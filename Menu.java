@@ -49,8 +49,12 @@ public class Menu {
         int row = 100;
         int col = 50;
 
-        if( row * 20 >= height ){ System.exit(0); }
-        if( col * 20 >= width ){ System.exit(0); }
+        if( row * 20 >= height ) {
+            System.out.println("Too many rows");
+            System.exit(0); }
+        if( col * 20 >= width ){
+            System.out.println("Too many columns");
+            System.exit(0); }
         Board game = new Board( row, col, 15 );
     }
 }
