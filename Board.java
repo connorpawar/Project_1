@@ -14,8 +14,8 @@ public class Board {
     private void initGame( int tileRow, int tileHeight, int mines ) {
 
         /* Constants for board size based on 15 x 15 pixel tiles */
-        final int rowSize = ( tileRow * 15 );
-        final int rowHeight = ( tileHeight * 15 );
+        final int rowSize = ( tileRow * 20 );
+        final int rowHeight = ( tileHeight * 20 );
 
         /* JFrame game is the board window */
         JFrame game = new JFrame();
@@ -37,7 +37,7 @@ public class Board {
         of tiles will be the tileRow * tileHeight.
         */
         for(int i = 0; i < tileRow * tileHeight; i++){
-            game.add( new JButton( "Button " + i ) );
+            game.add( new JButton( "x" ) );
         }
 
         /*
