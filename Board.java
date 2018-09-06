@@ -1,4 +1,9 @@
 import java.lang.Exception;
+/*
+The below imports need to be adjusted to only import the
+required classes/methods for this file, I got lazy and just
+imported every class/method in awt/swing/imagio
+*/
 import java.awt.*;
 import javax.swing.*;
 import javax.imageio.*;
