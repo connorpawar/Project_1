@@ -46,18 +46,18 @@ public class Board {
         changed throughout the coding process, for now Number1.png is just
         an example icon I made in microsoft paint to display in the grid.
         */
-       JButton arrayStructure[][] = new JButton[numTiles][numTiles];
+       JButton buttonGrid[][] = new JButton[numTiles][numTiles];
 
         try {
 //          Image img = ImageIO.read(getClass().getResource("Resources/Number1.png"));
             for (int i = 0; i < numTiles; i++) {
                 for (int j = 0; j < numTiles; j++) {
-                    arrayStructure[i][j] = new JButton();
-                    arrayStructure[i][j].setMargin(new Insets(0, 0, 0, 0));
+                    buttonGrid[i][j] = new JButton();
+                    buttonGrid[i][j].setMargin(new Insets(0, 0, 0, 0));
 //                  newButton.setIcon( new ImageIcon(img) );
-                    arrayStructure[i][j].setText(Integer.toString(i + j));
-                    arrayStructure[i][j].setPreferredSize(new Dimension(tileSize, tileSize));
-                    game.add(arrayStructure[i][j]);
+                    buttonGrid[i][j].setText(Integer.toString(i + j));
+                    buttonGrid[i][j].setPreferredSize(new Dimension(tileSize, tileSize));
+                    game.add(buttonGrid[i][j]);
                 }
             }
         } catch (Exception ex) {
