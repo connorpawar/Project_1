@@ -1,13 +1,13 @@
 import javax.swing.*;
 //import board.java;
 
-public class board_util{
+public class Board_Util{
 
     //board mGameBoard;
     int mHieght;
     int mWidth;
 
-    public board_util(Board gameBoard){
+    public Board_Util(Board gameBoard){
         /*mGameBoard = gameBoard;
 
         mHieght = gameBoard.getHieght;

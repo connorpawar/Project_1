@@ -1,6 +1,6 @@
 import javax.swing.*;
 
-public class tile extends JButton{
+public class Tile extends JButton{
 
     static final int mWidth = 20;
     static final int mHieght = 20;
@@ -12,7 +12,7 @@ public class tile extends JButton{
     ImageIcon mFlaggedIcon;
 
     //constructor
-    public tile(){
+    public Tile(){
         super();
 
         mFlaggedIcon = new ImageIcon();//TODO new to find flagged image
@@ -21,7 +21,7 @@ public class tile extends JButton{
         mIsMine= false;
     }
 
-    public tile(boolean isMine){
+    public Tile(boolean isMine){
         super();
 
         mFlaggedIcon = new ImageIcon();//TODO new to find flagged image
