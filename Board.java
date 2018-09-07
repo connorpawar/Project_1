@@ -1,3 +1,5 @@
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.lang.Exception;
 /*
 The below imports need to be adjusted to only import the
@@ -44,15 +46,19 @@ public class Board {
         changed throughout the coding process, for now Number1.png is just
         an example icon I made in microsoft paint to display in the grid.
         */
+       JButton arrayStructure[][] = new JButton[numTiles][numTiles];
+
         try {
-//            Image img = ImageIO.read(getClass().getResource("Resources/Number1.png"));
-            for (int i = 0; i < numTiles * numTiles; i++) {
-                JButton newButton = new JButton();
-                newButton.setMargin(new Insets(0, 0, 0, 0));
-//                newButton.setIcon( new ImageIcon(img) );
-                newButton.setText(Integer.toString(i));
-                newButton.setPreferredSize(new Dimension(tileSize, tileSize));
-                game.add(newButton);
+//          Image img = ImageIO.read(getClass().getResource("Resources/Number1.png"));
+            for (int i = 0; i < numTiles; i++) {
+                for (int j = 0; j < numTiles; j++) {
+                    arrayStructure[i][j] = new JButton();
+                    arrayStructure[i][j].setMargin(new Insets(0, 0, 0, 0));
+//                  newButton.setIcon( new ImageIcon(img) );
+                    arrayStructure[i][j].setText(Integer.toString(i + j));
+                    arrayStructure[i][j].setPreferredSize(new Dimension(tileSize, tileSize));
+                    game.add(arrayStructure[i][j]);
+                }
             }
         } catch (Exception ex) {
             System.out.println("Problem with loading Resources/Number1.png");
@@ -64,9 +70,9 @@ public class Board {
         This WindowListener has an Overridden windowClosing event that allows
         the function Menu.open() to get called on the Board window closing.
         */
-        game.addWindowListener(new java.awt.event.WindowAdapter() {
+        game.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(java.awt.event.WindowEvent e) {
+            public void windowClosing(WindowEvent e) {
                 Menu.open();
             }
         });
