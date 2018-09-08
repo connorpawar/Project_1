@@ -69,5 +69,8 @@ public class Menu {
         }
 
         Board game = new Board(boardSize, 15);
+
+
+
     }
 }
