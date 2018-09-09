@@ -12,12 +12,14 @@ public class Tile extends JButton {
     private int y;
 
     ImageIcon mFlaggedIcon;
+    ImageIcon mMineIcon;
 
     //constructor
     public Tile() {
         super();
 
-        mFlaggedIcon = new ImageIcon();//TODO new to find flagged image
+        mFlaggedIcon = new ImageIcon("americanFlagIcon.png");
+        mMineIcon = new ImageIcon("MineIcon.png");
         mSurroundingMines = 0;
         mFlagged = false;
         mIsMine = false;
@@ -26,7 +28,8 @@ public class Tile extends JButton {
     public Tile(boolean isMine) {
         super();
 
-        mFlaggedIcon = new ImageIcon();//TODO new to find flagged image
+        mFlaggedIcon = new ImageIcon("americanFlagIcon.png");
+        mMineIcon = new ImageIcon("MineIcon.png");
         mSurroundingMines = 0;
         mFlagged = false;
         mIsMine = false;
@@ -34,7 +37,7 @@ public class Tile extends JButton {
 
     public void finishConstucting() {
         this.setVisible(true);
-        //tile.setSize(mWidth, mHieght);
+        this.setSize(mWidth, mHieght);
         //this.addActionListener(this);
     }
 
@@ -52,24 +55,32 @@ public class Tile extends JButton {
     }
 
     //Setters
-    public void setFlagged(boolean flagged) {
-        if (flagged) {
-            //this.setIcon();
-        } else {
-            this.setText("");
+    public void setFlagged(boolean flagged){
+        if(flagged){
+            this.setIcon(mFlaggedIcon);
+        }else{
+            this.setIcon(null);
+            //this.setText("");
         }
 
         mFlagged = flagged;
     }
 
-    public void setMineCount(int mineCount) {
-        mSurroundingMines = mineCount;
+    public void setMineImage(boolean show){
+        if(!this.getIsMine())
+            return ;
+        //TODO find an icon for a mine
+
+        if(show)
+            this.setIcon(mMineIcon);
+        else
+            this.setIcon(null);
     }
 
-    public void setIsMine(boolean isMine) {
-        mIsMine = isMine;
-    }
+    public void setMineCount(int mineCount){ mSurroundingMines = mineCount;}
+    public void setIsMine(boolean isMine){ mIsMine = isMine;}
 
+    public void increaseMineCount(){mSurroundingMines += 1;}
 
     public void increaseMineCount() {
         mSurroundingMines += 1;
