@@ -54,53 +54,49 @@ public class Menu {
         int width = (int) screenSize.getWidth();
         int height = (int) screenSize.getHeight();
         int windowDimensionMax = (width <= height) ? width : height;
+        System.out.println("Window is limited to: " + windowDimensionMax);
         System.out.println("Width: " + width);
         System.out.println("Height: " + height);
-
 
         JFrame menuFrame = new JFrame();
         menuFrame.setTitle("Minesweeper Setup");
         JButton menuButton = new JButton("Start");
-        menuButton.setBounds(100,250,80, 40);
+        menuButton.setBounds(100, 250, 80, 40);
 
-        JLabel rowLabel = new JLabel();
-        rowLabel.setText("Enter Row :");
-        rowLabel.setBounds(40,0,100,100);
-        JTextField rowField = new JTextField();
-        rowField.setBounds(140, 38, 80, 30);
-        JLabel rowErr = new JLabel();
-        rowErr.setText("Invalid input");
-        rowErr.setBounds(140,30,100,100);
 
-        JLabel colLabel = new JLabel();
-        colLabel.setText("Enter Column :");
-        colLabel.setBounds(40,70,100,100);
-        JTextField colField = new JTextField();
-        colField.setBounds(140, 108, 80, 30);
-        JLabel colErr = new JLabel();
-        colErr.setText("Invalid input");
-        colErr.setBounds(140,100,100,100);
+        JComboBox field_BoardSize = new JComboBox();
+        field_BoardSize.setBounds(140, 108, 80, 30);
+        for (int i = 2; i <= windowDimensionMax / Board.tileSize; i++) {
+            field_BoardSize.addItem(i);
+        }
+        field_BoardSize.setVisible(true);
+
+        JLabel field_BoardSize_label = new JLabel();
+        field_BoardSize_label.setText("Board Size:");
+        field_BoardSize_label.setBounds(40, 70, 100, 100);
+
+
+
 
         JLabel mineLabel = new JLabel();
         mineLabel.setText("Enter Mines :");
-        mineLabel.setBounds(40,140,100,100);
+        mineLabel.setBounds(40, 140, 100, 100);
         JTextField mineField = new JTextField();
         mineField.setBounds(140, 178, 80, 30);
         JLabel mineErr = new JLabel();
-        mineErr.setText("Invalid input");
-        mineErr.setBounds(140,170,100,100);
+        mineErr.setBounds(140, 200, 140, 30);
 
-        menuFrame.add(rowLabel);
+       /* menuFrame.add(rowLabel);
         menuFrame.add(rowField);
         menuFrame.add(rowErr);
-        rowErr.setVisible(false);
-        menuFrame.add(colLabel);
-        menuFrame.add(colField);
-        menuFrame.add(colErr);
-        colErr.setVisible(false);
+        rowErr.setVisible(false);*/
+        menuFrame.add(field_BoardSize_label);
+
         menuFrame.add(mineLabel);
         menuFrame.add(mineField);
         menuFrame.add(mineErr);
+        field_BoardSize.setSelectedIndex((windowDimensionMax / Board.tileSize) - 2);
+        menuFrame.add(field_BoardSize);
         mineErr.setVisible(false);
         menuFrame.add(menuButton);
         menuFrame.setSize(300, 400);
@@ -110,40 +106,27 @@ public class Menu {
         menuFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         menuFrame.setResizable(false);
 
-        menuButton.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                rowErr.setVisible(false);
-                colErr.setVisible(false);
-                mineErr.setVisible(false);
-                int errCount = 0;
-
-                try {
-                    int rowNum = Integer.parseInt(rowField.getText());
-                    System.out.println(rowNum);
-                } catch (Exception err) {
-                     rowErr.setVisible(true);
-                     errCount += 1;
-                }
-                try {
-                    int colNum = Integer.parseInt(colField.getText());
-                    System.out.println(colNum);
-                } catch (Exception err)  {
-                    colErr.setVisible(true);
-                    errCount += 1;
-                }
-                try {
-                    int mineNum = Integer.parseInt(mineField.getText());
-                    System.out.println(mineNum);
-                } catch (Exception err)  {
+        menuButton.addActionListener(e -> {
+            boolean error_exists = false;
+            int userInput_BoardSize = Integer.parseInt(field_BoardSize.getEditor().getItem().toString());
+            mineErr.setVisible(false);
+            try {
+                int mineNum = Integer.parseInt(mineField.getText());
+                if(mineNum > ((userInput_BoardSize * userInput_BoardSize) - 1)){
+                    error_exists = true;
+                    mineErr.setText("Current Mine Max: " + ((userInput_BoardSize * userInput_BoardSize) - 1));
                     mineErr.setVisible(true);
-                    errCount += 1;
                 }
-                if (errCount == 0){
-                    int boardSize = Integer.parseInt(rowField.getText())*Integer.parseInt(colField.getText());
-                    Board game = new Board(boardSize, Integer.parseInt(mineField.getText()));
-                    menuFrame.dispose();
-                }
+            } catch (NumberFormatException e1) {
+                error_exists = true;
+                mineErr.setText("Please only use numbers.");
+                mineErr.setVisible(true);
+            }
+
+
+            if (!error_exists) {
+                Board game = new Board(userInput_BoardSize, Integer.parseInt(mineField.getText()));
+                menuFrame.dispose();
             }
         });
 
@@ -162,7 +145,5 @@ public class Menu {
             }
             //System.exit(0);
         }
-
-
     }
 }
