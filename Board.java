@@ -17,15 +17,12 @@ public class Board {
     /* Centralized location for Board constants */
     static int tileSize = 30;
 
-    Board(int numTiles, int mines) {
+    Board(int rowLength, int colLength, int mines) {
         /* EventQueue.invokeLater() is necessary to avoid window hanging */
-        EventQueue.invokeLater(() -> initGame(numTiles, mines));
+        EventQueue.invokeLater(() -> initGame(rowLength, colLength, mines));
     }
 
-    private void initGame(int numTiles, int mines) {
-
-        /* Constants for board size based on 15 x 15 pixel tiles */
-        final int windowSize = (numTiles * tileSize);
+    private void initGame(int numCols, int numRows, int mines) {
 
         /*
          *  JFrame game is the board window
@@ -40,11 +37,9 @@ public class Board {
         function name used to set the JFrame characteristic
         */
         game.setTitle("Definitely not Minesweeper");
-        game.setSize(windowSize, windowSize);
-        game.setLayout(new GridLayout(numTiles, numTiles));
         game.setLocationRelativeTo(null);
         game.setResizable(false);
-        game.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        game.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         info.setTitle("Information");
         info.setSize(200, 100);
@@ -56,6 +51,7 @@ public class Board {
          * available to the player.
          */
         JLabel flags = new JLabel();
+        flags.setText("Flags Available: " + Integer.toString(mines));
         try {
             Image img = ImageIO.read(getClass().getResource("Resources/flag.png"));
             flags.setIcon(new ImageIcon(img));
@@ -81,41 +77,43 @@ public class Board {
             }
         });
 
-        flags.setText("Flags Available: " + Integer.toString(mines));
-
         info.add(updateFlags);
         info.add(flags);
         info.setResizable(false);
         info.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
         /*
-        This adds the tiles to the grid, in this case the number
-        of tiles will be the tileRow * tileHeight. The tile icon will be
-        changed throughout the coding process, for now Number1.png is just
-        an example icon I made in microsoft paint to display in the grid.
+        This adds the tiles to a JPanel that is set as a flowlayout that is then
+        added to another JPanel to allow modular row/size functionality.
         */
-       JButton buttonGrid[][] = new JButton[numTiles][numTiles];
-
+        JButton buttonGrid[][] = new JButton[numRows][numCols];
+        JPanel masterPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 0, 5));
         try {
 //          Image img = ImageIO.read(getClass().getResource("Resources/Number1.png"));
-            for (int i = 0; i < numTiles; i++) {
-                for (int j = 0; j < numTiles; j++) {
+            for (int i = 0; i < numRows; i++) {
+                JPanel tempPanel = new JPanel(new GridLayout(numCols, 1));
+
+                for (int j = 0; j < numCols; j++) {
                     buttonGrid[i][j] = new JButton();
                     buttonGrid[i][j].setMargin(new Insets(0, 0, 0, 0));
 //                  newButton.setIcon( new ImageIcon(img) );
-                    buttonGrid[i][j].setText(Integer.toString(i + j));
+                    buttonGrid[i][j].setText(i + "," + j);
                     buttonGrid[i][j].setPreferredSize(new Dimension(tileSize, tileSize));
-                    game.add(buttonGrid[i][j]);
+                    tempPanel.add(buttonGrid[i][j]);
                 }
+                masterPanel.add(tempPanel);
             }
+            game.add(masterPanel);
         } catch (Exception ex) {
-            System.out.println("Problem with loading Resources/Number1.png");
+            ex.printStackTrace();
         }
 
         game.validate();
+        game.pack();
         game.setVisible(true);
         info.validate();
         info.setVisible(true);
+
         /*
         This WindowListener has an Overridden windowClosing event that allows
         the function Menu.open() to get called on the Board window closing.
@@ -123,6 +121,7 @@ public class Board {
         game.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                info.dispose();
                 Menu.open();
             }
         });
