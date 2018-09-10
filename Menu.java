@@ -79,6 +79,7 @@ public class Menu {
         JLabel mineErr = new JLabel();
         mineErr.setBounds(140, 200, 140, 30);
         mineErr.setVisible(false);
+        mineErr.setForeground(Color.red);
 
         /*
          * Add components to menu frame
@@ -120,6 +121,12 @@ public class Menu {
                     mineErr.setText("Current Mine Max: " + ((numRows * numCols) - 1));
                     mineErr.setVisible(true);
                 }
+                if (mineNum < 1) {
+                    error_exists = true;
+                    mineErr.setText("Current Mine Min: 1");
+                    mineErr.setVisible(true);
+                }
+
             } catch (NumberFormatException e1) {
                 error_exists = true;
                 mineErr.setText("Numbers only.");
