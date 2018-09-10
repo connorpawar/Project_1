@@ -1,4 +1,8 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.*;
+import javax.swing.*;
+
 
 public class Menu {
 
@@ -26,8 +30,9 @@ public class Menu {
      * Creates the menu, called only by the constructor
      * */
     private void initMenu() {
-        System.out.println("initMenu()");
+
     }
+
 
     /*Menu.main(String[] args)
      * Main function of Menu, just used for board
@@ -52,6 +57,96 @@ public class Menu {
         System.out.println("Width: " + width);
         System.out.println("Height: " + height);
 
+
+        JFrame menuFrame = new JFrame();
+        menuFrame.setTitle("Minesweeper Setup");
+        JButton menuButton = new JButton("Start");
+        menuButton.setBounds(100,250,80, 40);
+
+        JLabel rowLabel = new JLabel();
+        rowLabel.setText("Enter Row :");
+        rowLabel.setBounds(40,0,100,100);
+        JTextField rowField = new JTextField();
+        rowField.setBounds(140, 38, 80, 30);
+        JLabel rowErr = new JLabel();
+        rowErr.setText("Invalid input");
+        rowErr.setBounds(140,30,100,100);
+
+        JLabel colLabel = new JLabel();
+        colLabel.setText("Enter Column :");
+        colLabel.setBounds(40,70,100,100);
+        JTextField colField = new JTextField();
+        colField.setBounds(140, 108, 80, 30);
+        JLabel colErr = new JLabel();
+        colErr.setText("Invalid input");
+        colErr.setBounds(140,100,100,100);
+
+        JLabel mineLabel = new JLabel();
+        mineLabel.setText("Enter Mines :");
+        mineLabel.setBounds(40,140,100,100);
+        JTextField mineField = new JTextField();
+        mineField.setBounds(140, 178, 80, 30);
+        JLabel mineErr = new JLabel();
+        mineErr.setText("Invalid input");
+        mineErr.setBounds(140,170,100,100);
+
+        menuFrame.add(rowLabel);
+        menuFrame.add(rowField);
+        menuFrame.add(rowErr);
+        rowErr.setVisible(false);
+        menuFrame.add(colLabel);
+        menuFrame.add(colField);
+        menuFrame.add(colErr);
+        colErr.setVisible(false);
+        menuFrame.add(mineLabel);
+        menuFrame.add(mineField);
+        menuFrame.add(mineErr);
+        mineErr.setVisible(false);
+        menuFrame.add(menuButton);
+        menuFrame.setSize(300, 400);
+        menuFrame.setLocationRelativeTo(null);
+        menuFrame.setLayout(null);
+        menuFrame.setVisible(true);
+        menuFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        menuFrame.setResizable(false);
+
+        menuButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                rowErr.setVisible(false);
+                colErr.setVisible(false);
+                mineErr.setVisible(false);
+                int errCount = 0;
+
+                try {
+                    int rowNum = Integer.parseInt(rowField.getText());
+                    System.out.println(rowNum);
+                } catch (Exception err) {
+                     rowErr.setVisible(true);
+                     errCount += 1;
+                }
+                try {
+                    int colNum = Integer.parseInt(colField.getText());
+                    System.out.println(colNum);
+                } catch (Exception err)  {
+                    colErr.setVisible(true);
+                    errCount += 1;
+                }
+                try {
+                    int mineNum = Integer.parseInt(mineField.getText());
+                    System.out.println(mineNum);
+                } catch (Exception err)  {
+                    mineErr.setVisible(true);
+                    errCount += 1;
+                }
+                if (errCount == 0){
+                    int boardSize = Integer.parseInt(rowField.getText())*Integer.parseInt(colField.getText());
+                    Board game = new Board(boardSize, Integer.parseInt(mineField.getText()));
+                    menuFrame.dispose();
+                }
+            }
+        });
+
         /* board will be displayed as tile x tile board where boardsize is the tiles
          * along one side of the board, this will be changed to user input */
         int boardSize = 28;
@@ -65,11 +160,10 @@ public class Menu {
             if (boardSize * Board.tileSize >= width) {
                 System.out.println("The window is too wide for this screen.");
             }
-            System.exit(0);
+            //System.exit(0);
         }
 
         Board game = new Board(boardSize, 15);
-
 
 
     }
