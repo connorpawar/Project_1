@@ -17,10 +17,11 @@ import javax.imageio.*;
 public class Board {
     /* Centralized location for Board constants */
     static int tileSize = 30;
-    private int mNumMines; 
-    private int numTiles; 
     private Random random;
     private Tile[][] buttonGrid;
+    private int mNumRows;
+    private int mNumCols;
+    private int mNumMines;
 
 
     Board(int rowLength, int colLength, int mines) {
@@ -30,6 +31,9 @@ public class Board {
 
     private void initGame(int numCols, int numRows, int mines) {
 
+        mNumCols = numCols;
+        mNumRows = numRows;
+        mNumMines = mines;
         /*
          *  JFrame game is the board window
          *  JFrame info is the information window
@@ -92,7 +96,7 @@ public class Board {
         This adds the tiles to a JPanel that is set as a flowlayout that is then
         added to another JPanel to allow modular row/size functionality.
         */
-        buttonGrid[][] = new JButton[numRows][numCols];
+        buttonGrid = new Tile[numRows][numCols];
         JPanel masterPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 0, 5));
         try {
 //          Image img = ImageIO.read(getClass().getResource("Resources/Number1.png"));
@@ -144,8 +148,8 @@ public class Board {
      * it then will set the risk of nearby mines
      */
     public void initBoard() {
-        for (int i = 0; i < numTiles; i++) {
-            for (int j = 0; j < numTiles; j++) {
+        for (int i = 0; i < mNumRows; i++) {
+            for (int j = 0; j < mNumCols; j++) {
                 buttonGrid[i][j].cleanTile();
             }
         }
@@ -168,8 +172,8 @@ public class Board {
      * randomly places a mine inside the board
      */
     private void setMine() {
-        int x = random.nextInt(numTiles);
-        int y = random.nextInt(numTiles);
+        int x = random.nextInt(mNumRows);
+        int y = random.nextInt(mNumCols);
 
         if (!buttonGrid[x][y].getIsMine()) {
             buttonGrid[x][y].setIsMine(true);
@@ -182,8 +186,8 @@ public class Board {
      * setRiskNum() accesses the number of mines around a tile
      */
     private void setRiskNum() {
-        for (int i = 0; i < numTiles; i++) {
-            for (int j = 0; j < numTiles; j++) {
+        for (int i = 0; i < mNumRows; i++) {
+            for (int j = 0; j < mNumCols; j++) {
                 int leftOne = i - 1;
                 int rightOne = i + 1;
                 int downOne = j - 1;
@@ -195,17 +199,17 @@ public class Board {
                     mineRisk++;
                 if (leftOne >= 0 && buttonGrid[leftOne][j].getIsMine())
                     mineRisk++;
-                if (leftOne >= 0 && upOne < numTiles && buttonGrid[leftOne][upOne].getIsMine())
+                if (leftOne >= 0 && upOne < mNumCols && buttonGrid[leftOne][upOne].getIsMine())
                     mineRisk++;
                 if (downOne >= 0 && buttonGrid[i][downOne].getIsMine())
                     mineRisk++;
-                if (upOne < numTiles && buttonGrid[i][upOne].getIsMine())
+                if (upOne < mNumCols && buttonGrid[i][upOne].getIsMine())
                     mineRisk++;
-                if (rightOne < numTiles && buttonGrid[rightOne][downOne].getIsMine())
+                if (rightOne < mNumRows && buttonGrid[rightOne][downOne].getIsMine())
                     mineRisk++;
-                if (rightOne < numTiles && buttonGrid[rightOne][j].getIsMine())
+                if (rightOne < mNumRows && buttonGrid[rightOne][j].getIsMine())
                     mineRisk++;
-                if (rightOne < numTiles && upOne < numTiles && buttonGrid[rightOne][upOne].getIsMine())
+                if (rightOne < mNumRows && upOne < mNumCols && buttonGrid[rightOne][upOne].getIsMine())
                     mineRisk++;
 
                 buttonGrid[i][j].setMineCount(mineRisk);
