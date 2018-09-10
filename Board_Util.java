@@ -1,20 +1,16 @@
-//package mineSweeper;
-
 import javax.swing.*;
-import mineSweeper.Board.java;
 
 public class Board_Util{
-
     Board mGameBoard;
-    Tile mTileArray[][];
+    private Tile mTileArray[][];
     int mNumRows;
     int mNumCols;
 
-    public Board_Util(){//Board board, Tile[][] tileArray,int numRows, int numCols, JLable flag){
-        /*mGameBoard = board;
+    public Board_Util(Board board, Tile[][] tileArray,int numRows, int numCols){
+        mGameBoard = board;
         mTileArray = tileArray;
         mNumRows = numRows;
-        mNumCols = numCols;*/
+        mNumCols = numCols;
     }
 
     public void revealExpanding(int row, int col){
@@ -27,10 +23,10 @@ public class Board_Util{
     public void gameOver(){
         for(int i=0; i<0; i++){
             for(int j=0; j<0; j++){
-                if(mTileArray[i][j]->getIsMine())
-                    mTileArray[i][j]->setMineImage(true);
+                if(mTileArray[i][j].getIsMine())
+                    mTileArray[i][j].setMineImage(true);
 
-                mTileArray[i][j]->setEnabled(false);
+                mTileArray[i][j].setEnabled(false);
             }
         }
     }
@@ -38,7 +34,7 @@ public class Board_Util{
     public void setNumberOfMines(){
         for(int i=0; i<0; i++){
             for(int j=0; j<0; j++){
-                if(mTileArray[i][j]->getIsMine())
+                if(mTileArray[i][j].getIsMine())
                     incrementSurroundingMineCount(i,j);
             }
         }
@@ -68,13 +64,13 @@ public class Board_Util{
 
         //if there are tiles left of the postion
         if(row != 0)
-            mTileArray[i-1][j+1]->increaseMineCount();
+            mTileArray[row-1][col+1].increaseMineCount();
 
-        mTileArray[i][j+1]->increaseMineCount();
+        mTileArray[row][col+1].increaseMineCount();
 
         //if there are tiles right of the position
         if(row != mNumRows-1)
-            mTileArray[i+1][j+1]->increaseMineCount();
+            mTileArray[row+1][col+1].increaseMineCount();
     }
 
     private void incrementBelow(int row, int col){
@@ -84,23 +80,23 @@ public class Board_Util{
 
         //if there are tiles left of the postion
         if(row != 0)
-            mTileArray[i-1][j-1]->increaseMineCount();
+            mTileArray[row-1][col-1].increaseMineCount();
 
-        mTileArray[i][j-1]->increaseMineCount();
+        mTileArray[row][col-1].increaseMineCount();
 
         //if there are tiles right of the position
         if(row != mNumRows-1)
-            mTileArray[i+1][j-1]->increaseMineCount();
+            mTileArray[row+1][col-1].increaseMineCount();
     }
 
     private void incrementSides(int row, int col){
         //if there are tiles left of the postion
         if(row != 0)
-            mTileArray[i-1][j]->increaseMineCount();
+            mTileArray[row-1][col].increaseMineCount();
 
         //if there are tiles right of the position
         if(row != mNumRows-1)
-            mTileArray[i+1][j]->increaseMineCount();
+            mTileArray[row+1][col].increaseMineCount();
     }
 
 
@@ -115,21 +111,21 @@ public class Board_Util{
             return;
 
         //if there are tiles left of the postion
-        if(row != 0 && mTileArray[i-1][j+1]->getHasSurroundingMine() == true)
-            mTileArray[i-1][j+1]->displaySurroundingMines();
+        if(row != 0 && mTileArray[row-1][col+1].getHasSurroundingMine() == true)
+            mTileArray[row-1][col+1].displaySurroundingMines();
         else
-            revealAbove(i-1, j+1);
+            revealAbove(row-1, col+1);
 
-        if(mTileArray[i-1][j+1]->getHasSurroundingMine() == true)
-            mTileArray[i][j+1]->displaySurroundingMines();
+        if(mTileArray[row-1][col+1].getHasSurroundingMine() == true)
+            mTileArray[row][col+1].displaySurroundingMines();
         else
-            revealAbove(i-1, j+1);
+            revealAbove(row-1, col+1);
 
         //if there are tiles right of the position
-        if(row != mNumRows-1 && mTileArray[i+1][j+1]->getHasSurroundingMine() == true)
-            mTileArray[i+1][j+1]->displaySurroundingMines();
+        if(row != mNumRows-1 && mTileArray[row+1][col+1].getHasSurroundingMine() == true)
+            mTileArray[row+1][col+1].displaySurroundingMines();
         else
-            revealAbove(i+1, j+1);
+            revealAbove(row+1, col+1);
     }
 
     private void revealBelow(int row, int col){
@@ -138,35 +134,35 @@ public class Board_Util{
             return;
 
         ///if there are tiles left of the postion
-        if(row != 0 && mTileArray[i-1][j-1]->getHasSurroundingMine() == true)
-            mTileArray[i-1][j-1]->displaySurroundingMines();
+        if(row != 0 && mTileArray[row-1][col-1].getHasSurroundingMine() == true)
+            mTileArray[row-1][col-1].displaySurroundingMines();
         else
-            revealAbove(i-1, j-1);
+            revealAbove(row-1, col-1);
 
-        if(mTileArray[i-1][j-1]->getHasSurroundingMine() == true)
-            mTileArray[i][j-1]->displaySurroundingMines();
+        if(mTileArray[row-1][col-1].getHasSurroundingMine() == true)
+            mTileArray[row][col-1].displaySurroundingMines();
         else
-            revealAbove(i-1, j-1);
+            revealAbove(row-1, col-1);
 
         //if there are tiles right of the position
-        if(row != mNumRows-1 && mTileArray[i+1][j-1]->getHasSurroundingMine() == true)
-            mTileArray[i+1][j-1]->displaySurroundingMines();
+        if(row != mNumRows-1 && mTileArray[row+1][col-1].getHasSurroundingMine() == true)
+            mTileArray[row+1][col-1].displaySurroundingMines();
         else
-            revealAbove(i+1, j-1);
+            revealAbove(row+1, col-1);
     }
 
     private void revealSides(int row, int col){
         //if there are tiles left of the postion
-        if(row != 0 && mTileArray[i-1][j]->getHasSurroundingMine() == true)
-            mTileArray[i-1][j]->displaySurroundingMines();
+        if(row != 0 && mTileArray[row-1][col].getHasSurroundingMine() == true)
+            mTileArray[row-1][col].displaySurroundingMines();
         else
-            revealSides(i-1, j);
+            revealSides(row-1, col);
 
         //if there are tiles right of the position
-        if(row != mNumRows-1 && mTileArray[i+1][j]->getHasSurroundingMine() == true)
-            mTileArray[i+1][j]->displaySurroundingMines();
+        if(row != mNumRows-1 && mTileArray[row+1][col].getHasSurroundingMine() == true)
+            mTileArray[row+1][col].displaySurroundingMines();
         else
-            revealSides(i+1, j);
+            revealSides(row+1, col);
 
     }
 
