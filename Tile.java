@@ -1,6 +1,6 @@
 import javax.swing.*;
 
-public class Tile extends JButton{
+public class Tile extends JButton {
 
     static final int mWidth = 20;
     static final int mHieght = 20;
@@ -9,33 +9,52 @@ public class Tile extends JButton{
     boolean mHasSurroundingMine;
     boolean mFlagged;
     boolean mIsMine;
+    private int x;
+    private int y;
 
     ImageIcon mFlaggedIcon;
     ImageIcon mMineIcon;
 
     //constructor
-    public Tile(){
+    public Tile() {
         super();
 
         mFlaggedIcon = new ImageIcon("americanFlagIcon.png");
         mMineIcon = new ImageIcon("MineIcon.png");
         mSurroundingMines = 0;
         mFlagged = false;
-        mIsMine= false;
-        mHasSurroundingMine = false;
+        mIsMine = false;
+    }
 
+    public Tile(boolean isMine) {
+        super();
+
+        mFlaggedIcon = new ImageIcon("americanFlagIcon.png");
+        mMineIcon = new ImageIcon("MineIcon.png");
+        mSurroundingMines = 0;
+        mFlagged = false;
+        mIsMine = false;
+    }
+
+    public void finishConstucting() {
+        this.setVisible(true);
+        this.setSize(mWidth, mHieght);
         this.setVisible(true);
         this.setSize(mWidth, mHieght);
     }
 
-    public void finishConstucting(){
-        //this.addActionListener(this);
+    //Getters
+    public boolean getFlagged() {
+        return mFlagged;
     }
 
-    //Getters
-    public boolean getFlagged(){return mFlagged;}
-    public int getMineCount(){ return mSurroundingMines;}
-    public boolean getIsMine(){ return mIsMine;}
+    public int getMineCount() {
+        return mSurroundingMines;
+    }
+
+    public boolean getIsMine() {
+        return mIsMine;
+    }
 
     //Setters
     public void setFlagged(boolean flagged){
@@ -52,7 +71,6 @@ public class Tile extends JButton{
     public void setMineImage(boolean show){
         if(!this.getIsMine())
             return ;
-
         if(show)
             this.setIcon(mMineIcon);
         else{
@@ -101,4 +119,11 @@ public class Tile extends JButton{
             setFlagged(!mFlagged);
         }
     }*/
+
+
+    public void cleanTile() {
+        mSurroundingMines = 0;
+        mFlagged = false;
+        mIsMine = false;
+    }
 }
