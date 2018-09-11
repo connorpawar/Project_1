@@ -37,6 +37,15 @@ public class Tile extends JButton {
             @Override
             public void mouseClicked(MouseEvent e){
 
+                if(mIsMine){
+                    //TODO game over
+                }else{
+                    if(mHasSurroundingMine)
+                        displaySurroundingMines();
+                    else
+                        //revealExpanding();
+
+                    this.setEnabled(false);
             }
         });
     }
