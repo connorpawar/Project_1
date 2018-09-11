@@ -1,6 +1,6 @@
 import javax.swing.*;
 
-public class Tile extends JButton{
+public class Tile extends JButton {
 
     static final int mWidth = 20;
     static final int mHieght = 20;
@@ -8,56 +8,74 @@ public class Tile extends JButton{
     int mSurroundingMines;
     boolean mFlagged;
     boolean mIsMine;
+    private int x;
+    private int y;
 
     ImageIcon mFlaggedIcon;
 
     //constructor
-    public Tile(){
+    public Tile() {
         super();
 
         mFlaggedIcon = new ImageIcon();//TODO new to find flagged image
         mSurroundingMines = 0;
         mFlagged = false;
-        mIsMine= false;
+        mIsMine = false;
     }
 
-    public Tile(boolean isMine){
+    public Tile(boolean isMine) {
         super();
 
         mFlaggedIcon = new ImageIcon();//TODO new to find flagged image
         mSurroundingMines = 0;
         mFlagged = false;
-        mIsMine= false;
+        mIsMine = false;
     }
 
-    public void finishConstucting(){
+    public void finishConstucting() {
         this.setVisible(true);
         //tile.setSize(mWidth, mHieght);
         //this.addActionListener(this);
     }
 
     //Getters
-    public boolean getFlagged(){return mFlagged;}
-    public int getMineCount(){ return mSurroundingMines;}
-    public boolean getIsMine(){ return mIsMine;}
+    public boolean getFlagged() {
+        return mFlagged;
+    }
+
+    public int getMineCount() {
+        return mSurroundingMines;
+    }
+
+    public boolean getIsMine() {
+        return mIsMine;
+    }
 
     //Setters
-    public void setFlagged(boolean flagged){
-        if(flagged){
+    public void setFlagged(boolean flagged) {
+        if (flagged) {
             //this.setIcon();
-        }else{
+        } else {
             this.setText("");
         }
 
         mFlagged = flagged;
     }
-    public void setMineCount(int mineCount){ mSurroundingMines = mineCount;}
-    public void setIsMine(boolean isMine){ mIsMine = isMine;}
+
+    public void setMineCount(int mineCount) {
+        mSurroundingMines = mineCount;
+    }
+
+    public void setIsMine(boolean isMine) {
+        mIsMine = isMine;
+    }
 
 
-    public void increaseMineCount(){mSurroundingMines += 1;}
+    public void increaseMineCount() {
+        mSurroundingMines += 1;
+    }
 
-    public void displaySurroundingMines(){
+    public void displaySurroundingMines() {
         String SurroundingMinesString = Integer.toString(mSurroundingMines);
         this.setText(SurroundingMinesString);
     }
@@ -75,4 +93,11 @@ public class Tile extends JButton{
             setFlagged(!mFlagged);
         }
     }*/
+
+
+    public void cleanTile() {
+        mSurroundingMines = 0;
+        mFlagged = false;
+        mIsMine = false;
+    }
 }
