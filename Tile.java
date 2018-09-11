@@ -23,7 +23,6 @@ public class Tile extends JButton {
         mMineIcon = new ImageIcon("MineIcon.png");
         mSurroundingMines = 0;
         mFlagged = false;
-<<<<<<< HEAD
         mIsMine = false;
     }
 
@@ -40,16 +39,11 @@ public class Tile extends JButton {
     public void finishConstucting() {
         this.setVisible(true);
         this.setSize(mWidth, mHieght);
-=======
-        mIsMine= false;
-        mHasSurroundingMine = false;
-
         this.setVisible(true);
         this.setSize(mWidth, mHieght);
     }
 
     public void finishConstucting(){
->>>>>>> better wokring versions of Tile and Board_Util many sections commented out on Board_Util
         //this.addActionListener(this);
     }
 
@@ -102,20 +96,12 @@ public class Tile extends JButton {
         mHasSurroundingMine = true;
     }
 
-<<<<<<< HEAD
-    public void increaseMineCount() {
-        mSurroundingMines += 1;
-    }
-
-    public void displaySurroundingMines() {
-=======
     //sets the text on the tile showing how many mines are near
     public void displaySurroundingMines(){
         //we will not display 0 for number of mines
         if(mSurroundingMines == 0)
             return;
 
->>>>>>> better wokring versions of Tile and Board_Util many sections commented out on Board_Util
         String SurroundingMinesString = Integer.toString(mSurroundingMines);
         this.setText(SurroundingMinesString);
     }
