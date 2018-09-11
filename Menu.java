@@ -77,7 +77,7 @@ public class Menu {
         mineField.setText("0");
         mineField.setBounds(140, 178, 80, 30);
         JLabel mineErr = new JLabel();
-        mineErr.setBounds(140, 200, 140, 30);
+        mineErr.setBounds(40, 200, 140, 30);
         mineErr.setVisible(false);
         mineErr.setForeground(Color.red);
 
