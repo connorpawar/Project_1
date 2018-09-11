@@ -1,4 +1,6 @@
 import javax.swing.*;
+import java.awt.event.*;
+
 
 public class Tile extends JButton {
 
@@ -23,38 +25,27 @@ public class Tile extends JButton {
         mMineIcon = new ImageIcon("MineIcon.png");
         mSurroundingMines = 0;
         mFlagged = false;
-        mIsMine = false;
-    }
+        mIsMine= false;
+        mHasSurroundingMine = false;
 
-    public Tile(boolean isMine) {
-        super();
-
-        mFlaggedIcon = new ImageIcon("americanFlagIcon.png");
-        mMineIcon = new ImageIcon("MineIcon.png");
-        mSurroundingMines = 0;
-        mFlagged = false;
-        mIsMine = false;
-    }
-
-    public void finishConstucting() {
         this.setVisible(true);
         this.setSize(mWidth, mHieght);
-        this.setVisible(true);
-        this.setSize(mWidth, mHieght);
+    }
+
+    public void finishConstucting(){
+        this.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+
+            }
+        });
     }
 
     //Getters
-    public boolean getFlagged() {
-        return mFlagged;
-    }
-
-    public int getMineCount() {
-        return mSurroundingMines;
-    }
-
-    public boolean getIsMine() {
-        return mIsMine;
-    }
+    public boolean getFlagged(){return mFlagged;}
+    public Integer getMineCount(){ return mSurroundingMines;}
+    public boolean getIsMine(){ return mIsMine;}
+    public boolean getHasSurroundingMine(){return mHasSurroundingMine;}
 
     //Setters
     public void setFlagged(boolean flagged){
@@ -71,7 +62,8 @@ public class Tile extends JButton {
     public void setMineImage(boolean show){
         if(!this.getIsMine())
             return ;
-        if(show)
+
+        if(show == true)
             this.setIcon(mMineIcon);
         else{
             this.setIcon(null);
