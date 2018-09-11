@@ -135,6 +135,8 @@ public class Board {
                 Menu.open();
             }
         });
+
+
     }
 
     public static void main(String[] args) {
