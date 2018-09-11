@@ -1,4 +1,6 @@
 import javax.swing.*;
+import java.awt.event.*;
+
 
 public class Tile extends JButton{
 
@@ -29,13 +31,19 @@ public class Tile extends JButton{
     }
 
     public void finishConstucting(){
-        //this.addActionListener(this);
+        this.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+
+            }
+        });
     }
 
     //Getters
     public boolean getFlagged(){return mFlagged;}
-    public int getMineCount(){ return mSurroundingMines;}
+    public Integer getMineCount(){ return mSurroundingMines;}
     public boolean getIsMine(){ return mIsMine;}
+    public boolean getHasSurroundingMine(){return mHasSurroundingMine;}
 
     //Setters
     public void setFlagged(boolean flagged){
@@ -53,7 +61,7 @@ public class Tile extends JButton{
         if(!this.getIsMine())
             return ;
 
-        if(show)
+        if(show == true)
             this.setIcon(mMineIcon);
         else{
             this.setIcon(null);

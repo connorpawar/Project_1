@@ -13,6 +13,7 @@ public class Board_Util{
         mNumCols = numCols;
     }
 
+    
     public void revealExpanding(int row, int col){
         revealAbove(row, col);
         revealBelow(row, col);
@@ -50,6 +51,7 @@ public class Board_Util{
     ///////////////////////////////
     /*HELPER METHODS*/
     //////////////////////////////
+
 
 
 
