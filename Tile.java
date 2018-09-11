@@ -43,10 +43,6 @@ public class Tile extends JButton {
         this.setSize(mWidth, mHieght);
     }
 
-    public void finishConstucting(){
-        //this.addActionListener(this);
-    }
-
     //Getters
     public boolean getFlagged() {
         return mFlagged;
@@ -75,7 +71,6 @@ public class Tile extends JButton {
     public void setMineImage(boolean show){
         if(!this.getIsMine())
             return ;
-
         if(show)
             this.setIcon(mMineIcon);
         else{
