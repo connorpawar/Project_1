@@ -71,10 +71,10 @@ public class Board {
 
         /*
          * Below is a button being created to test the decrement of the flags JLabel
-         * by clicking the JButton updateFlags, this will be implemented as an extension
+         * by clicking the Tile updateFlags, this will be implemented as an extension
          * of the Tile class.
          */
-        JButton updateFlags = new JButton();
+        Tile updateFlags = new Tile();
         updateFlags.addActionListener((ActionEvent event) -> {
 
             try {
@@ -96,7 +96,7 @@ public class Board {
         This adds the tiles to a JPanel that is set as a flowlayout that is then
         added to another JPanel to allow modular row/size functionality.
         */
-        buttonGrid = new Tile[numRows][numCols];
+        Tile tileGrid[][] = new Tile[numRows][numCols];
         JPanel masterPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 0, 5));
         try {
 //          Image img = ImageIO.read(getClass().getResource("Resources/Number1.png"));
@@ -104,12 +104,12 @@ public class Board {
                 JPanel tempPanel = new JPanel(new GridLayout(numCols, 1));
 
                 for (int j = 0; j < numCols; j++) {
-                    buttonGrid[i][j] = new Tile();
-                    buttonGrid[i][j].setMargin(new Insets(0, 0, 0, 0));
+                    tileGrid[i][j] = new Tile();
+                    tileGrid[i][j].setMargin(new Insets(0, 0, 0, 0));
 //                  newButton.setIcon( new ImageIcon(img) );
-                    buttonGrid[i][j].setText(i + "," + j);
-                    buttonGrid[i][j].setPreferredSize(new Dimension(tileSize, tileSize));
-                    tempPanel.add(buttonGrid[i][j]);
+                    tileGrid[i][j].setText(i + "," + j);
+                    tileGrid[i][j].setPreferredSize(new Dimension(tileSize, tileSize));
+                    tempPanel.add(tileGrid[i][j]);
                 }
                 masterPanel.add(tempPanel);
             }
