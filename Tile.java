@@ -42,10 +42,12 @@ public class Tile extends JButton {
                 }else{
                     if(mHasSurroundingMine)
                         displaySurroundingMines();
-                    else
+                    //else
                         //revealExpanding();
+                }
 
-                    this.setEnabled(false);
+                //this.setEnabled(false);
+
             }
         });
     }
