@@ -1,16 +1,23 @@
 import javax.swing.*;
+import java.util.Random;
 
-public class Board_Util{
-    Board mGameBoard;
+public class Game_Driver{
+    JFrame mGameBoard;
     private Tile mTileArray[][];
+    private Random random;
     int mNumRows;
     int mNumCols;
+    int mNumMines;
+    JLabel mFlagCounter;
 
-    public Board_Util(Board board, Tile[][] tileArray,int numRows, int numCols){
+    public Game_Driver(JFrame board, Tile[][] tileArray,int numRows, int numCols, int mineCount, JLabel flagCount){
         mGameBoard = board;
         mTileArray = tileArray;
         mNumRows = numRows;
         mNumCols = numCols;
+        mFlagCounter = flagCount;
+        mNumMines = mineCount;
+        initBoard();
     }
 
 
@@ -96,7 +103,7 @@ public class Board_Util{
         if(row != 0)
             mTileArray[row-1][col].increaseMineCount();
 
-        //if there are tiles right of the position
+        //if there are tiles right of the positiongetHasSurroundingMine() == true
         if(row != mNumRows-1)
             mTileArray[row+1][col].increaseMineCount();
     }
@@ -113,18 +120,18 @@ public class Board_Util{
             return;
 
         //if there are tiles left of the postion
-        if(row != 0 && mTileArray[row-1][col+1].getHasSurroundingMine() == true)
+        if(row != 0 && mTileArray[row-1][col+1].getMineCount() > 0)
             mTileArray[row-1][col+1].displaySurroundingMines();
         else
             revealAbove(row-1, col+1);
 
-        if(mTileArray[row-1][col+1].getHasSurroundingMine() == true)
+        if(mTileArray[row-1][col+1].getMineCount() > 0)
             mTileArray[row][col+1].displaySurroundingMines();
         else
             revealAbove(row-1, col+1);
 
         //if there are tiles right of the position
-        if(row != mNumRows-1 && mTileArray[row+1][col+1].getHasSurroundingMine() == true)
+        if(row != mNumRows-1 && mTileArray[row+1][col+1].getMineCount() > 0)
             mTileArray[row+1][col+1].displaySurroundingMines();
         else
             revealAbove(row+1, col+1);
@@ -136,18 +143,18 @@ public class Board_Util{
             return;
 
         ///if there are tiles left of the postion
-        if(row != 0 && mTileArray[row-1][col-1].getHasSurroundingMine() == true)
+        if(row != 0 && mTileArray[row-1][col-1].getMineCount() > 0)
             mTileArray[row-1][col-1].displaySurroundingMines();
         else
             revealAbove(row-1, col-1);
 
-        if(mTileArray[row-1][col-1].getHasSurroundingMine() == true)
+        if(mTileArray[row-1][col-1].getMineCount() > 0)
             mTileArray[row][col-1].displaySurroundingMines();
         else
             revealAbove(row-1, col-1);
 
         //if there are tiles right of the position
-        if(row != mNumRows-1 && mTileArray[row+1][col-1].getHasSurroundingMine() == true)
+        if(row != mNumRows-1 && mTileArray[row+1][col-1].getMineCount() > 0)
             mTileArray[row+1][col-1].displaySurroundingMines();
         else
             revealAbove(row+1, col-1);
@@ -155,18 +162,110 @@ public class Board_Util{
 
     private void revealSides(int row, int col){
         //if there are tiles left of the postion
-        if(row != 0 && mTileArray[row-1][col].getHasSurroundingMine() == true)
+        if(row != 0 && mTileArray[row-1][col].getMineCount() > 0)
             mTileArray[row-1][col].displaySurroundingMines();
         else
             revealSides(row-1, col);
 
         //if there are tiles right of the position
-        if(row != mNumRows-1 && mTileArray[row+1][col].getHasSurroundingMine() == true)
+        if(row != mNumRows-1 && mTileArray[row+1][col].getMineCount() > 0)
             mTileArray[row+1][col].displaySurroundingMines();
         else
             revealSides(row+1, col);
 
     }
+
+    ///////////////////////////////
+    /*Methods that initialize the board*/
+    //////////////////////////////
+        /*
+         * Initializes the board for mTileArray by cleaning all of the tiles, then calls
+         * placeMines which randomly sets in the desired amount of mines,
+         * it then will set the risk of nearby mines
+         */
+        public void initBoard() {
+            for (int i = 0; i < mNumRows; i++) {
+                for (int j = 0; j < mNumCols; j++) {
+                    mTileArray[i][j].cleanTile();
+                }
+            }
+            placeMines();
+            setRiskNum();
+        }
+
+        /*
+         * Places all of the mines to mNumMines
+         * it calls setMine to be placed randomly
+         */
+        private void placeMines() {
+            for (int i = 0; i < mNumMines; i++) {
+                setMine();
+            }
+        }
+
+        /*
+         * setMine() is a helper function of placeMines()
+         * randomly places a mine inside the board
+         */
+        private void setMine() {
+            int x = random.nextInt(mNumRows);
+            int y = random.nextInt(mNumCols);
+
+            if (!mTileArray[x][y].getIsMine()) {
+                mTileArray[x][y].setIsMine(true);
+            } else {
+                setMine();
+            }
+        }
+
+        /*
+         * setRiskNum() accesses the number of mines around a tile
+         */
+        private void setRiskNum() {
+            for (int i = 0; i < mNumRows; i++) {
+                int leftOne = i - 1;
+                int rightOne = i + 1;
+
+                for (int j = 0; j < mNumCols; j++) {
+                    int downOne = j - 1;
+                    int upOne = j + 1;
+
+                    int mineRisk = 0;
+
+                    /*
+                    *Starts from bottom left of tile and checks in a clockwise pattern
+                    */
+                    if (leftOne >= 0 && downOne >= 0 && mTileArray[leftOne][downOne].getIsMine()) {
+                        mineRisk++;
+                    }
+                    if (leftOne >= 0 && mTileArray[leftOne][j].getIsMine()) {
+                        mineRisk++;
+                    }
+                    if (leftOne >= 0 && upOne < mNumCols && mTileArray[leftOne][upOne].getIsMine()) {
+                        mineRisk++;
+                    }
+                    if (upOne < mNumCols && mTileArray[i][upOne].getIsMine()) {
+                        mineRisk++;
+                    }
+                    if (rightOne < mNumRows && upOne < mNumCols && mTileArray[rightOne][upOne].getIsMine()) {
+                        mineRisk++;
+                    }
+                    if (rightOne < mNumRows && mTileArray[rightOne][j].getIsMine()) {
+                        mineRisk++;
+                    }
+                    if (rightOne < mNumRows && mTileArray[rightOne][downOne].getIsMine()) {
+                        mineRisk++;
+                    }
+                    if (downOne >= 0 && mTileArray[i][downOne].getIsMine()) {
+                        mineRisk++;
+                    }
+
+
+                    mTileArray[i][j].setMineCount(mineRisk);
+                    System.out.print(mineRisk);
+                }
+            }
+        }
 
 
 }

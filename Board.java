@@ -3,7 +3,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.lang.Exception;
-import java.util.Random;
 
 /*
 The below imports need to be adjusted to only import the
@@ -17,12 +16,6 @@ import javax.imageio.*;
 public class Board {
     /* Centralized location for Board constants */
     static int tileSize = 30;
-    private Random random;
-    private Tile[][] buttonGrid;
-    private int mNumRows;
-    private int mNumCols;
-    private int mNumMines;
-
 
     Board(int rowLength, int colLength, int mines) {
         /* EventQueue.invokeLater() is necessary to avoid window hanging */
@@ -30,10 +23,6 @@ public class Board {
     }
 
     private void initGame(int numCols, int numRows, int mines) {
-
-        mNumCols = numCols;
-        mNumRows = numRows;
-        mNumMines = mines;
         /*
          *  JFrame game is the board window
          *  JFrame info is the information window
@@ -99,15 +88,12 @@ public class Board {
         Tile tileGrid[][] = new Tile[numRows][numCols];
         JPanel masterPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 0, 5));
         try {
-//          Image img = ImageIO.read(getClass().getResource("Resources/Number1.png"));
             for (int i = 0; i < numRows; i++) {
                 JPanel tempPanel = new JPanel(new GridLayout(numCols, 1));
 
                 for (int j = 0; j < numCols; j++) {
                     tileGrid[i][j] = new Tile();
                     tileGrid[i][j].setMargin(new Insets(0, 0, 0, 0));
-//                  newButton.setIcon( new ImageIcon(img) );
-                    tileGrid[i][j].setText(i + "," + j);
                     tileGrid[i][j].setPreferredSize(new Dimension(tileSize, tileSize));
                     tempPanel.add(tileGrid[i][j]);
                 }
@@ -136,88 +122,11 @@ public class Board {
             }
         });
 
-
+        Game_Driver gameStart = new Game_Driver(game, tileGrid, numRows, numCols, mines, flags);
     }
 
     public static void main(String[] args) {
         /* Empty main() */
-    }
-
-
-    /*
-     * Initializes the board for buttonGrid by cleaning all of the tiles, then calls
-     * placeMines which randomly sets in the desired amount of mines,
-     * it then will set the risk of nearby mines
-     */
-    public void initBoard() {
-        for (int i = 0; i < mNumRows; i++) {
-            for (int j = 0; j < mNumCols; j++) {
-                buttonGrid[i][j].cleanTile();
-            }
-        }
-        placeMines();
-        setRiskNum();
-    }
-
-    /*
-     * Places all of the mines to mNumMines
-     * it calls setMine to be placed randomly
-     */
-    private void placeMines() {
-        for (int i = 0; i < mNumMines; i++) {
-            setMine();
-        }
-    }
-
-    /*
-     * setMine() is a helper function of placeMines()
-     * randomly places a mine inside the board
-     */
-    private void setMine() {
-        int x = random.nextInt(mNumRows);
-        int y = random.nextInt(mNumCols);
-
-        if (!buttonGrid[x][y].getIsMine()) {
-            buttonGrid[x][y].setIsMine(true);
-        } else {
-            setMine();
-        }
-    }
-
-    /*
-     * setRiskNum() accesses the number of mines around a tile
-     */
-    private void setRiskNum() {
-        for (int i = 0; i < mNumRows; i++) {
-            for (int j = 0; j < mNumCols; j++) {
-                int leftOne = i - 1;
-                int rightOne = i + 1;
-                int downOne = j - 1;
-                int upOne = j + 1;
-
-                int mineRisk = 0;
-
-                if (leftOne >= 0 && downOne >= 0 && buttonGrid[leftOne][downOne].getIsMine())
-                    mineRisk++;
-                if (leftOne >= 0 && buttonGrid[leftOne][j].getIsMine())
-                    mineRisk++;
-                if (leftOne >= 0 && upOne < mNumCols && buttonGrid[leftOne][upOne].getIsMine())
-                    mineRisk++;
-                if (downOne >= 0 && buttonGrid[i][downOne].getIsMine())
-                    mineRisk++;
-                if (upOne < mNumCols && buttonGrid[i][upOne].getIsMine())
-                    mineRisk++;
-                if (rightOne < mNumRows && buttonGrid[rightOne][downOne].getIsMine())
-                    mineRisk++;
-                if (rightOne < mNumRows && buttonGrid[rightOne][j].getIsMine())
-                    mineRisk++;
-                if (rightOne < mNumRows && upOne < mNumCols && buttonGrid[rightOne][upOne].getIsMine())
-                    mineRisk++;
-
-                buttonGrid[i][j].setMineCount(mineRisk);
-                System.out.print(mineRisk);
-            }
-        }
     }
 
 }
