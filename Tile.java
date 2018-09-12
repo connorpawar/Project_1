@@ -4,30 +4,27 @@ import java.awt.event.*;
 
 public class Tile extends JButton {
 
-    static final int mWidth = 20;
-    static final int mHieght = 20;
+    static final int mWidth = 30;
+    static final int mHieght = 30;
 
     int mSurroundingMines;
-    boolean mHasSurroundingMine;
     boolean mFlagged;
     boolean mIsMine;
     private int x;
     private int y;
 
-    ImageIcon mFlaggedIcon;
-    ImageIcon mMineIcon;
-
+    final static ImageIcon mFlaggedIcon = new ImageIcon("Resources/flag.png");
+    final static ImageIcon mMineIcon = new ImageIcon("Resources/MineIcon.png");
+    final static ImageIcon mTileIcon = new ImageIcon("Resources/TileIcon.png");
     //constructor
     public Tile() {
         super();
 
-        mFlaggedIcon = new ImageIcon("americanFlagIcon.png");
-        mMineIcon = new ImageIcon("MineIcon.png");
+
         mSurroundingMines = 0;
         mFlagged = false;
         mIsMine= false;
-        mHasSurroundingMine = false;
-
+        setIcon(mTileIcon);
         this.setVisible(true);
         this.setSize(mWidth, mHieght);
     }
@@ -45,7 +42,6 @@ public class Tile extends JButton {
     public boolean getFlagged(){return mFlagged;}
     public Integer getMineCount(){ return mSurroundingMines;}
     public boolean getIsMine(){ return mIsMine;}
-    public boolean getHasSurroundingMine(){return mHasSurroundingMine;}
 
     //Setters
     public void setFlagged(boolean flagged){
@@ -73,14 +69,12 @@ public class Tile extends JButton {
 
     public void setMineCount(int mineCount){
          mSurroundingMines = mineCount;
-         if(mSurroundingMines > 0 )
-            mHasSurroundingMine = true;
      }
+
     public void setIsMine(boolean isMine){ mIsMine = isMine;}
 
     public void increaseMineCount(){
         mSurroundingMines += 1;
-        mHasSurroundingMine = true;
     }
 
     //sets the text on the tile showing how many mines are near
@@ -98,14 +92,15 @@ public class Tile extends JButton {
         if(SwingUtilities.isLeftMouseButton(MouseEvent)){//TODO get MouseEvent
             if(mIsMine){
                 //TODO game over
-            }else{
-                if(mHasSurroundingMine)
+            }
+            else{
+                if(mSurroundingMines > 0){
                     displaySurroundingMines();
-                else
+                }
+                else{
                     //revealExpanding();
-
+                }
                 this.setEnabled(false);
-
             }
         }else if(SwingUtilities.isRightMouseButton(MouseEvent)){
             setFlagged(!mFlagged);
@@ -117,5 +112,6 @@ public class Tile extends JButton {
         mSurroundingMines = 0;
         mFlagged = false;
         mIsMine = false;
+        setIcon(mTileIcon);
     }
 }
