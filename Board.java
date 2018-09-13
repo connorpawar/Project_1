@@ -93,6 +93,10 @@ public class Board {
 
                 for (int j = 0; j < numCols; j++) {
                     tileGrid[i][j] = new Tile();
+                    tileGrid[i][j].setMargin(new Insets(0, 0, 0, 0));
+                    tileGrid[i][j].setPreferredSize(new Dimension(tileSize, tileSize));
+                    tileGrid[i][j].setX(i);
+                    tileGrid[i][j].setY(j);
                     tempPanel.add(tileGrid[i][j]);
                 }
                 masterPanel.add(tempPanel);

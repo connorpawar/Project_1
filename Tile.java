@@ -5,25 +5,24 @@ import java.io.IOException;
 
 public class Tile extends JButton {
     /* Contants for Tiles */
-    static final int mTileSize = 30;
+    private static final int mTileSize = 30;
 
     /* Member variables of tiles */
-    int mSurroundingMines;
-    boolean mHasSurroundingMine;
-    boolean mFlagged;
-    boolean mIsMine;
-    boolean mOpened;
+    private int mSurroundingMines;
+    private boolean mFlagged;
+    private boolean mIsMine;
+    private boolean mOpened;
     private int x;
     private int y;
 
     /* The ImageIcons used to display the icons */
-    static ImageIcon mFlaggedIcon;
-    static ImageIcon mMineIcon;
-    static ImageIcon mTileIcon;
-    static ImageIcon mPressedIcon;
+    private static ImageIcon mFlaggedIcon;
+    private static ImageIcon mMineIcon;
+    private static ImageIcon mTileIcon;
+    private static ImageIcon mPressedIcon;
 
     //constructor
-    public Tile() {
+    Tile() {
         super();
 
 
@@ -40,13 +39,13 @@ public class Tile extends JButton {
         addActionListener(e -> {
 
             if (mIsMine) {
-                setMineImage(true);
+                setIcon(mMineIcon);
                 Game_Driver.gameOver();
             } else {
                 if (mSurroundingMines != 0) {
-                    displaySurroundingMines();
+                    setIcon(null);
+                    setText(Integer.toString(mSurroundingMines));
                 } else {
-                    setIcon(mPressedIcon);
                     Game_Driver.openTile(x, y);
                 }
             }
@@ -61,11 +60,11 @@ public class Tile extends JButton {
         return mFlagged;
     }
 
-    public Integer getMineCount() {
+    Integer getSurroundingMines() {
         return mSurroundingMines;
     }
 
-    public boolean getIsMine() {
+    boolean getIsMine() {
         return mIsMine;
     }
 
@@ -73,12 +72,8 @@ public class Tile extends JButton {
         return mOpened;
     }
 
-    public boolean canOpen() {
-        return (!mOpened && mSurroundingMines == 0);
-    }
-
-    public boolean getHasSurroundingMine() {
-        return mHasSurroundingMine;
+    boolean canOpen() {
+        return (!mOpened);
     }
 
     /////////////////////////////////////////////////////////
@@ -116,34 +111,38 @@ public class Tile extends JButton {
                 e1.printStackTrace();
             }
             mPressedIcon = new ImageIcon(img);
+
+
         } catch (Exception e) {
             System.out.println("ImageIcons not set successfully.");
         }
     }
 
+    public void setMine(){
+        setIcon(mMineIcon);
+    }
+
+    void setX(int i){
+        x = i;
+    }
+
+    void setY(int j){
+        y = j;
+    }
+
     public void setFlagged(boolean flagged) {
         if (flagged) {
-            setIcon(mFlaggedIcon);
+            this.setIcon(mFlaggedIcon);
         } else {
-            setIcon(mTileIcon);
+            this.setIcon(mTileIcon);
         }
-
-        mFlagged = flagged;
     }
 
-    public void setMineImage(boolean show) {
-
-        if (show == true)
-            setIcon(mMineIcon);
-        else
-            setIcon(mTileIcon);
-    }
-
-    public void setMineCount(int mineCount) {
+    void setSurroundingMines(int mineCount) {
         mSurroundingMines = mineCount;
     }
 
-    public void setIsMine(boolean isMine) {
+    void setIsMine(boolean isMine) {
         mIsMine = isMine;
     }
 
@@ -151,20 +150,20 @@ public class Tile extends JButton {
     //METHODS
     /////////////////////////////////////////////////////////
 
-    public void increaseMineCount() {
+    void increaseSurroundingMines() {
         mSurroundingMines += 1;
     }
 
     //sets the text on the tile showing how many mines are near
-    public void displaySurroundingMines() {
+    void displaySurroundingMines(){
         //we will not display 0 for number of mines
 
         if (mSurroundingMines == 0) {
             setIcon(mPressedIcon);
         } else if (mSurroundingMines > 0) {
             try {
-                Image img = ImageIO.read(getClass().getResource("Resources/Number" + mSurroundingMines + ".png"));
-                setIcon(new ImageIcon(img));
+                setIcon(null);
+                setText(Integer.toString(mSurroundingMines));
             } catch (Exception e) {
                 System.out.println("Error in displaying numbered tile.");
             }
@@ -199,11 +198,7 @@ public class Tile extends JButton {
         setIcon(mTileIcon);
     }
 
-    public void setmHasSurroundingMine() {
-        mHasSurroundingMine = true;
-    }
-
-    public void setIsOpened() {
+    void setIsOpened() {
         mOpened = true;
     }
 }

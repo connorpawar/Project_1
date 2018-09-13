@@ -151,6 +151,7 @@ public class Menu {
         /*Currently using this commented block to test the
          * Board and Menu class while an entrance function/driver class
          * has not been created/determined*/
+        new Tile().setIcons();
         Menu startGame = new Menu();
     }
 

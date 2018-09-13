@@ -32,7 +32,7 @@ public class Game_Driver {
         for (int i = 0; i < 0; i++) {
             for (int j = 0; j < 0; j++) {
                 if (mTileArray[i][j].getIsMine())
-                    mTileArray[i][j].setMineImage(true);
+                    mTileArray[i][j].setMine();
 
                 mTileArray[i][j].setEnabled(false);
             }
@@ -71,13 +71,13 @@ public class Game_Driver {
 
         //if there are tiles left of the postion
         if (row != 0)
-            mTileArray[row - 1][col + 1].increaseMineCount();
+            mTileArray[row - 1][col + 1].increaseSurroundingMines();
 
-        mTileArray[row][col + 1].increaseMineCount();
+        mTileArray[row][col + 1].increaseSurroundingMines();
 
         //if there are tiles right of the position
         if (row != mNumRows - 1)
-            mTileArray[row + 1][col + 1].increaseMineCount();
+            mTileArray[row + 1][col + 1].increaseSurroundingMines();
     }
 
     private void incrementBelow(int row, int col) {
@@ -87,23 +87,23 @@ public class Game_Driver {
 
         //if there are tiles left of the postion
         if (row != 0)
-            mTileArray[row - 1][col - 1].increaseMineCount();
+            mTileArray[row - 1][col - 1].increaseSurroundingMines();
 
-        mTileArray[row][col - 1].increaseMineCount();
+        mTileArray[row][col - 1].increaseSurroundingMines();
 
         //if there are tiles right of the position
         if (row != mNumRows - 1)
-            mTileArray[row + 1][col - 1].increaseMineCount();
+            mTileArray[row + 1][col - 1].increaseSurroundingMines();
     }
 
     private void incrementSides(int row, int col) {
         //if there are tiles left of the postion
         if (row != 0)
-            mTileArray[row - 1][col].increaseMineCount();
+            mTileArray[row - 1][col].increaseSurroundingMines();
 
         //if there are tiles right of the positiongetHasSurroundingMine() == true
         if (row != mNumRows - 1)
-            mTileArray[row + 1][col].increaseMineCount();
+            mTileArray[row + 1][col].increaseSurroundingMines();
     }
 
 
@@ -117,18 +117,18 @@ public class Game_Driver {
             return;
 
         //if there are tiles left of the position
-        if (row != 0 && mTileArray[row - 1][col + 1].getMineCount() > 0)
+        if (row != 0 && mTileArray[row - 1][col + 1].getSurroundingMines() > 0)
             mTileArray[row - 1][col + 1].displaySurroundingMines();
         else
             revealAbove(row - 1, col + 1);
 
-        if (mTileArray[row - 1][col + 1].getMineCount() > 0)
+        if (mTileArray[row - 1][col + 1].getSurroundingMines() > 0)
             mTileArray[row][col + 1].displaySurroundingMines();
         else
             revealAbove(row - 1, col + 1);
 
         //if there are tiles right of the position
-        if (row != mNumRows - 1 && mTileArray[row + 1][col + 1].getMineCount() > 0)
+        if (row != mNumRows - 1 && mTileArray[row + 1][col + 1].getSurroundingMines() > 0)
             mTileArray[row + 1][col + 1].displaySurroundingMines();
         else
             revealAbove(row + 1, col + 1);
@@ -140,18 +140,18 @@ public class Game_Driver {
             return;
 
         ///if there are tiles left of the position
-        if (row != 0 && mTileArray[row - 1][col - 1].getMineCount() > 0)
+        if (row != 0 && mTileArray[row - 1][col - 1].getSurroundingMines() > 0)
             mTileArray[row - 1][col - 1].displaySurroundingMines();
         else
             revealAbove(row - 1, col - 1);
 
-        if (mTileArray[row - 1][col - 1].getMineCount() > 0)
+        if (mTileArray[row - 1][col - 1].getSurroundingMines() > 0)
             mTileArray[row][col - 1].displaySurroundingMines();
         else
             revealAbove(row - 1, col - 1);
 
         //if there are tiles right of the position
-        if (row != mNumRows - 1 && mTileArray[row + 1][col - 1].getMineCount() > 0)
+        if (row != mNumRows - 1 && mTileArray[row + 1][col - 1].getSurroundingMines() > 0)
             mTileArray[row + 1][col - 1].displaySurroundingMines();
         else
             revealAbove(row + 1, col - 1);
@@ -159,13 +159,13 @@ public class Game_Driver {
 
     private static void revealSides(int row, int col) {
         //if there are tiles left of the postion
-        if (row != 0 && mTileArray[row - 1][col].getMineCount() > 0)
+        if (row != 0 && mTileArray[row - 1][col].getSurroundingMines() > 0)
             mTileArray[row - 1][col].displaySurroundingMines();
         else
             revealSides(row - 1, col);
 
         //if there are tiles right of the position
-        if (row != mNumRows - 1 && mTileArray[row + 1][col].getMineCount() > 0)
+        if (row != mNumRows - 1 && mTileArray[row + 1][col].getSurroundingMines() > 0)
             mTileArray[row + 1][col].displaySurroundingMines();
         else
             revealSides(row + 1, col);
@@ -259,8 +259,7 @@ public class Game_Driver {
                 }
 
 
-                mTileArray[i][j].setMineCount(mineRisk);
-                mTileArray[i][j].setmHasSurroundingMine();
+                mTileArray[i][j].setSurroundingMines(mineRisk);
                 // System.out.println(mineRisk);
             }
         }
@@ -271,7 +270,7 @@ public class Game_Driver {
         mTileArray[i][j].setIsOpened();
         mTileArray[i][j].displaySurroundingMines();
 
-        if (!mTileArray[i][j].getHasSurroundingMine()) {
+        if (mTileArray[i][j].getSurroundingMines() == 0) {
             int leftOne = i - 1;
             int rightOne = i + 1;
             int downOne = j - 1;
@@ -287,7 +286,7 @@ public class Game_Driver {
                 openTile(i, downOne);
             if (upOne < mNumCols && mTileArray[i][upOne].canOpen())
                 openTile(i, upOne);
-            if (rightOne < mNumRows && mTileArray[rightOne][downOne].canOpen())
+            if (rightOne < mNumRows && downOne >= 0 && mTileArray[rightOne][downOne].canOpen())
                 openTile(rightOne, downOne);
             if (rightOne < mNumRows && mTileArray[rightOne][j].canOpen())
                 openTile(rightOne, j);
