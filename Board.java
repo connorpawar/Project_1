@@ -16,6 +16,8 @@ import javax.imageio.*;
 public class Board {
     /* Centralized location for Board constants */
     static int tileSize = 30;
+    static int mNumFlags;
+    static JLabel flags;
 
     Board(int rowLength, int colLength, int mines) {
         /* EventQueue.invokeLater() is necessary to avoid window hanging */
@@ -30,7 +32,7 @@ public class Board {
          */
         JFrame game = new JFrame();
         JFrame info = new JFrame();
-
+        mNumFlags = mines;
         /*
         Below are the JFrame values being set, documented by the related
         function name used to set the JFrame characteristic
@@ -49,7 +51,7 @@ public class Board {
          * Below is the JLabel being created to show the current number of flags
          * available to the player.
          */
-        JLabel flags = new JLabel();
+        flags = new JLabel();
         flags.setText("Flags Available: " + Integer.toString(mines));
         try {
             Image img = ImageIO.read(getClass().getResource("Resources/flag.png"));
@@ -123,6 +125,31 @@ public class Board {
         });
 
         Game_Driver gameStart = new Game_Driver(game, tileGrid, numRows, numCols, mines, flags);
+    }
+
+    static public void incrementDownFlagCount(){
+        mNumFlags -= 1;
+        try {
+            if (Integer.parseInt(flags.getText().replaceAll("[^\\d]", "")) == 0) {
+                throw new NumberFormatException();
+            }
+            flags.setText("Flags Available: " + Integer.toString(mNumFlags));
+        } catch (NumberFormatException e) {
+            System.out.println(flags.getText());
+        }
+    }
+
+    static public void incrementUpFlagCount(){
+        mNumFlags += 1;
+
+        try {
+            if (Integer.parseInt(flags.getText().replaceAll("[^\\d]", "")) == 0) {
+                throw new NumberFormatException();
+            }
+            flags.setText("Flags Available: " + Integer.toString(mNumFlags));
+        } catch (NumberFormatException e) {
+            System.out.println(flags.getText());
+        }
     }
 
     public static void main(String[] args) {

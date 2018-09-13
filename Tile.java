@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.event.*;
 
 public class Tile extends JButton {
 
@@ -30,20 +31,7 @@ public class Tile extends JButton {
         this.setSize(mWidth, mHieght);
         this.setVisible(true);
 
-        this.addActionListener(e -> {
-
-            if(mIsMine){
-                setMineImage(true);
-                Game_Driver.gameOver();
-            }else{
-                if(mSurroundingMines != 0){
-                    displaySurroundingMines();
-                }else{
-                    this.setIcon(mPressedIcon);
-                    Game_Driver.revealExpanding(x,y);
-                }
-            }
-        });
+        this.addMouseListener(mouseListener);
     }
 
     /////////////////////////////////////////////////////////
@@ -58,11 +46,23 @@ public class Tile extends JButton {
     //Setters
     /////////////////////////////////////////////////////////
 
+    public void setNullIcon(){
+        this.setIcon(null);
+        setDisable();
+    }
+
+    public void setDisable(){
+        this.setEnabled(false);
+        this.removeMouseListener(mouseListener);
+    }
+
     public void setFlagged(boolean flagged){
         if(flagged){
             this.setIcon(mFlaggedIcon);
+            Board.incrementDownFlagCount();
         }else{
             this.setIcon(mTileIcon);
+            Board.incrementUpFlagCount();
         }
 
         mFlagged = flagged;
@@ -101,30 +101,35 @@ public class Tile extends JButton {
             this.setIcon(null);
             this.setText(Integer.toString(mSurroundingMines));
         }
+        setDisable();
     }
 
+    MouseListener mouseListener = new MouseAdapter() {
+        public void mousePressed(MouseEvent mouseEvent) {
+            int modifiers = mouseEvent.getModifiers();
+            //left button clicked
+            if ((modifiers & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
+                if(mIsMine){
+                    setMineImage(true);
+                    Game_Driver.gameOver();
+                }else{
+                    if(mFlagged)
+                        setFlagged(!mFlagged);
 
-
-    /*public void actionPerformed(ActionEvent e) {
-
-        if(SwingUtilities.isLeftMouseButton(MouseEvent)){//TODO get MouseEvent
-            if(mIsMine){
-                //TODO game over
-            }
-            else{
-                if(mSurroundingMines > 0){
-                    displaySurroundingMines();
+                    if(mSurroundingMines > 0){
+                        displaySurroundingMines();
+                    }else{
+                        setNullIcon();
+                        Game_Driver.revealExpanding(x,y);
+                    }
                 }
-                else{
-                    //revealExpanding();
-                }
-                this.setEnabled(false);
             }
-        }else if(SwingUtilities.isRightMouseButton(MouseEvent)){
-            setFlagged(!mFlagged);
+            //right button clicked
+            if ((modifiers & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
+              setFlagged(!mFlagged);
+            }
         }
-    }*/
-
+    };
 
     public void cleanTile() {
         mSurroundingMines = 0;
