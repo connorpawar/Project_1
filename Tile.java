@@ -1,4 +1,8 @@
+//import javax.swing.*;
+//import java.awt.event.*;
+
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 
 
@@ -16,6 +20,8 @@ public class Tile extends JButton {
     final static ImageIcon mFlaggedIcon = new ImageIcon("Resources/flag.png");
     final static ImageIcon mMineIcon = new ImageIcon("Resources/MineIcon.png");
     final static ImageIcon mTileIcon = new ImageIcon("Resources/TileIcon.png");
+    final static ImageIcon numberIcon = new ImageIcon("Resources/Number8.png ");
+
     //constructor
     public Tile() {
         super();
@@ -23,59 +29,53 @@ public class Tile extends JButton {
 
         mSurroundingMines = 0;
         mFlagged = false;
-        mIsMine= false;
+        mIsMine= true;
         setIcon(mTileIcon);
         this.setVisible(true);
         this.setSize(mWidth, mHieght);
-    }
 
-    public void finishConstucting(){
-        this.addMouseListener(new MouseAdapter(){
-            @Override
-            public void mouseClicked(MouseEvent e){
+        this.addActionListener(e -> {
 
-                if(mIsMine){
-                    //TODO game over
-                }else{
-                    if(mHasSurroundingMine)
-                        displaySurroundingMines();
-                    //else
-                        //revealExpanding();
-                }
-
-                //this.setEnabled(false);
-
+            if(mIsMine){
+                setMineImage(true);
+                //TODO game over
+            }else{
+                if(mSurroundingMines != 0)
+                    displaySurroundingMines();
+                //else
+                //TODO call revealExpanding() in Game driver
             }
         });
     }
 
+    /////////////////////////////////////////////////////////
     //Getters
+    /////////////////////////////////////////////////////////
+
     public boolean getFlagged(){return mFlagged;}
     public Integer getMineCount(){ return mSurroundingMines;}
     public boolean getIsMine(){ return mIsMine;}
 
+    /////////////////////////////////////////////////////////
     //Setters
+    /////////////////////////////////////////////////////////
+
     public void setFlagged(boolean flagged){
         if(flagged){
             this.setIcon(mFlaggedIcon);
         }else{
-            this.setIcon(null);
-            this.setText("");
+            this.setIcon(mTileIcon);
         }
 
         mFlagged = flagged;
     }
 
     public void setMineImage(boolean show){
-        if(!this.getIsMine())
-            return ;
 
         if(show == true)
             this.setIcon(mMineIcon);
-        else{
-            this.setIcon(null);
-            this.setText("");
-        }
+        else
+            this.setIcon(mTileIcon);
     }
 
     public void setMineCount(int mineCount){
@@ -84,6 +84,10 @@ public class Tile extends JButton {
 
     public void setIsMine(boolean isMine){ mIsMine = isMine;}
 
+    /////////////////////////////////////////////////////////
+    //METHODS
+    /////////////////////////////////////////////////////////
+
     public void increaseMineCount(){
         mSurroundingMines += 1;
     }
@@ -91,12 +95,50 @@ public class Tile extends JButton {
     //sets the text on the tile showing how many mines are near
     public void displaySurroundingMines(){
         //we will not display 0 for number of mines
-        if(mSurroundingMines == 0)
-            return;
 
-        String SurroundingMinesString = Integer.toString(mSurroundingMines);
-        this.setText(SurroundingMinesString);
+
+        this.setIcon(null);
+        this.setText(Integer.toString(mSurroundingMines));
+
+        if(mSurroundingMines == 0){
+            this.setIcon(null);
+        }else if(mSurroundingMines > 0){
+            /*ImageIcon numberIcon = new ImageIcon("Resources/Number" + Integer.toString(mSurroundingMines) + ".png ");
+            this.setIcon( numberIcon );*/
+
+            this.setIcon(null);
+            this.setText(Integer.toString(mSurroundingMines));
+        }
+
+        /*String SurroundingMinesString = Integer.toString(mSurroundingMines);
+        this.setText(SurroundingMinesString);*/
     }
+
+    /*public void finishConstucting(){
+        this.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+
+                if(mIsMine){
+                    setMineImage(true);
+                    //TODO game over
+                }else{
+                    if(mSurroundingMines > 0)
+                        displaySurroundingMines();
+                    //else
+                    //TODO call revealExpanding() in Game driver
+                        //revealExpanding();
+                }
+
+                //this.setEnabled(false);
+
+            }
+        });
+
+        this.setEnabled(false);
+
+    }*/
+
 
     /*public void actionPerformed(ActionEvent e) {
 
