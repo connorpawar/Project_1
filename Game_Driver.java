@@ -4,7 +4,7 @@ import java.util.Random;
 public class Game_Driver{
     JFrame mGameBoard;
     private static Tile mTileArray[][];
-    private Random random;
+    private Random random = new Random();
     static int mNumRows;
     static int mNumCols;
     static int mNumMines;
@@ -115,11 +115,11 @@ public class Game_Driver{
     //////////////////////////////
 
     private static void revealAbove(int row, int col){
-        //if there are no tiles above the postion
+        //if there are no tiles above the position
         if(col == 0)
             return;
 
-        //if there are tiles left of the postion
+        //if there are tiles left of the position
         if(row != 0 && mTileArray[row-1][col+1].getMineCount() > 0)
             mTileArray[row-1][col+1].displaySurroundingMines();
         else
@@ -138,11 +138,11 @@ public class Game_Driver{
     }
 
     private static void revealBelow(int row, int col){
-        //if there are no tiles below the postion
+        //if there are no tiles below the position
         if(col == mNumCols-1)
             return;
 
-        ///if there are tiles left of the postion
+        ///if there are tiles left of the position
         if(row != 0 && mTileArray[row-1][col-1].getMineCount() > 0)
             mTileArray[row-1][col-1].displaySurroundingMines();
         else
@@ -254,7 +254,7 @@ public class Game_Driver{
                     if (rightOne < mNumRows && mTileArray[rightOne][j].getIsMine()) {
                         mineRisk++;
                     }
-                    if (rightOne < mNumRows && mTileArray[rightOne][downOne].getIsMine()) {
+                    if (rightOne < mNumRows && downOne >= 0 && mTileArray[rightOne][downOne].getIsMine()) {
                         mineRisk++;
                     }
                     if (downOne >= 0 && mTileArray[i][downOne].getIsMine()) {
@@ -263,7 +263,7 @@ public class Game_Driver{
 
 
                     mTileArray[i][j].setMineCount(mineRisk);
-                    System.out.print(mineRisk);
+                    System.out.println(mineRisk);
                 }
             }
         }
