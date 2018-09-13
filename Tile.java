@@ -6,8 +6,10 @@ public class Tile extends JButton {
     static final int mHieght = 30;
 
     int mSurroundingMines;
+    boolean mHasSurroundingMine;
     boolean mFlagged;
     boolean mIsMine;
+    boolean mOpened;
     private int x;
     private int y;
 
@@ -40,7 +42,7 @@ public class Tile extends JButton {
                     displaySurroundingMines();
                 }else{
                     this.setIcon(mPressedIcon);
-                    Game_Driver.revealExpanding(x,y);
+                    Game_Driver.openTile(x,y);
                 }
             }
         });
@@ -53,6 +55,9 @@ public class Tile extends JButton {
     public boolean getFlagged(){return mFlagged;}
     public Integer getMineCount(){ return mSurroundingMines;}
     public boolean getIsMine(){ return mIsMine;}
+    public boolean getIsOpened(){return mOpened;}
+    public boolean canOpen(){return(!mOpened && mSurroundingMines == 0);}
+    public boolean getHasSurroundingMine(){return mHasSurroundingMine;}
 
     /////////////////////////////////////////////////////////
     //Setters
@@ -130,5 +135,13 @@ public class Tile extends JButton {
         mFlagged = false;
         mIsMine = false;
         setIcon(mTileIcon);
+    }
+
+    public void setmHasSurroundingMine(){
+        mHasSurroundingMine = true;
+    }
+
+    public void setIsOpened(){
+        mOpened = true;
     }
 }

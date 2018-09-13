@@ -263,10 +263,43 @@ public class Game_Driver{
 
 
                     mTileArray[i][j].setMineCount(mineRisk);
+                    mTileArray[i][j].setmHasSurroundingMine();
                     System.out.println(mineRisk);
                 }
             }
         }
+
+    public static void openTile(int i, int j) {
+
+        mTileArray[i][j].setIsOpened();
+
+        if (!mTileArray[i][j].getHasSurroundingMine()) {
+            int leftOne = i - 1;
+            int rightOne = i + 1;
+            int downOne = j - 1;
+            int upOne = j + 1;
+
+            if (leftOne >= 0 && downOne >= 0 && mTileArray[leftOne][downOne].canOpen())
+                openTile(leftOne, downOne);
+            if (leftOne >= 0 && mTileArray[leftOne][j].canOpen())
+                openTile(leftOne, j);
+            if (leftOne >= 0 && upOne < mNumCols && mTileArray[leftOne][upOne].canOpen())
+                openTile(leftOne, upOne);
+            if (downOne >= 0 && mTileArray[i][downOne].canOpen())
+                openTile(i, downOne);
+            if (upOne < mNumCols && mTileArray[i][upOne].canOpen())
+                openTile(i, upOne);
+            if (rightOne < mNumRows && mTileArray[rightOne][downOne].canOpen())
+                openTile(rightOne, downOne);
+            if (rightOne < mNumRows && mTileArray[rightOne][j].canOpen())
+                openTile(rightOne, j);
+            if (rightOne < mNumRows && upOne < mNumCols && mTileArray[rightOne][upOne].canOpen())
+                openTile(rightOne, upOne);
+
+        }
+
+
+    }
 
 
 }
