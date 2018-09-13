@@ -63,7 +63,7 @@ public class Board {
          * by clicking the Tile updateFlags, this will be implemented as an extension
          * of the Tile class.
          */
-        Tile updateFlags = new Tile();
+        JButton updateFlags = new JButton();
         updateFlags.addActionListener((ActionEvent event) -> {
 
             try {
