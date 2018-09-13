@@ -29,7 +29,7 @@ public class Tile extends JButton {
 
         mSurroundingMines = 0;
         mFlagged = false;
-        mIsMine= true;
+        mIsMine= false;
         setIcon(mTileIcon);
         this.setVisible(true);
         this.setSize(mWidth, mHieght);
@@ -38,12 +38,14 @@ public class Tile extends JButton {
 
             if(mIsMine){
                 setMineImage(true);
-                //TODO game over
+                Game_Driver.gameOver();
             }else{
-                if(mSurroundingMines != 0)
+                if(mSurroundingMines != 0){
                     displaySurroundingMines();
-                //else
-                //TODO call revealExpanding() in Game driver
+                }else{
+                    this.setIcon(null);
+                    Game_Driver.revealExpanding(x,y);
+                }
             }
         });
     }
@@ -88,17 +90,11 @@ public class Tile extends JButton {
     //METHODS
     /////////////////////////////////////////////////////////
 
-    public void increaseMineCount(){
-        mSurroundingMines += 1;
-    }
+    public void increaseMineCount(){ mSurroundingMines += 1;}
 
     //sets the text on the tile showing how many mines are near
     public void displaySurroundingMines(){
         //we will not display 0 for number of mines
-
-
-        this.setIcon(null);
-        this.setText(Integer.toString(mSurroundingMines));
 
         if(mSurroundingMines == 0){
             this.setIcon(null);
@@ -109,35 +105,8 @@ public class Tile extends JButton {
             this.setIcon(null);
             this.setText(Integer.toString(mSurroundingMines));
         }
-
-        /*String SurroundingMinesString = Integer.toString(mSurroundingMines);
-        this.setText(SurroundingMinesString);*/
     }
 
-    /*public void finishConstucting(){
-        this.addMouseListener(new MouseAdapter(){
-            @Override
-            public void mouseClicked(MouseEvent e){
-
-                if(mIsMine){
-                    setMineImage(true);
-                    //TODO game over
-                }else{
-                    if(mSurroundingMines > 0)
-                        displaySurroundingMines();
-                    //else
-                    //TODO call revealExpanding() in Game driver
-                        //revealExpanding();
-                }
-
-                //this.setEnabled(false);
-
-            }
-        });
-
-        this.setEnabled(false);
-
-    }*/
 
 
     /*public void actionPerformed(ActionEvent e) {
