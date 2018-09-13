@@ -110,8 +110,8 @@ public class Menu {
          */
         menuButton.addActionListener(e -> {
             boolean error_exists = false;
-            int numRows = (Integer)field_rowLength.getSelectedItem();
-            int numCols = (Integer)field_colLength.getSelectedItem();
+            int numRows = (Integer) field_rowLength.getSelectedItem();
+            int numCols = (Integer) field_colLength.getSelectedItem();
 
             mineErr.setVisible(false);
             try {
