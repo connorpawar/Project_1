@@ -110,8 +110,8 @@ public class Menu {
          */
         menuButton.addActionListener(e -> {
             boolean error_exists = false;
-            int numRows = (Integer)field_rowLength.getSelectedItem();
-            int numCols = (Integer)field_colLength.getSelectedItem();
+            int numRows = (Integer) field_rowLength.getSelectedItem();
+            int numCols = (Integer) field_colLength.getSelectedItem();
 
             mineErr.setVisible(false);
             try {
@@ -151,6 +151,7 @@ public class Menu {
         /*Currently using this commented block to test the
          * Board and Menu class while an entrance function/driver class
          * has not been created/determined*/
+        new Tile().setIcons();
         Menu startGame = new Menu();
     }
 

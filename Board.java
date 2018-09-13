@@ -97,6 +97,8 @@ public class Board {
                     tileGrid[i][j] = new Tile();
                     tileGrid[i][j].setMargin(new Insets(0, 0, 0, 0));
                     tileGrid[i][j].setPreferredSize(new Dimension(tileSize, tileSize));
+                    tileGrid[i][j].setX(i);
+                    tileGrid[i][j].setY(j);
                     tempPanel.add(tileGrid[i][j]);
                 }
                 masterPanel.add(tempPanel);
@@ -124,7 +126,7 @@ public class Board {
             }
         });
 
-        Game_Driver gameStart = new Game_Driver(game, tileGrid, numRows, numCols, mines, flags);
+        Game_Driver gameStart = new Game_Driver(tileGrid, numRows, numCols, mines);
     }
 
     static public void incrementDownFlagCount(){

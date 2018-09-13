@@ -1,36 +1,41 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.*;
+import java.io.IOException;
 
 public class Tile extends JButton {
+    /* Contants for Tiles */
+    private static final int mTileSize = 30;
 
-    static final int mWidth = 30;
-    static final int mHieght = 30;
-
-    int mSurroundingMines;
-    boolean mFlagged;
-    boolean mIsMine;
+    /* Member variables of tiles */
+    private int mSurroundingMines;
+    private boolean mFlagged;
+    private boolean mIsMine;
+    private boolean mOpened;
     private int x;
     private int y;
 
-
-    final static ImageIcon mFlaggedIcon = new ImageIcon("Resources/flag.png");
-    final static ImageIcon mMineIcon = new ImageIcon("Resources/MineIcon.png");
-    final static ImageIcon mTileIcon = new ImageIcon("Resources/TileIcon.png");
-    final static ImageIcon numberIcon = new ImageIcon("Resources/Number8.png ");
-    final static ImageIcon mPressedIcon = new ImageIcon("Resources/PressedIcon.png");
+    /* The ImageIcons used to display the icons */
+    private static ImageIcon mFlaggedIcon;
+    private static ImageIcon mMineIcon;
+    private static ImageIcon mTileIcon;
+    private static ImageIcon mPressedIcon;
 
     //constructor
-    public Tile() {
+    Tile() {
         super();
 
 
         mSurroundingMines = 0;
         mFlagged = false;
-        mIsMine= false;
+        mIsMine = false;
+        setText("");
+        setMargin(new Insets(0, 0, 0, 0));
+        setPreferredSize(new Dimension(mTileSize, mTileSize));
         setIcon(mTileIcon);
-        this.setSize(mWidth, mHieght);
-        this.setVisible(true);
-
+        setSize(mTileSize, mTileSize);
+        setVisible(true);
+      
         this.addMouseListener(mouseListener);
     }
 
@@ -38,9 +43,25 @@ public class Tile extends JButton {
     //Getters
     /////////////////////////////////////////////////////////
 
-    public boolean getFlagged(){return mFlagged;}
-    public Integer getMineCount(){ return mSurroundingMines;}
-    public boolean getIsMine(){ return mIsMine;}
+    public boolean getFlagged() {
+        return mFlagged;
+    }
+
+    Integer getSurroundingMines() {
+        return mSurroundingMines;
+    }
+
+    boolean getIsMine() {
+        return mIsMine;
+    }
+
+    public boolean getIsOpened() {
+        return mOpened;
+    }
+
+    boolean canOpen() {
+        return (!mOpened);
+    }
 
     /////////////////////////////////////////////////////////
     //Setters
@@ -64,42 +85,95 @@ public class Tile extends JButton {
             this.setIcon(mTileIcon);
             Board.incrementUpFlagCount();
         }
+    }
+  
+    public void setIcons() {
+        /* Generating the ImageIcons using ImageIO.read */
+        try {
+            Image img = null;
+            try {
+                img = ImageIO.read(getClass().getResource("Resources/flag.png"));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            mFlaggedIcon = new ImageIcon(img);
 
-        mFlagged = flagged;
+            try {
+                img = ImageIO.read(getClass().getResource("Resources/MineIcon.png"));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            mMineIcon = new ImageIcon(img);
+
+            try {
+                img = ImageIO.read(getClass().getResource("Resources/TileIcon.png"));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            mTileIcon = new ImageIcon(img);
+
+            try {
+                img = ImageIO.read(getClass().getResource("Resources/PressedIcon.png"));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            mPressedIcon = new ImageIcon(img);
+
+
+        } catch (Exception e) {
+            System.out.println("ImageIcons not set successfully.");
+        }
     }
 
-    public void setMineImage(boolean show){
+    public void setMine(){
+        setIcon(mMineIcon);
+    }
 
-        if(show == true)
-            this.setIcon(mMineIcon);
-        else
+    void setX(int i){
+        x = i;
+    }
+
+    void setY(int j){
+        y = j;
+    }
+
+    public void setFlagged(boolean flagged) {
+        if (flagged) {
+            this.setIcon(mFlaggedIcon);
+        } else {
             this.setIcon(mTileIcon);
+        }
     }
 
-    public void setMineCount(int mineCount){
-         mSurroundingMines = mineCount;
-     }
+    void setSurroundingMines(int mineCount) {
+        mSurroundingMines = mineCount;
+    }
 
-    public void setIsMine(boolean isMine){ mIsMine = isMine;}
+    void setIsMine(boolean isMine) {
+        mIsMine = isMine;
+    }
 
     /////////////////////////////////////////////////////////
     //METHODS
     /////////////////////////////////////////////////////////
 
-    public void increaseMineCount(){ mSurroundingMines += 1;}
+    void increaseSurroundingMines() {
+        mSurroundingMines += 1;
+    }
 
     //sets the text on the tile showing how many mines are near
-    public void displaySurroundingMines(){
+    void displaySurroundingMines(){
         //we will not display 0 for number of mines
 
-        if(mSurroundingMines == 0){
-            this.setIcon(mPressedIcon);
-        }else if(mSurroundingMines > 0){
-            /*ImageIcon numberIcon = new ImageIcon("Resources/Number" + Integer.toString(mSurroundingMines) + ".png ");
-            this.setIcon( numberIcon );*/
-
-            this.setIcon(null);
-            this.setText(Integer.toString(mSurroundingMines));
+        if (mSurroundingMines == 0) {
+            setIcon(mPressedIcon);
+        } else if (mSurroundingMines > 0) {
+            try {
+                setIcon(null);
+                setText(Integer.toString(mSurroundingMines));
+            } catch (Exception e) {
+                System.out.println("Error in displaying numbered tile.");
+            }
         }
         setDisable();
     }
@@ -136,5 +210,9 @@ public class Tile extends JButton {
         mFlagged = false;
         mIsMine = false;
         setIcon(mTileIcon);
+    }
+
+    void setIsOpened() {
+        mOpened = true;
     }
 }
