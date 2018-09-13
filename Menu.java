@@ -42,7 +42,7 @@ public class Menu {
         /*
          * Column combobox generation along with associated label
          */
-        JComboBox field_colLength = new JComboBox();
+        JComboBox<Integer> field_colLength = new JComboBox<>();
         field_colLength.setBounds(140, 78, 80, 30);
         for (int i = 2; i <= max_numCols - 1; i++) {
             field_colLength.addItem(i);
@@ -56,7 +56,7 @@ public class Menu {
         /*
          * Row combobox generation along with associated label
          */
-        JComboBox field_rowLength = new JComboBox();
+        JComboBox<Integer> field_rowLength = new JComboBox<>();
         field_rowLength.setBounds(140, 108, 80, 30);
         for (int i = 2; i <= max_numRows - 2; i++) {
             field_rowLength.addItem(i);
@@ -65,7 +65,7 @@ public class Menu {
 
         JLabel field_rowLength_label = new JLabel();
         field_rowLength_label.setText("Rows:");
-        field_rowLength_label.setBounds(40, 70, 100, 100);
+        field_rowLength_label.setBounds(40, 70, 120, 100);
 
         /*
          * Mine text field generation along with associated labels
@@ -77,7 +77,7 @@ public class Menu {
         mineField.setText("0");
         mineField.setBounds(140, 178, 80, 30);
         JLabel mineErr = new JLabel();
-        mineErr.setBounds(40, 200, 140, 30);
+        mineErr.setBounds(40, 200, 200, 30);
         mineErr.setVisible(false);
         mineErr.setForeground(Color.red);
 
@@ -110,8 +110,8 @@ public class Menu {
          */
         menuButton.addActionListener(e -> {
             boolean error_exists = false;
-            int numRows = Integer.parseInt(field_rowLength.getEditor().getItem().toString());
-            int numCols = Integer.parseInt(field_colLength.getEditor().getItem().toString());
+            int numRows = (Integer)field_rowLength.getSelectedItem();
+            int numCols = (Integer)field_colLength.getSelectedItem();
 
             mineErr.setVisible(false);
             try {
