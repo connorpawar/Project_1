@@ -124,7 +124,7 @@ public class Board {
             }
         });
 
-        Game_Driver gameStart = new Game_Driver(game, tileGrid, numRows, numCols, mines, flags);
+        Game_Driver gameStart = new Game_Driver(tileGrid, numRows, numCols, mines);
     }
 
     public static void main(String[] args) {

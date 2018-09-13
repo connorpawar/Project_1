@@ -1,34 +1,23 @@
 import javax.swing.*;
 import java.util.Random;
 
-public class Game_Driver {
-    JFrame mGameBoard;
+class Game_Driver {
     private static Tile mTileArray[][];
     private Random random = new Random();
-    static int mNumRows;
-    static int mNumCols;
-    static int mNumMines;
-    JLabel mFlagCounter;
+    private static int mNumRows;
+    private static int mNumCols;
+    private static int mNumMines;
 
-    public Game_Driver(JFrame board, Tile[][] tileArray, int numRows, int numCols, int mineCount, JLabel flagCount) {
-        mGameBoard = board;
+    Game_Driver(Tile[][] tileArray, int numRows, int numCols, int mineCount) {
         mTileArray = tileArray;
         mNumRows = numRows;
         mNumCols = numCols;
-        mFlagCounter = flagCount;
         mNumMines = mineCount;
         initBoard();
     }
 
-
-    public static void revealExpanding(int row, int col) {
-        revealAbove(row, col);
-        revealBelow(row, col);
-        revealSides(row, col);
-    }
-
     //shows all bombs and disables all buttons
-    public static void gameOver() {
+    static void gameOver() {
         for (int i = 0; i < 0; i++) {
             for (int j = 0; j < 0; j++) {
                 if (mTileArray[i][j].getIsMine())
@@ -39,138 +28,9 @@ public class Game_Driver {
         }
     }
 
-    public void setNumberOfMines() {
-        for (int i = 0; i < 0; i++) {
-            for (int j = 0; j < 0; j++) {
-                if (mTileArray[i][j].getIsMine())
-                    incrementSurroundingMineCount(i, j);
-            }
-        }
-    }
-
-    //adds one to the mine count to the surrounding tiles
-    private void incrementSurroundingMineCount(int row, int col) {
-        incrementAbove(row, col);
-        incrementBelow(row, col);
-        incrementSides(row, col);
-    }
-
     ///////////////////////////////
     /*HELPER METHODS*/
     //////////////////////////////
-
-
-    ///////////////////////////////
-    /*Helpers for incrementSurroundingMineCount() */
-    //////////////////////////////
-
-    private void incrementAbove(int row, int col) {
-        //if there are no tiles above the postion
-        if (col == 0)
-            return;
-
-        //if there are tiles left of the postion
-        if (row != 0)
-            mTileArray[row - 1][col + 1].increaseSurroundingMines();
-
-        mTileArray[row][col + 1].increaseSurroundingMines();
-
-        //if there are tiles right of the position
-        if (row != mNumRows - 1)
-            mTileArray[row + 1][col + 1].increaseSurroundingMines();
-    }
-
-    private void incrementBelow(int row, int col) {
-        //if there are no tiles below the postion
-        if (col == mNumCols - 1)
-            return;
-
-        //if there are tiles left of the postion
-        if (row != 0)
-            mTileArray[row - 1][col - 1].increaseSurroundingMines();
-
-        mTileArray[row][col - 1].increaseSurroundingMines();
-
-        //if there are tiles right of the position
-        if (row != mNumRows - 1)
-            mTileArray[row + 1][col - 1].increaseSurroundingMines();
-    }
-
-    private void incrementSides(int row, int col) {
-        //if there are tiles left of the postion
-        if (row != 0)
-            mTileArray[row - 1][col].increaseSurroundingMines();
-
-        //if there are tiles right of the positiongetHasSurroundingMine() == true
-        if (row != mNumRows - 1)
-            mTileArray[row + 1][col].increaseSurroundingMines();
-    }
-
-
-    ///////////////////////////////
-    /*Helpers for revealExpanding() */
-    //////////////////////////////
-
-    private static void revealAbove(int row, int col) {
-        //if there are no tiles above the position
-        if (col == 0)
-            return;
-
-        //if there are tiles left of the position
-        if (row != 0 && mTileArray[row - 1][col + 1].getSurroundingMines() > 0)
-            mTileArray[row - 1][col + 1].displaySurroundingMines();
-        else
-            revealAbove(row - 1, col + 1);
-
-        if (mTileArray[row - 1][col + 1].getSurroundingMines() > 0)
-            mTileArray[row][col + 1].displaySurroundingMines();
-        else
-            revealAbove(row - 1, col + 1);
-
-        //if there are tiles right of the position
-        if (row != mNumRows - 1 && mTileArray[row + 1][col + 1].getSurroundingMines() > 0)
-            mTileArray[row + 1][col + 1].displaySurroundingMines();
-        else
-            revealAbove(row + 1, col + 1);
-    }
-
-    private static void revealBelow(int row, int col) {
-        //if there are no tiles below the position
-        if (col == mNumCols - 1)
-            return;
-
-        ///if there are tiles left of the position
-        if (row != 0 && mTileArray[row - 1][col - 1].getSurroundingMines() > 0)
-            mTileArray[row - 1][col - 1].displaySurroundingMines();
-        else
-            revealAbove(row - 1, col - 1);
-
-        if (mTileArray[row - 1][col - 1].getSurroundingMines() > 0)
-            mTileArray[row][col - 1].displaySurroundingMines();
-        else
-            revealAbove(row - 1, col - 1);
-
-        //if there are tiles right of the position
-        if (row != mNumRows - 1 && mTileArray[row + 1][col - 1].getSurroundingMines() > 0)
-            mTileArray[row + 1][col - 1].displaySurroundingMines();
-        else
-            revealAbove(row + 1, col - 1);
-    }
-
-    private static void revealSides(int row, int col) {
-        //if there are tiles left of the postion
-        if (row != 0 && mTileArray[row - 1][col].getSurroundingMines() > 0)
-            mTileArray[row - 1][col].displaySurroundingMines();
-        else
-            revealSides(row - 1, col);
-
-        //if there are tiles right of the position
-        if (row != mNumRows - 1 && mTileArray[row + 1][col].getSurroundingMines() > 0)
-            mTileArray[row + 1][col].displaySurroundingMines();
-        else
-            revealSides(row + 1, col);
-
-    }
 
     ///////////////////////////////
     /*Methods that initialize the board*/
@@ -180,7 +40,7 @@ public class Game_Driver {
      * placeMines which randomly sets in the desired amount of mines,
      * it then will set the risk of nearby mines
      */
-    public void initBoard() {
+    private void initBoard() {
         //We don't need to clean all the tiles
             /*for (int i = 0; i < mNumRows; i++) {
                 for (int j = 0; j < mNumCols; j++) {
@@ -265,7 +125,7 @@ public class Game_Driver {
         }
     }
 
-    public static void openTile(int i, int j) {
+    static void openTile(int i, int j) {
 
         mTileArray[i][j].setIsOpened();
         mTileArray[i][j].displaySurroundingMines();
