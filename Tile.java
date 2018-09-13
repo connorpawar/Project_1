@@ -1,10 +1,4 @@
-//import javax.swing.*;
-//import java.awt.event.*;
-
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-
 
 public class Tile extends JButton {
 
@@ -17,10 +11,12 @@ public class Tile extends JButton {
     private int x;
     private int y;
 
+
     final static ImageIcon mFlaggedIcon = new ImageIcon("Resources/flag.png");
     final static ImageIcon mMineIcon = new ImageIcon("Resources/MineIcon.png");
     final static ImageIcon mTileIcon = new ImageIcon("Resources/TileIcon.png");
     final static ImageIcon numberIcon = new ImageIcon("Resources/Number8.png ");
+    final static ImageIcon mPressedIcon = new ImageIcon("Resources/PressedIcon.png");
 
     //constructor
     public Tile() {
@@ -31,8 +27,8 @@ public class Tile extends JButton {
         mFlagged = false;
         mIsMine= false;
         setIcon(mTileIcon);
-        this.setVisible(true);
         this.setSize(mWidth, mHieght);
+        this.setVisible(true);
 
         this.addActionListener(e -> {
 
@@ -43,7 +39,7 @@ public class Tile extends JButton {
                 if(mSurroundingMines != 0){
                     displaySurroundingMines();
                 }else{
-                    this.setIcon(null);
+                    this.setIcon(mPressedIcon);
                     Game_Driver.revealExpanding(x,y);
                 }
             }
@@ -97,7 +93,7 @@ public class Tile extends JButton {
         //we will not display 0 for number of mines
 
         if(mSurroundingMines == 0){
-            this.setIcon(null);
+            this.setIcon(mPressedIcon);
         }else if(mSurroundingMines > 0){
             /*ImageIcon numberIcon = new ImageIcon("Resources/Number" + Integer.toString(mSurroundingMines) + ".png ");
             this.setIcon( numberIcon );*/
