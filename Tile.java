@@ -115,14 +115,17 @@ public class Tile extends JButton {
     }
 
     private void setFlagged(boolean flagged){
-        if(!flagged){
+        if(!flagged && Board.getFlagCount() != 0){
             setIcon(mFlaggedIcon);
             mFlagged = true;
-            Board.incrementDownFlagCount();
-        }else{
+            Board.decrementFlagCount();
+        }else if(mFlagged){
             setIcon(mTileIcon);
             mFlagged = false;
-            Board.incrementUpFlagCount();
+            Board.incrementFlagCount();
+        }
+        else{
+
         }
     }
   

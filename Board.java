@@ -129,7 +129,7 @@ public class Board {
         Game_Driver gameStart = new Game_Driver(tileGrid, numRows, numCols, mines);
     }
 
-    static void incrementDownFlagCount(){
+    static void decrementFlagCount(){
         mNumFlags -= 1;
         try {
             if (Integer.parseInt(flags.getText().replaceAll("[^\\d]", "")) == 0) {
@@ -141,11 +141,11 @@ public class Board {
         }
     }
 
-    static void incrementUpFlagCount(){
+    static void incrementFlagCount(){
         mNumFlags += 1;
 
         try {
-            if (Integer.parseInt(flags.getText().replaceAll("[^\\d]", "")) == 0) {
+            if (Integer.parseInt(flags.getText().replaceAll("[^\\d]", "")) == mNumFlags) {
                 throw new NumberFormatException();
             }
             flags.setText("Flags Available: " + Integer.toString(mNumFlags));
