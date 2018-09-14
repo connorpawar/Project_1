@@ -57,12 +57,6 @@ class Game_Driver {
                 Menu.open();
             }
         });
-        loseFrame.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                mGame.dispose();
-                Menu.open();
-            }
-        });
 
     }
 
