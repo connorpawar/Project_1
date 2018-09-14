@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 class Game_Driver {
     private static JFrame mGame;
@@ -46,6 +48,18 @@ class Game_Driver {
             loseFrame.dispose();
             Board newgame = new Board(mNumCols, mNumRows, mNumMines);
         });
+        loseFrame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                mGame.dispose();
+                Menu.open();
+            }
+        });
+        loseFrame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                mGame.dispose();
+                Menu.open();
+            }
+        });
     }
 
     static void gameWin() {
@@ -59,7 +73,6 @@ class Game_Driver {
                 }
             }
             if (win == true) {
-                System.out.println("You win");
                 for (int i = 0; i < mNumRows; i++) {
                     for (int j = 0; j < mNumCols; j++) {
                         mTileArray[i][j].setEnabled(false);
@@ -82,10 +95,27 @@ class Game_Driver {
                     winFrame.dispose();
                     Board newgame = new Board(mNumCols, mNumRows, mNumMines);
                 });
+                winFrame.addWindowListener(new WindowAdapter() {
+                    public void windowClosing(WindowEvent e) {
+                        mGame.dispose();
+                        Menu.open();
+                    }
+                });
             }
         }
     }
 
+    static boolean isEndPossible() {
+        boolean isPossible = true;
+        for (int i = 0; i < mNumRows; i++) {
+            for (int j = 0; j < mNumCols; j++) {
+                if (!(mTileArray[i][j].getIsMine())) {
+                    isPossible &= !(mTileArray[i][j].isEnabled());
+                }
+            }
+        }
+        return (isPossible);
+    }
     ///////////////////////////////
     /*HELPER METHODS*/
     //////////////////////////////
