@@ -7,12 +7,14 @@ class Game_Driver {
     private static int mNumRows;
     private static int mNumCols;
     private static int mNumMines;
+    private JFrame info;
 
-    Game_Driver(Tile[][] tileArray, int numRows, int numCols, int mineCount) {
+    Game_Driver(Tile[][] tileArray, JFrame infoFrame, int numRows, int numCols, int mineCount) {
         mTileArray = tileArray;
         mNumRows = numRows;
         mNumCols = numCols;
         mNumMines = mineCount;
+        info = infoFrame;
         initBoard();
     }
 

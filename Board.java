@@ -126,7 +126,7 @@ public class Board {
             }
         });
 
-        Game_Driver gameStart = new Game_Driver(tileGrid, numRows, numCols, mines);
+        Game_Driver gameStart = new Game_Driver(tileGrid, info, numRows, numCols, mines);
     }
 
     static void decrementFlagCount(){
