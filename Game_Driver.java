@@ -1,14 +1,17 @@
 import javax.swing.*;
+import java.awt.*;
 import java.util.Random;
 
 class Game_Driver {
+    private static JFrame mGame;
     private static Tile mTileArray[][];
     private Random random = new Random();
     private static int mNumRows;
     private static int mNumCols;
     private static int mNumMines;
 
-    Game_Driver(Tile[][] tileArray, int numRows, int numCols, int mineCount) {
+    Game_Driver(JFrame game, Tile[][] tileArray, int numRows, int numCols, int mineCount) {
+        mGame = game;
         mTileArray = tileArray;
         mNumRows = numRows;
         mNumCols = numCols;
@@ -18,12 +21,67 @@ class Game_Driver {
 
     //shows all bombs and disables all buttons
     static void gameOver() {
-        for (int i = 0; i < 0; i++) {
-            for (int j = 0; j < 0; j++) {
+        for (int i = 0; i < mNumRows; i++) {
+            for (int j = 0; j < mNumCols; j++) {
                 if (mTileArray[i][j].getIsMine())
                     mTileArray[i][j].setMine();
 
                 mTileArray[i][j].setEnabled(false);
+            }
+        }
+        Board.getInfoFrame().dispose();
+        JFrame loseFrame = new JFrame("You Lose!");
+        loseFrame.setLocationRelativeTo(null);
+        loseFrame.setSize(250, 150);
+        loseFrame.setLayout(new GridLayout(2, 1));
+        JLabel loseText = new JLabel("You lost! Would you like to play again?");
+        JButton loseButton = new JButton("Replay?");
+        loseFrame.add(loseText);
+        loseFrame.add(loseButton);
+        loseFrame.setResizable(false);
+        loseFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        loseFrame.setVisible(true);
+        loseButton.addActionListener(e -> {
+            mGame.dispose();
+            loseFrame.dispose();
+            Board newgame = new Board(mNumCols, mNumRows, mNumMines);
+        });
+    }
+
+    static void gameWin() {
+        if (Board.getFlagCount() == 0) {
+            Boolean win = true;
+            for (int i = 0; i < mNumRows; i++) {
+                for (int j = 0; j < mNumCols; j++) {
+                    if (mTileArray[i][j].getIsMine()) {
+                        win &= mTileArray[i][j].getFlagged();
+                    }
+                }
+            }
+            if (win == true) {
+                System.out.println("You win");
+                for (int i = 0; i < mNumRows; i++) {
+                    for (int j = 0; j < mNumCols; j++) {
+                        mTileArray[i][j].setEnabled(false);
+                    }
+                }
+                Board.getInfoFrame().dispose();
+                JFrame winFrame = new JFrame("You Win!");
+                winFrame.setLocationRelativeTo(null);
+                winFrame.setSize(250, 150);
+                winFrame.setLayout(new GridLayout(2, 1));
+                JLabel winText = new JLabel("You win! Would you like to play again?");
+                JButton winButton = new JButton("Replay?");
+                winFrame.add(winText);
+                winFrame.add(winButton);
+                winFrame.setResizable(false);
+                winFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                winFrame.setVisible(true);
+                winButton.addActionListener(e -> {
+                    mGame.dispose();
+                    winFrame.dispose();
+                    Board newgame = new Board(mNumCols, mNumRows, mNumMines);
+                });
             }
         }
     }

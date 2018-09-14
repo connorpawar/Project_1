@@ -32,7 +32,7 @@ public class Tile extends JButton {
             int modifiers = mouseEvent.getModifiers();
             //left button clicked
             if ((modifiers & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
-                if(!mFlagged) {
+                if (!mFlagged) {
                     if (mIsMine) {
                         setMineIcon();
                         Game_Driver.gameOver();
@@ -67,7 +67,7 @@ public class Tile extends JButton {
         setIcon(mTileIcon);
         setSize(mTileSize, mTileSize);
         setVisible(true);
-      
+
         addMouseListener(mouseListener);
     }
 
@@ -99,35 +99,37 @@ public class Tile extends JButton {
     //Setters
     /////////////////////////////////////////////////////////
 
-    private void setNullIcon(){
+    private void setNullIcon() {
         setIcon(null);
         setDisable();
     }
 
-    private void setMineIcon(){
+    private void setMineIcon() {
         setIcon(mMineIcon);
     }
 
-    private void setDisable(){
+    private void setDisable() {
         setEnabled(false);
         removeMouseListener(mouseListener);
     }
 
-    private void setFlagged(boolean flagged){
-        if(!flagged && Board.getFlagCount() != 0){
+    private void setFlagged(boolean flagged) {
+        if (!flagged && Board.getFlagCount() != 0) {
             setIcon(mFlaggedIcon);
             mFlagged = true;
             Board.decrementFlagCount();
-        }else if(mFlagged){
+            if (Board.getFlagCount() == 0) {
+                Game_Driver.gameWin();
+            }
+        } else if (mFlagged) {
             setIcon(mTileIcon);
             mFlagged = false;
             Board.incrementFlagCount();
-        }
-        else{
+        } else {
 
         }
     }
-  
+
     void setIcons() {
         /* Generating the ImageIcons using ImageIO.read */
         try {
@@ -166,15 +168,15 @@ public class Tile extends JButton {
         }
     }
 
-    void setMine(){
+    void setMine() {
         setIcon(mMineIcon);
     }
 
-    void setX(int i){
+    void setX(int i) {
         x = i;
     }
 
-    void setY(int j){
+    void setY(int j) {
         y = j;
     }
 
@@ -191,7 +193,7 @@ public class Tile extends JButton {
     /////////////////////////////////////////////////////////
 
     //sets the text on the tile showing how many mines are near
-    void displaySurroundingMines(){
+    void displaySurroundingMines() {
         //we will not display 0 for number of mines
 
         if (mSurroundingMines == 0) {
