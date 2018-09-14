@@ -14,10 +14,10 @@ import javax.swing.*;
 import javax.imageio.*;
 
 public class Board {
-    /* Centralized location for Board constants */
+    /* Centralized location for Board variables */
     static int tileSize = 30;
-    static int mNumFlags;
-    static JLabel flags;
+    private static int mNumFlags;
+    private static JLabel flags;
 
     Board(int rowLength, int colLength, int mines) {
         /* EventQueue.invokeLater() is necessary to avoid window hanging */
@@ -129,7 +129,7 @@ public class Board {
         Game_Driver gameStart = new Game_Driver(tileGrid, numRows, numCols, mines);
     }
 
-    static public void incrementDownFlagCount(){
+    static void incrementDownFlagCount(){
         mNumFlags -= 1;
         try {
             if (Integer.parseInt(flags.getText().replaceAll("[^\\d]", "")) == 0) {
@@ -141,7 +141,7 @@ public class Board {
         }
     }
 
-    static public void incrementUpFlagCount(){
+    static void incrementUpFlagCount(){
         mNumFlags += 1;
 
         try {
@@ -152,6 +152,10 @@ public class Board {
         } catch (NumberFormatException e) {
             System.out.println(flags.getText());
         }
+    }
+
+    static int getFlagCount(){
+        return mNumFlags;
     }
 
     public static void main(String[] args) {
