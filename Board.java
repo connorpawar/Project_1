@@ -18,12 +18,19 @@ public class Board {
     static int tileSize = 30;
     private static int mNumFlags;
     private static JLabel flags;
+    public static JFrame info;
 
+    /////////////////////////////////////////////////////////
+    //Constructor
+    /////////////////////////////////////////////////////////
     Board(int rowLength, int colLength, int mines) {
         /* EventQueue.invokeLater() is necessary to avoid window hanging */
         EventQueue.invokeLater(() -> initGame(rowLength, colLength, mines));
     }
 
+    /////////////////////////////////////////////////////////
+    //Methods
+    /////////////////////////////////////////////////////////
     private void initGame(int numCols, int numRows, int mines) {
         /*
          *  JFrame game is the board window
@@ -31,7 +38,7 @@ public class Board {
          *
          */
         JFrame game = new JFrame();
-        JFrame info = new JFrame();
+        info = new JFrame();
         mNumFlags = mines;
         /*
         Below are the JFrame values being set, documented by the related
@@ -126,7 +133,7 @@ public class Board {
             }
         });
 
-        Game_Driver gameStart = new Game_Driver(tileGrid, info, numRows, numCols, mines);
+        Game_Driver gameStart = new Game_Driver(tileGrid, numRows, numCols, mines);
     }
 
     static void decrementFlagCount(){
@@ -154,10 +161,21 @@ public class Board {
         }
     }
 
+
+    /////////////////////////////////////////////////////////
+    //Getters
+    /////////////////////////////////////////////////////////
+    static JFrame getInfoFrame(){
+        return info;
+    }
+
     static int getFlagCount(){
         return mNumFlags;
     }
 
+    /////////////////////////////////////////////////////////
+    //Main
+    /////////////////////////////////////////////////////////
     public static void main(String[] args) {
         /* Empty main() */
     }
