@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Random;
 
 class Game_Driver {
@@ -23,13 +25,14 @@ class Game_Driver {
     static void gameOver() {
         for (int i = 0; i < mNumRows; i++) {
             for (int j = 0; j < mNumCols; j++) {
-                if (mTileArray[i][j].getIsMine())
+                if (mTileArray[i][j].getIsMine()) {
                     mTileArray[i][j].setMine();
-
+                }
                 mTileArray[i][j].setEnabled(false);
             }
         }
         Board.getInfoFrame().dispose();
+        mGame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         JFrame loseFrame = new JFrame("You Lose!");
         loseFrame.setLocationRelativeTo(null);
         loseFrame.setSize(250, 150);
@@ -46,6 +49,13 @@ class Game_Driver {
             loseFrame.dispose();
             Board newgame = new Board(mNumCols, mNumRows, mNumMines);
         });
+        /*loseFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                loseFrame.dispose();
+                mGame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            }
+        });*/
     }
 
     static void gameWin() {
