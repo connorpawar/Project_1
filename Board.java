@@ -74,15 +74,17 @@ public class Board {
          */
         JButton updateFlags = new JButton();
         updateFlags.addActionListener((ActionEvent event) -> {
-
-            try {
+            game.dispose();
+            info.dispose();
+            Board newgame = new Board(numCols, numRows, mines);
+            /*try {
                 if (Integer.parseInt(flags.getText().replaceAll("[^\\d]", "")) == 0) {
                     throw new NumberFormatException();
                 }
                 flags.setText("Flags Available: " + Integer.toString(Integer.parseInt(flags.getText().replaceAll("[^\\d]", "")) - 1));
             } catch (NumberFormatException e) {
                 System.out.println(flags.getText());
-            }
+            }*/
         });
 
         info.add(updateFlags);
@@ -133,10 +135,10 @@ public class Board {
             }
         });
 
-        Game_Driver gameStart = new Game_Driver(tileGrid, numRows, numCols, mines);
+        Game_Driver gameStart = new Game_Driver(game, tileGrid, numRows, numCols, mines);
     }
 
-    static void decrementFlagCount(){
+    static void decrementFlagCount() {
         mNumFlags -= 1;
         try {
             if (Integer.parseInt(flags.getText().replaceAll("[^\\d]", "")) == 0) {
@@ -148,7 +150,7 @@ public class Board {
         }
     }
 
-    static void incrementFlagCount(){
+    static void incrementFlagCount() {
         mNumFlags += 1;
 
         try {
@@ -165,11 +167,11 @@ public class Board {
     /////////////////////////////////////////////////////////
     //Getters
     /////////////////////////////////////////////////////////
-    static JFrame getInfoFrame(){
+    static JFrame getInfoFrame() {
         return info;
     }
 
-    static int getFlagCount(){
+    static int getFlagCount() {
         return mNumFlags;
     }
 
