@@ -28,11 +28,11 @@ class Game_Driver {
                 if (mTileArray[i][j].getIsMine()) {
                     mTileArray[i][j].setMine();
                 }
-                mTileArray[i][j].setEnabled(false);
+                mTileArray[i][j].setDisable();
             }
         }
         Board.getInfoFrame().dispose();
-        mGame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        mGame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         JFrame loseFrame = new JFrame("You Lose!");
         loseFrame.setLocationRelativeTo(null);
         loseFrame.setSize(250, 150);
@@ -72,7 +72,7 @@ class Game_Driver {
                 System.out.println("You win");
                 for (int i = 0; i < mNumRows; i++) {
                     for (int j = 0; j < mNumCols; j++) {
-                        mTileArray[i][j].setEnabled(false);
+                        mTileArray[i][j].setDisable();
                     }
                 }
                 Board.getInfoFrame().dispose();

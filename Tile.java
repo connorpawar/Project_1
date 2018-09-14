@@ -108,7 +108,7 @@ public class Tile extends JButton {
         setIcon(mMineIcon);
     }
 
-    private void setDisable() {
+    public void setDisable() {
         setEnabled(false);
         removeMouseListener(mouseListener);
     }
