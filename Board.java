@@ -19,6 +19,7 @@ public class Board {
     private static int mNumFlags;
     private static JLabel flags;
     public static JFrame info;
+    public static JFrame game;
 
     /////////////////////////////////////////////////////////
     //Constructor
@@ -37,7 +38,7 @@ public class Board {
          *  JFrame info is the information window
          *
          */
-        JFrame game = new JFrame();
+        game = new JFrame();
         info = new JFrame();
         mNumFlags = mines;
         /*
@@ -73,6 +74,7 @@ public class Board {
          * of the Tile class.
          */
         JButton updateFlags = new JButton();
+        updateFlags.setText("RESTART");
         updateFlags.addActionListener((ActionEvent event) -> {
             game.dispose();
             info.dispose();
@@ -131,7 +133,9 @@ public class Board {
             @Override
             public void windowClosing(WindowEvent e) {
                 info.dispose();
-                Menu.open();
+                if(game.getDefaultCloseOperation() == WindowConstants.DISPOSE_ON_CLOSE){
+                    Menu.open();
+                }
             }
         });
 
@@ -169,6 +173,10 @@ public class Board {
     /////////////////////////////////////////////////////////
     static JFrame getInfoFrame() {
         return info;
+    }
+
+    static JFrame getGameFrame(){
+        return game;
     }
 
     static int getFlagCount() {
