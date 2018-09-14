@@ -32,18 +32,17 @@ public class Tile extends JButton {
             int modifiers = mouseEvent.getModifiers();
             //left button clicked
             if ((modifiers & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
-                if(mIsMine){
-                    setMineIcon();
-                    Game_Driver.gameOver();
-                }else{
-                    if(mFlagged)
-                        setFlagged(!mFlagged);
-
-                    if(mSurroundingMines > 0){
-                        displaySurroundingMines();
-                    }else{
-                        setNullIcon();
-                        Game_Driver.openTile(x,y);
+                if(!mFlagged) {
+                    if (mIsMine) {
+                        setMineIcon();
+                        Game_Driver.gameOver();
+                    } else {
+                        if (mSurroundingMines > 0) {
+                            displaySurroundingMines();
+                        } else {
+                            setNullIcon();
+                            Game_Driver.openTile(x, y);
+                        }
                     }
                 }
             }
@@ -93,7 +92,7 @@ public class Tile extends JButton {
     }
 
     boolean canOpen() {
-        return (!mOpened);
+        return (!mOpened && !mFlagged);
     }
 
     /////////////////////////////////////////////////////////
