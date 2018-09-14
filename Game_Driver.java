@@ -41,12 +41,6 @@ class Game_Driver {
      * it then will set the risk of nearby mines
      */
     private void initBoard() {
-        //We don't need to clean all the tiles
-            /*for (int i = 0; i < mNumRows; i++) {
-                for (int j = 0; j < mNumCols; j++) {
-                    mTileArray[i][j].cleanTile();
-                }
-            }*/
         placeMines();
         setRiskNum();
     }

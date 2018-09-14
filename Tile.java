@@ -117,9 +117,11 @@ public class Tile extends JButton {
     private void setFlagged(boolean flagged){
         if(!flagged){
             setIcon(mFlaggedIcon);
+            mFlagged = true;
             Board.incrementDownFlagCount();
         }else{
             setIcon(mTileIcon);
+            mFlagged = false;
             Board.incrementUpFlagCount();
         }
     }
@@ -186,10 +188,6 @@ public class Tile extends JButton {
     //METHODS
     /////////////////////////////////////////////////////////
 
-    void increaseSurroundingMines() {
-        mSurroundingMines += 1;
-    }
-
     //sets the text on the tile showing how many mines are near
     void displaySurroundingMines(){
         //we will not display 0 for number of mines
@@ -205,13 +203,6 @@ public class Tile extends JButton {
             }
         }
         setDisable();
-    }
-
-    public void cleanTile() {
-        mSurroundingMines = 0;
-        mFlagged = false;
-        mIsMine = false;
-        setIcon(mTileIcon);
     }
 
     void setIsOpened() {
