@@ -43,6 +43,9 @@ public class Tile extends JButton {
                             setNullIcon();
                             Game_Driver.openTile(x, y);
                         }
+                        if (Game_Driver.isEndPossible()) {
+                            Game_Driver.gameWin();
+                        }
                     }
                 }
             }
@@ -119,7 +122,9 @@ public class Tile extends JButton {
             mFlagged = true;
             Board.decrementFlagCount();
             if (Board.getFlagCount() == 0) {
-                Game_Driver.gameWin();
+                if (Game_Driver.isEndPossible()) {
+                    Game_Driver.gameWin();
+                }
             }
         } else if (mFlagged) {
             setIcon(mTileIcon);
