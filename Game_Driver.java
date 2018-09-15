@@ -33,8 +33,8 @@ class Game_Driver {
                 mTileArray[i][j].setDisable();
             }
         }
+        mGame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         Board.getInfoFrame().dispose();
-        mGame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         JFrame loseFrame = new JFrame("You Lose!");
         loseFrame.setLocationRelativeTo(null);
         loseFrame.setSize(250, 150);
@@ -76,6 +76,7 @@ class Game_Driver {
                         mTileArray[i][j].setDisable();
                     }
                 }
+                mGame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
                 Board.getInfoFrame().dispose();
                 JFrame winFrame = new JFrame("You Win!");
                 winFrame.setLocationRelativeTo(null);
