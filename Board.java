@@ -14,23 +14,33 @@ import javax.swing.*;
 import javax.imageio.*;
 
 public class Board {
-    /* Centralized location for Board constants */
+    /* Centralized location for Board variables */
     static int tileSize = 30;
+    private static int mNumFlags;
+    private static JLabel flags;
+    public static JFrame info;
+    public static JFrame game;
 
+    /////////////////////////////////////////////////////////
+    //Constructor
+    /////////////////////////////////////////////////////////
     Board(int rowLength, int colLength, int mines) {
         /* EventQueue.invokeLater() is necessary to avoid window hanging */
         EventQueue.invokeLater(() -> initGame(rowLength, colLength, mines));
     }
 
+    /////////////////////////////////////////////////////////
+    //Methods
+    /////////////////////////////////////////////////////////
     private void initGame(int numCols, int numRows, int mines) {
         /*
          *  JFrame game is the board window
          *  JFrame info is the information window
          *
          */
-        JFrame game = new JFrame();
-        JFrame info = new JFrame();
-
+        game = new JFrame();
+        info = new JFrame();
+        mNumFlags = mines;
         /*
         Below are the JFrame values being set, documented by the related
         function name used to set the JFrame characteristic
@@ -49,7 +59,7 @@ public class Board {
          * Below is the JLabel being created to show the current number of flags
          * available to the player.
          */
-        JLabel flags = new JLabel();
+        flags = new JLabel();
         flags.setText("Flags Available: " + Integer.toString(mines));
         try {
             Image img = ImageIO.read(getClass().getResource("Resources/flag.png"));
@@ -64,16 +74,19 @@ public class Board {
          * of the Tile class.
          */
         JButton updateFlags = new JButton();
+        updateFlags.setText("RESTART");
         updateFlags.addActionListener((ActionEvent event) -> {
-
-            try {
+            game.dispose();
+            info.dispose();
+            Board newgame = new Board(numCols, numRows, mines);
+            /*try {
                 if (Integer.parseInt(flags.getText().replaceAll("[^\\d]", "")) == 0) {
                     throw new NumberFormatException();
                 }
                 flags.setText("Flags Available: " + Integer.toString(Integer.parseInt(flags.getText().replaceAll("[^\\d]", "")) - 1));
             } catch (NumberFormatException e) {
                 System.out.println(flags.getText());
-            }
+            }*/
         });
 
         info.add(updateFlags);
@@ -93,6 +106,10 @@ public class Board {
 
                 for (int j = 0; j < numCols; j++) {
                     tileGrid[i][j] = new Tile();
+                    tileGrid[i][j].setMargin(new Insets(0, 0, 0, 0));
+                    tileGrid[i][j].setPreferredSize(new Dimension(tileSize, tileSize));
+                    tileGrid[i][j].setX(i);
+                    tileGrid[i][j].setY(j);
                     tempPanel.add(tileGrid[i][j]);
                 }
                 masterPanel.add(tempPanel);
@@ -116,13 +133,59 @@ public class Board {
             @Override
             public void windowClosing(WindowEvent e) {
                 info.dispose();
-                Menu.open();
+                if(game.getDefaultCloseOperation() == WindowConstants.DISPOSE_ON_CLOSE){
+                    Menu.open();
+                }
             }
         });
 
-        Game_Driver gameStart = new Game_Driver(game, tileGrid, numRows, numCols, mines, flags);
+        Game_Driver gameStart = new Game_Driver(game, tileGrid, numRows, numCols, mines);
     }
 
+    static void decrementFlagCount() {
+        mNumFlags -= 1;
+        try {
+            if (Integer.parseInt(flags.getText().replaceAll("[^\\d]", "")) == 0) {
+                throw new NumberFormatException();
+            }
+            flags.setText("Flags Available: " + Integer.toString(mNumFlags));
+        } catch (NumberFormatException e) {
+            System.out.println(flags.getText());
+        }
+    }
+
+    static void incrementFlagCount() {
+        mNumFlags += 1;
+
+        try {
+            if (Integer.parseInt(flags.getText().replaceAll("[^\\d]", "")) == mNumFlags) {
+                throw new NumberFormatException();
+            }
+            flags.setText("Flags Available: " + Integer.toString(mNumFlags));
+        } catch (NumberFormatException e) {
+            System.out.println(flags.getText());
+        }
+    }
+
+
+    /////////////////////////////////////////////////////////
+    //Getters
+    /////////////////////////////////////////////////////////
+    static JFrame getInfoFrame() {
+        return info;
+    }
+
+    static JFrame getGameFrame(){
+        return game;
+    }
+
+    static int getFlagCount() {
+        return mNumFlags;
+    }
+
+    /////////////////////////////////////////////////////////
+    //Main
+    /////////////////////////////////////////////////////////
     public static void main(String[] args) {
         /* Empty main() */
     }

@@ -1,176 +1,123 @@
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Random;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-public class Game_Driver {
-    JFrame mGameBoard;
+class Game_Driver {
+    private static JFrame mGame;
     private static Tile mTileArray[][];
     private Random random = new Random();
-    static int mNumRows;
-    static int mNumCols;
-    static int mNumMines;
-    JLabel mFlagCounter;
+    private static int mNumRows;
+    private static int mNumCols;
+    private static int mNumMines;
 
-    public Game_Driver(JFrame board, Tile[][] tileArray, int numRows, int numCols, int mineCount, JLabel flagCount) {
-        mGameBoard = board;
+    Game_Driver(JFrame game, Tile[][] tileArray, int numRows, int numCols, int mineCount) {
+        mGame = game;
         mTileArray = tileArray;
         mNumRows = numRows;
         mNumCols = numCols;
-        mFlagCounter = flagCount;
         mNumMines = mineCount;
         initBoard();
     }
 
-
-    public static void revealExpanding(int row, int col) {
-        revealAbove(row, col);
-        revealBelow(row, col);
-        revealSides(row, col);
-    }
-
     //shows all bombs and disables all buttons
-    public static void gameOver() {
-        for (int i = 0; i < 0; i++) {
-            for (int j = 0; j < 0; j++) {
-                if (mTileArray[i][j].getIsMine())
-                    mTileArray[i][j].setMineImage(true);
+    static void gameOver() {
+        for (int i = 0; i < mNumRows; i++) {
+            for (int j = 0; j < mNumCols; j++) {
+                if (mTileArray[i][j].getIsMine()) {
+                    mTileArray[i][j].setMine();
+                }
+                mTileArray[i][j].setDisable();
+            }
+        }
+        mGame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        Board.getInfoFrame().dispose();
+        JFrame loseFrame = new JFrame("You Lose!");
+        loseFrame.setLocationRelativeTo(null);
+        loseFrame.setSize(250, 150);
+        loseFrame.setLayout(new GridLayout(2, 1));
+        JLabel loseText = new JLabel("You lost! Would you like to play again?");
+        JButton loseButton = new JButton("Replay?");
+        loseFrame.add(loseText);
+        loseFrame.add(loseButton);
+        loseFrame.setResizable(false);
+        loseFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        loseFrame.setVisible(true);
+        loseButton.addActionListener(e -> {
+            mGame.dispose();
+            loseFrame.dispose();
+            Board newgame = new Board(mNumCols, mNumRows, mNumMines);
+        });
+        loseFrame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                mGame.dispose();
+                Menu.open();
+            }
+        });
 
-                mTileArray[i][j].setEnabled(false);
+    }
+
+    static void gameWin() {
+        if (Board.getFlagCount() == 0) {
+            Boolean win = true;
+            for (int i = 0; i < mNumRows; i++) {
+                for (int j = 0; j < mNumCols; j++) {
+                    if (mTileArray[i][j].getIsMine()) {
+                        win &= mTileArray[i][j].getFlagged();
+                    }
+                }
+            }
+            if (win == true) {
+                for (int i = 0; i < mNumRows; i++) {
+                    for (int j = 0; j < mNumCols; j++) {
+                        mTileArray[i][j].setDisable();
+                    }
+                }
+                mGame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+                Board.getInfoFrame().dispose();
+                JFrame winFrame = new JFrame("You Win!");
+                winFrame.setLocationRelativeTo(null);
+                winFrame.setSize(250, 150);
+                winFrame.setLayout(new GridLayout(2, 1));
+                JLabel winText = new JLabel("You win! Would you like to play again?");
+                JButton winButton = new JButton("Replay?");
+                winFrame.add(winText);
+                winFrame.add(winButton);
+                winFrame.setResizable(false);
+                winFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                winFrame.setVisible(true);
+                winButton.addActionListener(e -> {
+                    mGame.dispose();
+                    winFrame.dispose();
+                    Board newgame = new Board(mNumCols, mNumRows, mNumMines);
+                });
+                winFrame.addWindowListener(new WindowAdapter() {
+                    public void windowClosing(WindowEvent e) {
+                        mGame.dispose();
+                        Menu.open();
+                    }
+                });
             }
         }
     }
 
-    public void setNumberOfMines() {
-        for (int i = 0; i < 0; i++) {
-            for (int j = 0; j < 0; j++) {
-                if (mTileArray[i][j].getIsMine())
-                    incrementSurroundingMineCount(i, j);
+    static boolean isEndPossible() {
+        boolean isPossible = true;
+        for (int i = 0; i < mNumRows; i++) {
+            for (int j = 0; j < mNumCols; j++) {
+                if (!(mTileArray[i][j].getIsMine())) {
+                    isPossible &= !(mTileArray[i][j].isEnabled());
+                }
             }
         }
+        return (isPossible);
     }
-
-    //adds one to the mine count to the surrounding tiles
-    private void incrementSurroundingMineCount(int row, int col) {
-        incrementAbove(row, col);
-        incrementBelow(row, col);
-        incrementSides(row, col);
-    }
-
     ///////////////////////////////
     /*HELPER METHODS*/
     //////////////////////////////
-
-
-    ///////////////////////////////
-    /*Helpers for incrementSurroundingMineCount() */
-    //////////////////////////////
-
-    private void incrementAbove(int row, int col) {
-        //if there are no tiles above the postion
-        if (col == 0)
-            return;
-
-        //if there are tiles left of the postion
-        if (row != 0)
-            mTileArray[row - 1][col + 1].increaseMineCount();
-
-        mTileArray[row][col + 1].increaseMineCount();
-
-        //if there are tiles right of the position
-        if (row != mNumRows - 1)
-            mTileArray[row + 1][col + 1].increaseMineCount();
-    }
-
-    private void incrementBelow(int row, int col) {
-        //if there are no tiles below the postion
-        if (col == mNumCols - 1)
-            return;
-
-        //if there are tiles left of the postion
-        if (row != 0)
-            mTileArray[row - 1][col - 1].increaseMineCount();
-
-        mTileArray[row][col - 1].increaseMineCount();
-
-        //if there are tiles right of the position
-        if (row != mNumRows - 1)
-            mTileArray[row + 1][col - 1].increaseMineCount();
-    }
-
-    private void incrementSides(int row, int col) {
-        //if there are tiles left of the postion
-        if (row != 0)
-            mTileArray[row - 1][col].increaseMineCount();
-
-        //if there are tiles right of the positiongetHasSurroundingMine() == true
-        if (row != mNumRows - 1)
-            mTileArray[row + 1][col].increaseMineCount();
-    }
-
-
-    ///////////////////////////////
-    /*Helpers for revealExpanding() */
-    //////////////////////////////
-
-    private static void revealAbove(int row, int col) {
-        //if there are no tiles above the position
-        if (col == 0)
-            return;
-
-        //if there are tiles left of the position
-        if (row != 0 && mTileArray[row - 1][col + 1].getMineCount() > 0)
-            mTileArray[row - 1][col + 1].displaySurroundingMines();
-        else
-            revealAbove(row - 1, col + 1);
-
-        if (mTileArray[row - 1][col + 1].getMineCount() > 0)
-            mTileArray[row][col + 1].displaySurroundingMines();
-        else
-            revealAbove(row - 1, col + 1);
-
-        //if there are tiles right of the position
-        if (row != mNumRows - 1 && mTileArray[row + 1][col + 1].getMineCount() > 0)
-            mTileArray[row + 1][col + 1].displaySurroundingMines();
-        else
-            revealAbove(row + 1, col + 1);
-    }
-
-    private static void revealBelow(int row, int col) {
-        //if there are no tiles below the position
-        if (col == mNumCols - 1)
-            return;
-
-        ///if there are tiles left of the position
-        if (row != 0 && mTileArray[row - 1][col - 1].getMineCount() > 0)
-            mTileArray[row - 1][col - 1].displaySurroundingMines();
-        else
-            revealAbove(row - 1, col - 1);
-
-        if (mTileArray[row - 1][col - 1].getMineCount() > 0)
-            mTileArray[row][col - 1].displaySurroundingMines();
-        else
-            revealAbove(row - 1, col - 1);
-
-        //if there are tiles right of the position
-        if (row != mNumRows - 1 && mTileArray[row + 1][col - 1].getMineCount() > 0)
-            mTileArray[row + 1][col - 1].displaySurroundingMines();
-        else
-            revealAbove(row + 1, col - 1);
-    }
-
-    private static void revealSides(int row, int col) {
-        //if there are tiles left of the postion
-        if (row != 0 && mTileArray[row - 1][col].getMineCount() > 0)
-            mTileArray[row - 1][col].displaySurroundingMines();
-        else
-            revealSides(row - 1, col);
-
-        //if there are tiles right of the position
-        if (row != mNumRows - 1 && mTileArray[row + 1][col].getMineCount() > 0)
-            mTileArray[row + 1][col].displaySurroundingMines();
-        else
-            revealSides(row + 1, col);
-
-    }
 
     ///////////////////////////////
     /*Methods that initialize the board*/
@@ -180,13 +127,7 @@ public class Game_Driver {
      * placeMines which randomly sets in the desired amount of mines,
      * it then will set the risk of nearby mines
      */
-    public void initBoard() {
-        //We don't need to clean all the tiles
-            /*for (int i = 0; i < mNumRows; i++) {
-                for (int j = 0; j < mNumCols; j++) {
-                    mTileArray[i][j].cleanTile();
-                }
-            }*/
+    private void initBoard() {
         placeMines();
         setRiskNum();
     }
@@ -259,19 +200,18 @@ public class Game_Driver {
                 }
 
 
-                mTileArray[i][j].setMineCount(mineRisk);
-                mTileArray[i][j].setmHasSurroundingMine();
+                mTileArray[i][j].setSurroundingMines(mineRisk);
                 // System.out.println(mineRisk);
             }
         }
     }
 
-    public static void openTile(int i, int j) {
+    static void openTile(int i, int j) {
 
         mTileArray[i][j].setIsOpened();
         mTileArray[i][j].displaySurroundingMines();
 
-        if (!mTileArray[i][j].getHasSurroundingMine()) {
+        if (mTileArray[i][j].getSurroundingMines() == 0) {
             int leftOne = i - 1;
             int rightOne = i + 1;
             int downOne = j - 1;
@@ -287,7 +227,7 @@ public class Game_Driver {
                 openTile(i, downOne);
             if (upOne < mNumCols && mTileArray[i][upOne].canOpen())
                 openTile(i, upOne);
-            if (rightOne < mNumRows && mTileArray[rightOne][downOne].canOpen())
+            if (rightOne < mNumRows && downOne >= 0 && mTileArray[rightOne][downOne].canOpen())
                 openTile(rightOne, downOne);
             if (rightOne < mNumRows && mTileArray[rightOne][j].canOpen())
                 openTile(rightOne, j);
