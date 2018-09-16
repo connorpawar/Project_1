@@ -23,7 +23,6 @@ public class Tile extends JButton {
     public Tile() {
         super();
 
-
         mSurroundingMines = 0;
         mFlagged = false;
         mIsMine= false;
