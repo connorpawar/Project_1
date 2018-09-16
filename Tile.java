@@ -37,23 +37,37 @@ import java.io.IOException;
 
 class Tile extends JButton {
     /* Constants for Tiles */
+	/** mTileSize - The length and width of all tiles */
     private static final int mTileSize = 30;
 
     /* Member variables of tiles */
+    /** mSurroundingMines - holds the number of adjacent mines*/
     private int mSurroundingMines;
+    /** mFlagged - true if the tile is currenly flagged */
     private boolean mFlagged;
+    /** mIsMine - true if the tile is a mine */
     private boolean mIsMine;
+    /** mOpened - true if the tile is open */
     private boolean mOpened;
+    /** x - the x coordinate in the board */
     private int x;
+    /** y - the y coordinate in the board */
     private int y;
 
     /* The ImageIcons used to display the icons */
+    /** mFaggedIcon - Image for flag used on tiles*/
     private static ImageIcon mFlaggedIcon;
+    /** mMineIcon - Image for mine used on tiles*/
     private static ImageIcon mMineIcon;
+    /** mTileIcon - Image for tile used on tiles */
     private static ImageIcon mTileIcon;
+    /** mPressedIcon - Image for a pressed tile if surrounding mines are 0 use on tile */
     private static ImageIcon mPressedIcon;
 
-    /*MouseListener that controls the tiles*/
+    /**
+     * MouseListener that controls the tiles right and left click
+     * @param mouseEvent passed from mouse when clicked. shows left, right, or middle button clicked
+     */
     private MouseListener mouseListener = new MouseAdapter() {
         public void mousePressed(MouseEvent mouseEvent) {
             int modifiers = mouseEvent.getModifiers();
@@ -86,6 +100,10 @@ class Tile extends JButton {
     /////////////////////////////////////////////////////////
     //Constructor
     /////////////////////////////////////////////////////////
+
+    /**
+     * Constructs defalut tile sets default tile icon, size, visibility, margin, and mouse listener
+     */
     Tile() {
         super();
 
@@ -106,18 +124,34 @@ class Tile extends JButton {
     //Getters
     /////////////////////////////////////////////////////////
 
+    /**
+     * returns mFlagged
+     * @return True if tile is falgged
+     */
     boolean getFlagged() {
         return mFlagged;
     }
 
+    /**
+     * returns mSurroundingMines
+     * @return The number of adjacent mines
+     */
     Integer getSurroundingMines() {
         return mSurroundingMines;
     }
 
+    /**
+     * returns mIsMine
+     * @return True if the tile is a mine
+     */
     boolean getIsMine() {
         return mIsMine;
     }
 
+    /**
+     * Says if the tile can be opened
+     * @return True if tile can be opened, not open and not falgged
+     */
     boolean canOpen() {
         return (!mOpened && !mFlagged);
     }
@@ -126,20 +160,33 @@ class Tile extends JButton {
     //Setters
     /////////////////////////////////////////////////////////
 
+    /**
+     * sets a tile icon to null
+     */
     private void setNullIcon() {
         setIcon(null);
         setDisable();
     }
 
+    /**
+     * Sets a the mine icon on the tile
+     */
     void setMineIcon() {
         setIcon(mMineIcon);
     }
 
+    /**
+     * Makes the tile unclick able by disabling it and removing mouse listener
+     */
     void setDisable() {
         setEnabled(false);
         removeMouseListener(mouseListener);
     }
 
+    /**
+     * Set the tile icon to a flag image and sets member variable mFlagged
+     * @param flagged True if tile show be flagged
+     */
     private void setFlagged(boolean flagged) {
         if (!flagged && Board.getFlagCount() != 0) {
             setIcon(mFlaggedIcon);
@@ -157,8 +204,10 @@ class Tile extends JButton {
         }
     }
 
+    /**
+     * Generating the ImageIcons using ImageIO.read
+     */
     void setIcons() {
-        /* Generating the ImageIcons using ImageIO.read */
         try {
             Image img = null;
             try {
@@ -195,18 +244,34 @@ class Tile extends JButton {
         }
     }
 
+    /**
+     * Sets the x value of a tile for use in openTile(), called upon tile creation in Board.java
+     * @param i The new x coordinate
+     */
     void setX(int i) {
         x = i;
     }
 
+    /**
+     * Sets the y value of a tile for use in openTile(), called upon tile creation in Board.java
+     * @param j The new y coordinate
+     */
     void setY(int j) {
         y = j;
     }
 
+    /**
+     * Sets mSurroundingMines
+     * @param mineCount The number of adjacent mines
+     */
     void setSurroundingMines(int mineCount) {
         mSurroundingMines = mineCount;
     }
 
+    /**
+     * Sets the flag if the tile is a mine
+     * @param isMine The new mIsMine value
+     */
     void setIsMine(boolean isMine) {
         mIsMine = isMine;
     }
@@ -215,9 +280,11 @@ class Tile extends JButton {
     //METHODS
     /////////////////////////////////////////////////////////
 
-    //sets the text on the tile showing how many mines are near
+    /**
+     * Displays the number of adjacent mines, disables tile after
+     * Does not display 0 for number of mines, is left with pressed tile icon
+     */
     void displaySurroundingMines() {
-        //we will not display 0 for number of mines
 
         if (mSurroundingMines == 0) {
             setIcon(mPressedIcon);
@@ -232,6 +299,9 @@ class Tile extends JButton {
         setDisable();
     }
 
+    /**
+     * Sets mOpened true
+     */
     void setIsOpened() {
         mOpened = true;
     }
