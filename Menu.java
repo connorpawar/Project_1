@@ -1,5 +1,20 @@
-import java.awt.*;
-import javax.swing.*;
+/* Menu.java -- Creates the menu that takes user input, entry point of minesweeper game.
+ *
+ * open() -- creates a new menu object
+ * initMenu() -- called by the constructor of menu, creates all relevant input fields for user
+ * */
+
+//Swing imports
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
+//AWT imports
+import java.awt.Dimension;
+import java.awt.Color;
+import java.awt.Toolkit;
 
 public class Menu {
 
@@ -14,6 +29,7 @@ public class Menu {
 
     /*open()
      * @Return Void
+     *
      * Sort of like a get/set function but in this
      * case open() provides a public method to avoid
      * creating Menu Objects in any other class
@@ -24,10 +40,15 @@ public class Menu {
 
     /*initMenu()
      * @Return Void
+     *
      * Creates the menu, called only by the constructor
      * */
     private void initMenu() {
 
+        /*
+         * Used to get screen boundaries from users screen settings and limits
+         * board size to values pulled.
+         * */
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int width = (int) screenSize.getWidth();
         int height = (int) screenSize.getHeight();
@@ -110,8 +131,8 @@ public class Menu {
          */
         menuButton.addActionListener(e -> {
             boolean error_exists = false;
-            int numRows = (Integer)field_rowLength.getSelectedItem();
-            int numCols = (Integer)field_colLength.getSelectedItem();
+            int numRows = (Integer) field_rowLength.getSelectedItem();
+            int numCols = (Integer) field_colLength.getSelectedItem();
 
             mineErr.setVisible(false);
             try {
@@ -141,16 +162,11 @@ public class Menu {
         });
     }
 
-
-    /*Menu.main(String[] args)
-     * Main function of Menu, just used for board
-     * creation testing at the moment, will probably be
-     * in future implementations.
-     * */
+    /////////////////////////////////////////////////////////
+    //Main
+    /////////////////////////////////////////////////////////
     public static void main(String[] args) {
-        /*Currently using this commented block to test the
-         * Board and Menu class while an entrance function/driver class
-         * has not been created/determined*/
+        new Tile().setIcons();
         Menu startGame = new Menu();
     }
 

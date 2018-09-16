@@ -1,139 +1,238 @@
-import javax.swing.*;
-import java.awt.event.*;
+/* Tile.java -- Extension of the JButton class to act as a tile in a minesweeper game.
+ *
+ * getFlagged() -- returns mFlagged
+ * getSurroundingMines() -- returns mSurroundingMines
+ * getIsMine() -- returns mIsMine
+ *
+ * canOpen() -- returns true if a tile is not opened and not flagged
+ *
+ * setNullIcon() -- sets a tile icon to null
+ * setMineIcon() -- sets a tile icon to mMineIcon
+ * setDisable() -- this sets a button to disabled and removes the mouseListener from it disabling user input to the tile
+ * setFlagged() -- flags/unflags tiles as appropriate and will recognize a gameWin() on a flag placement
+ * setIcons() -- sets all of the ImageIcons used in the operation of the minesweeper game, called in Menu.java main()
+ * setX() -- sets the x value of a tile for use in openTile(), called upon tile creation in Board.java
+ * setY() -- sets the y value of a tile for use in openTile(), called upon tile creation in Board.java
+ * setSurroundingMines() -- sets mSurroundingMines
+ * setIsMine() -- sets mIsMine
+ * displaySurroundingMines() -- when called displays the correct tile related to being pressed, disables tile after
+ * setIsOpened() -- sets mOpened true
+ * */
 
-public class Tile extends JButton {
+//Swing imports
+import javax.imageio.ImageIO;
+import javax.swing.JButton;
+import javax.swing.ImageIcon;
+//AWT imports
+import java.awt.Insets;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.InputEvent;
+//Non-GUI related imports
+import java.io.IOException;
 
-    static final int mWidth = 30;
-    static final int mHieght = 30;
 
-    int mSurroundingMines;
-    boolean mFlagged;
-    boolean mIsMine;
+class Tile extends JButton {
+    /* Constants for Tiles */
+    private static final int mTileSize = 30;
+
+    /* Member variables of tiles */
+    private int mSurroundingMines;
+    private boolean mFlagged;
+    private boolean mIsMine;
+    private boolean mOpened;
     private int x;
     private int y;
 
+    /* The ImageIcons used to display the icons */
+    private static ImageIcon mFlaggedIcon;
+    private static ImageIcon mMineIcon;
+    private static ImageIcon mTileIcon;
+    private static ImageIcon mPressedIcon;
 
-    final static ImageIcon mFlaggedIcon = new ImageIcon("Resources/flag.png");
-    final static ImageIcon mMineIcon = new ImageIcon("Resources/MineIcon.png");
-    final static ImageIcon mTileIcon = new ImageIcon("Resources/TileIcon.png");
-    final static ImageIcon numberIcon = new ImageIcon("Resources/Number8.png ");
-    final static ImageIcon mPressedIcon = new ImageIcon("Resources/PressedIcon.png");
+    /*MouseListener that controls the tiles*/
+    private MouseListener mouseListener = new MouseAdapter() {
+        public void mousePressed(MouseEvent mouseEvent) {
+            int modifiers = mouseEvent.getModifiers();
+            //left button clicked
+            if ((modifiers & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
+                if (!mFlagged) {
+                    if (mIsMine) {
+                        setMineIcon();
+                        Game_Driver.gameOver();
+                    } else {
+                        if (mSurroundingMines > 0) {
+                            displaySurroundingMines();
+                        } else {
+                            setNullIcon();
+                            Game_Driver.openTile(x, y);
+                        }
+                        if (Game_Driver.isEndPossible()) {
+                            Game_Driver.gameWin();
+                        }
+                    }
+                }
+            }
+            //right button clicked
+            if ((modifiers & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
+                setFlagged(mFlagged);
+            }
+        }
+    };
 
-    //constructor
-    public Tile() {
+    /////////////////////////////////////////////////////////
+    //Constructor
+    /////////////////////////////////////////////////////////
+    Tile() {
         super();
 
         mSurroundingMines = 0;
         mFlagged = false;
-        mIsMine= false;
+        mIsMine = false;
+        setText("");
+        setMargin(new Insets(0, 0, 0, 0));
+        setPreferredSize(new Dimension(mTileSize, mTileSize));
         setIcon(mTileIcon);
-        this.setSize(mWidth, mHieght);
-        this.setVisible(true);
+        setSize(mTileSize, mTileSize);
+        setVisible(true);
 
-        this.addMouseListener(mouseListener);
+        addMouseListener(mouseListener);
     }
 
     /////////////////////////////////////////////////////////
     //Getters
     /////////////////////////////////////////////////////////
 
-    public boolean getFlagged(){return mFlagged;}
-    public Integer getMineCount(){ return mSurroundingMines;}
-    public boolean getIsMine(){ return mIsMine;}
+    boolean getFlagged() {
+        return mFlagged;
+    }
+
+    Integer getSurroundingMines() {
+        return mSurroundingMines;
+    }
+
+    boolean getIsMine() {
+        return mIsMine;
+    }
+
+    boolean canOpen() {
+        return (!mOpened && !mFlagged);
+    }
 
     /////////////////////////////////////////////////////////
     //Setters
     /////////////////////////////////////////////////////////
 
-    public void setNullIcon(){
-        this.setIcon(null);
+    private void setNullIcon() {
+        setIcon(null);
         setDisable();
     }
 
-    public void setDisable(){
-        this.setEnabled(false);
-        this.removeMouseListener(mouseListener);
+    void setMineIcon() {
+        setIcon(mMineIcon);
     }
 
-    public void setFlagged(boolean flagged){
-        if(flagged){
-            this.setIcon(mFlaggedIcon);
-            Board.incrementDownFlagCount();
-        }else{
-            this.setIcon(mTileIcon);
-            Board.incrementUpFlagCount();
+    void setDisable() {
+        setEnabled(false);
+        removeMouseListener(mouseListener);
+    }
+
+    private void setFlagged(boolean flagged) {
+        if (!flagged && Board.getFlagCount() != 0) {
+            setIcon(mFlaggedIcon);
+            mFlagged = true;
+            Board.decrementFlagCount();
+            if (Board.getFlagCount() == 0) {
+                if (Game_Driver.isEndPossible()) {
+                    Game_Driver.gameWin();
+                }
+            }
+        } else if (mFlagged) {
+            setIcon(mTileIcon);
+            mFlagged = false;
+            Board.incrementFlagCount();
         }
-
-        mFlagged = flagged;
     }
 
-    public void setMineImage(boolean show){
+    void setIcons() {
+        /* Generating the ImageIcons using ImageIO.read */
+        try {
+            Image img = null;
+            try {
+                img = ImageIO.read(getClass().getResource("Resources/flag.png"));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            mFlaggedIcon = new ImageIcon(img);
 
-        if(show == true)
-            this.setIcon(mMineIcon);
-        else
-            this.setIcon(mTileIcon);
+            try {
+                img = ImageIO.read(getClass().getResource("Resources/MineIcon.png"));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            mMineIcon = new ImageIcon(img);
+
+            try {
+                img = ImageIO.read(getClass().getResource("Resources/TileIcon.png"));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            mTileIcon = new ImageIcon(img);
+
+            try {
+                img = ImageIO.read(getClass().getResource("Resources/PressedIcon.png"));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            mPressedIcon = new ImageIcon(img);
+
+
+        } catch (Exception e) {
+            System.out.println("ImageIcons not set successfully.");
+        }
     }
 
-    public void setMineCount(int mineCount){
-         mSurroundingMines = mineCount;
-     }
+    void setX(int i) {
+        x = i;
+    }
 
-    public void setIsMine(boolean isMine){ mIsMine = isMine;}
+    void setY(int j) {
+        y = j;
+    }
+
+    void setSurroundingMines(int mineCount) {
+        mSurroundingMines = mineCount;
+    }
+
+    void setIsMine(boolean isMine) {
+        mIsMine = isMine;
+    }
 
     /////////////////////////////////////////////////////////
     //METHODS
     /////////////////////////////////////////////////////////
 
-    public void increaseMineCount(){ mSurroundingMines += 1;}
-
     //sets the text on the tile showing how many mines are near
-    public void displaySurroundingMines(){
+    void displaySurroundingMines() {
         //we will not display 0 for number of mines
 
-        if(mSurroundingMines == 0){
-            this.setIcon(mPressedIcon);
-        }else if(mSurroundingMines > 0){
-            /*ImageIcon numberIcon = new ImageIcon("Resources/Number" + Integer.toString(mSurroundingMines) + ".png ");
-            this.setIcon( numberIcon );*/
-
-            this.setIcon(null);
-            this.setText(Integer.toString(mSurroundingMines));
+        if (mSurroundingMines == 0) {
+            setIcon(mPressedIcon);
+        } else if (mSurroundingMines > 0) {
+            try {
+                setIcon(null);
+                setText(Integer.toString(mSurroundingMines));
+            } catch (Exception e) {
+                System.out.println("Error in displaying numbered tile.");
+            }
         }
         setDisable();
     }
 
-    MouseListener mouseListener = new MouseAdapter() {
-        public void mousePressed(MouseEvent mouseEvent) {
-            int modifiers = mouseEvent.getModifiers();
-            //left button clicked
-            if ((modifiers & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
-                if(mIsMine){
-                    setMineImage(true);
-                    Game_Driver.gameOver();
-                }else{
-                    if(mFlagged)
-                        setFlagged(!mFlagged);
-
-                    if(mSurroundingMines > 0){
-                        displaySurroundingMines();
-                    }else{
-                        setNullIcon();
-                        Game_Driver.revealExpanding(x,y);
-                    }
-                }
-            }
-            //right button clicked
-            if ((modifiers & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
-              setFlagged(!mFlagged);
-            }
-        }
-    };
-
-    public void cleanTile() {
-        mSurroundingMines = 0;
-        mFlagged = false;
-        mIsMine = false;
-        setIcon(mTileIcon);
+    void setIsOpened() {
+        mOpened = true;
     }
 }
