@@ -1,14 +1,3 @@
-/*Board.java -- Meant to initialize the board and pass related values to Game_Driver
- *
- * initGame(int, int, int) -- Creates the board, info window, and passes to Game_Driver
- * incrementFlagCount() -- increments the flagCount of the JLabel
- * decrementFlagCount() -- decrements the flagCount of the JLabel
- *
- * getInfoFrame() -- returns the JFrame that stores info about the flags
- * getFlagCount() -- returns mNumFlags
- * main() -- Empty
- * */
-
 //Swing imports
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -33,53 +22,115 @@ import java.io.IOException;
 import java.lang.Exception;
 
 public class Board {
-    /* Centralized location for Board variables */
-    static int tileSize = 30;
-    private static int mNumFlags;
-    private static JLabel flags;
-    private static JFrame info;
-    private static JFrame game;
 
-    /////////////////////////////////////////////////////////
-    //Constructor
-    /////////////////////////////////////////////////////////
+    /**
+      Constant size of a square tile will be
+      tileSize * tileSize, or 30x30 pixels
+     * */
+    final static int tileSize = 30;
+
+    /**
+     * Number of flags available to the user which is equal to the number
+     * of mines on the board. Used by various functions to track flags placed by user.
+     *
+     * @see #incrementFlagCount()
+     * @see #decrementFlagCount()
+     * @see #getFlagCount()
+     * */
+    private static int mNumFlags;
+
+    /**
+     * JLabel that displays the text containing Flags Available: and
+     * also the current number of flags which is equivalent to {@link #mNumFlags}
+     * */
+    private static JLabel flags;
+
+    /**
+     * JFrame that holds the replay JButton as well as the JLabel that tells the
+     * user how many flags are available to be placed still. Useful as member variable
+     * to let other functions manipulate text field indicating available mines.
+     *
+     * @see #getInfoFrame()
+     * */
+    private static JFrame mInfo;
+
+    /**
+     * JFrame that displays the {@link Tile} objects that correspond to the minesweeper
+     * board. Reference to this object is passed to {@link Game_Driver} to allow Game_Driver
+     * to control the board.
+     * */
+    private static JFrame mGame;
+
+    /**
+     * This constructor takes in the various input values from the user that is
+     * checked in the {@link Menu} object on start up and also in this constructor.
+     * Once preconditions are checked and verified, initGame() is added to the EventQueue.
+     *
+     * @ms.Pre-condition Input fields from Menu have been verified and the user has pressed the "Start" button
+     * @ms.Post-condition initGame() is successfully added to the EventQueue once inputs are verified once more
+     *
+     * @param rowLength An integer representing the length of a row
+     * @param colLength An integer representing the length of a column
+     * @param mines An integer representing the number of mines in a mGame
+     */
     Board(int rowLength, int colLength, int mines) {
-        /* EventQueue.invokeLater() is necessary to avoid window hanging */
-        EventQueue.invokeLater(() -> initGame(rowLength, colLength, mines));
+        /*
+        * Precondition checks that should be unnecessary due to user input restrictions in menu
+        */
+        try {
+            verifyBoardParam(rowLength, colLength, mines);
+            /* EventQueue.invokeLater() is necessary to avoid window hanging */
+            EventQueue.invokeLater(() -> initGame(rowLength, colLength, mines));
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            Menu.open();
+        }
     }
 
     /////////////////////////////////////////////////////////
     //Methods
     /////////////////////////////////////////////////////////
 
-    /*initGame(int numCols, int numRows, int mines)
-     * @Return Void
-     * @numCols Number of columns which is related to the length of a row
-     * @numRows Number of rows which is related to the length of a column
-     * @mines Number of mines in the board
+    /**
+     * Called only by the constructor of {@link #Board} after appropriate preconditions
+     * are checked. Creates the JFrame object that displays the {@link Tile} and generates the 2D
+     * array that stores the Tiles for use by the {@link Game_Driver} class in
+     * controlling the minesweeper mGame.
      *
-     * Creates the board and the information box based on the given
-     * variables. Passes relevant information to a Game_Driver object
-     * to allow the player to play the game.
+     * @ms.Pre-condition Input parameters are verified by constructor and board is ready to be generated from information
+     * @ms.Post-condition A JFrame object holding the desired Tiles and a 2D array corresponding to the board are passed to
+     *       a {@link Game_Driver} object with the parameters that will take user input and respond accordingly
+     *       to play a minesweeper mGame.
+     *
+     * @param numCols Number of columns which is related to the length of a row
+     * @param numRows Number of rows which is related to the length of a column
+     * @param mines Number of mines in the board
      * */
     private void initGame(int numCols, int numRows, int mines) {
+        try {
+            verifyBoardParam(numCols, numRows, mines);
+        }catch(IllegalArgumentException e){
+            System.out.println("Well this is unfortunate.");
+            e.printStackTrace();
+        }
+
         /*
-         *  JFrame game is the board window
-         *  JFrame info is the information window
+         *  JFrame mGame is the board window
+         *  JFrame mInfo is the information window
          */
-        game = new JFrame();
-        info = new JFrame();
+        mGame = new JFrame();
+        mInfo = new JFrame();
         mNumFlags = mines;
 
         /*
         Below are the JFrame values being set, documented by the related
         function name used to set the JFrame characteristic
         */
-        game.setTitle("Definitely not Minesweeper");
+        mGame.setTitle("Definitely not Minesweeper");
 
         /*
          * Because a bigger board placed in the center of the screen would go
-         * off screen, this setup below limits the placement of the game window
+         * off screen, this setup below limits the placement of the mGame window
          * which is oriented by the top left of its frame to the upper left quadrant
          * of the users monitor. This will then move further up and further left
          * as the board increases in respective size.
@@ -89,16 +140,16 @@ public class Board {
         int height = (int) screenSize.getHeight();
         int xOffset = width / 2 - (numRows * 15);
         int yOffset = height / 2 - (numCols * 15);
-        game.setLocation(xOffset, yOffset);
+        mGame.setLocation(xOffset, yOffset);
 
-        game.setResizable(false);
-        game.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        mGame.setResizable(false);
+        mGame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-        info.setTitle("Information");
-        info.setAlwaysOnTop(true);
-        info.setSize(200, 100);
-        info.setLocationRelativeTo(game);
-        info.setLayout(new GridLayout(2, 2));
+        mInfo.setTitle("Information");
+        mInfo.setAlwaysOnTop(true);
+        mInfo.setSize(200, 100);
+        mInfo.setLocationRelativeTo(mGame);
+        mInfo.setLayout(new GridLayout(2, 2));
 
         /*
          * Below is the JLabel being created to show the current number of flags
@@ -121,15 +172,15 @@ public class Board {
         JButton updateFlags = new JButton();
         updateFlags.setText("RESTART");
         updateFlags.addActionListener((ActionEvent event) -> {
-            game.dispose();
-            info.dispose();
+            mGame.dispose();
+            mInfo.dispose();
             Board newgame = new Board(numCols, numRows, mines);
         });
 
-        info.add(updateFlags);
-        info.add(flags);
-        info.setResizable(false);
-        info.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        mInfo.add(updateFlags);
+        mInfo.add(flags);
+        mInfo.setResizable(false);
+        mInfo.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
         /*
         This adds the tiles to a JPanel that is set as a flowlayout that is then
@@ -151,39 +202,46 @@ public class Board {
                 }
                 masterPanel.add(tempPanel);
             }
-            game.add(masterPanel);
+            mGame.add(masterPanel);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
-        game.validate();
-        game.pack();
-        game.setVisible(true);
-        info.validate();
-        info.setVisible(true);
+        mGame.validate();
+        mGame.pack();
+        mGame.setVisible(true);
+        mInfo.validate();
+        mInfo.setVisible(true);
 
         /*
         This WindowListener has an Overridden windowClosing event that allows
         the function Menu.open() to get called on the Board window closing.
         */
-        game.addWindowListener(new WindowAdapter() {
+        mGame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                info.dispose();
-                if (game.getDefaultCloseOperation() == WindowConstants.DISPOSE_ON_CLOSE) {
+                mInfo.dispose();
+                if (mGame.getDefaultCloseOperation() == WindowConstants.DISPOSE_ON_CLOSE) {
                     Menu.open();
                 }
             }
         });
 
-        Game_Driver gameStart = new Game_Driver(game, tileGrid, numRows, numCols, mines);
+        Game_Driver gameStart = new Game_Driver(mGame, tileGrid, numRows, numCols, mines);
     }
 
-    /*incrementFlagCount()
-     * @Return Void
-     *
+    /**
      * Takes the information stored in the flags JLabel
      * and increments it and updates the Label
+     *
+     * @ms.Pre-condition The user has unflagged a tile and the JLabel holding flag information must be incremented
+     * @ms.Post-condition The JLabel holding the flag information is displayed with a value 1 greater than calling
+     *
+     * @throws  NumberFormatException If thrown the JLabel holding the display value for the
+     *                                number of flags remaining for some reason does not parse
+     *                                into an integer correctly.
+     *
+     * @see #decrementFlagCount()
      * */
     static void incrementFlagCount() {
         mNumFlags += 1;
@@ -198,11 +256,18 @@ public class Board {
         }
     }
 
-    /*decrementFlagCount()
-     * @Return Void
-     *
+    /**
      * Takes the information stored in the flags JLabel
      * and decrements it and updates the Label
+     *
+     * @ms.Pre-condition The user has flagged a tile and the JLabel holding flag information must be decremented
+     * @ms.Post-condition The JLabel holding the flag information is displayed with a value 1 less than calling
+     *
+     * @throws  NumberFormatException If thrown the JLabel holding the display value for the
+     *                                number of flags remaining for some reason does not parse
+     *                                into an integer correctly.
+     *
+     * @see #incrementFlagCount()
      * */
     static void decrementFlagCount() {
         mNumFlags -= 1;
@@ -216,22 +281,70 @@ public class Board {
         }
     }
 
-
-    /////////////////////////////////////////////////////////
-    //Getters
-    /////////////////////////////////////////////////////////
-    static JFrame getInfoFrame() {
-        return info;
+    /**
+     * Checks the passed in parameters to ensure that they meet the requirements.
+     *
+     * @ms.Pre-condition Board values are needing to be verified.
+     * @ms.Post-condition Passed in board values were verified and no exception was thrown
+     *
+     * @param col the number of columns must be 2 or greater, otherwise throw an exception
+     * @param row the number of rows must be 2 or greater, otherwise throw an exception
+     * @param mines the number of mines must be greater than 0 but less than the number of tiles (row * col)
+     *
+     * @throws IllegalArgumentException Exception thrown if any of the past in arguments do not pass the specified
+     *                                  requirements.
+     * */
+    private void verifyBoardParam(int col, int row, int mines){
+        if(row < 2){
+            throw new IllegalArgumentException("Illegal row length: " + row);
+        }
+        else if(col < 2){
+            throw new IllegalArgumentException("Illegal col length: " + col);
+        }
+        else if(mines < 1 || mines > ((col * row) - 1)){
+            throw new IllegalArgumentException("Illegal number of mines: " + mines);
+        }
     }
 
+
+    /**
+     * Returns the JFrame mInfo that is created during {@link #initGame(int, int, int)} that
+     * holds information about available flags and also allows the user to restart the mGame.
+     *
+     * @return {@link #mInfo} JFrame that holds the replay button and the flag JLabel.
+     *
+     * @ms.Pre-condition No gaurantees are made before this function is called
+     * @ms.Post-condition The JFrame object called mInfo is returned
+     *
+     * @see #mInfo
+     * */
+    static JFrame getInfoFrame() {
+        return mInfo;
+    }
+
+    /**
+     * Returns the member variable {@link #mNumFlags} that corresponds to
+     * the number of flags in the current mGame of minesweeper.
+     *
+     * @return {@link #mNumFlags} Number of flags available to be placed
+     *
+     * @ms.Pre-condition No gaurantees are made before this function is called
+     * @ms.Post-condition The integer stored in mNumFlags is returned
+     *
+     * @see #mNumFlags
+     * */
     static int getFlagCount() {
         return mNumFlags;
     }
 
-    /////////////////////////////////////////////////////////
-    //Main
-    /////////////////////////////////////////////////////////
-    public static void main(String[] args) {
+    /**
+     * Main function of Board.java holds no particular significance and is left blank.
+     *
+     * @ms.Pre-condition No gaurantees are made before this function is called
+     * @ms.Post-condition No result of calling Board.main()
+     *
+     * */
+    public static void main() {
         /* Empty main() */
     }
 }

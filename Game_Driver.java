@@ -1,16 +1,3 @@
-/* Game_Driver.java -- Sets mines, tile values, and checks if the game is over
- *
- * gameOver() -- Called if the player has lost by clicking on a mine, ends the game
- * gameWin() -- Called if the player has won the game and checks all the tiles before prompting user for replay
- * isEndPossible() -- Called when a flag is set to check if the mines are all flagged and tiles are all revealed
- * openTile() -- Recursive function that expands from an empty tile orthogonally
- * initBoard() -- Places mines and sets the value of surrounding mines in each tile
- *
- * placeMines() -- called by initBoard() to place all of the mines
- * setMine() -- called by placeMines() to check if a tile is a mine, if not place the mine, if yes call setMine() again
- * setRiskNum() called by initBoard() to set the value of all surrounding mines to every tile
- * */
-
 //Swing imports
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;

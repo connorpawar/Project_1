@@ -1,9 +1,3 @@
-/* Menu.java -- Creates the menu that takes user input, entry point of minesweeper game.
- *
- * open() -- creates a new menu object
- * initMenu() -- called by the constructor of menu, creates all relevant input fields for user
- * */
-
 //Swing imports
 import javax.swing.JFrame;
 import javax.swing.JButton;
