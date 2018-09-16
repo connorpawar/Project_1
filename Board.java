@@ -1,25 +1,44 @@
+/*Board.java -- Meant to initialize the board and pass related values to Game_Driver
+ *
+ * initGame(int, int, int) -- Creates the board, info window, and passes to Game_Driver
+ * incrementFlagCount() -- increments the flagCount of the JLabel
+ * decrementFlagCount() -- decrements the flagCount of the JLabel
+ *
+ * getInfoFrame() -- returns the JFrame that stores info about the flags
+ * getFlagCount() -- returns mNumFlags
+ * main() -- Empty
+ * */
+
+//Swing imports
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JButton;
+import javax.swing.WindowConstants;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+//AWT imports
+import java.awt.EventQueue;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.FlowLayout;
+import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+//Non-GUI related imports
 import java.io.IOException;
 import java.lang.Exception;
-
-/*
-The below imports need to be adjusted to only import the
-required classes/methods for this file, I got lazy and just
-imported every class/method in awt/swing/imagio
-*/
-import java.awt.*;
-import javax.swing.*;
-import javax.imageio.*;
 
 public class Board {
     /* Centralized location for Board variables */
     static int tileSize = 30;
     private static int mNumFlags;
     private static JLabel flags;
-    public static JFrame info;
-    public static JFrame game;
+    private static JFrame info;
+    private static JFrame game;
 
     /////////////////////////////////////////////////////////
     //Constructor
@@ -32,25 +51,51 @@ public class Board {
     /////////////////////////////////////////////////////////
     //Methods
     /////////////////////////////////////////////////////////
+
+    /*initGame(int numCols, int numRows, int mines)
+     * @Return Void
+     * @numCols Number of columns which is related to the length of a row
+     * @numRows Number of rows which is related to the length of a column
+     * @mines Number of mines in the board
+     *
+     * Creates the board and the information box based on the given
+     * variables. Passes relevant information to a Game_Driver object
+     * to allow the player to play the game.
+     * */
     private void initGame(int numCols, int numRows, int mines) {
         /*
          *  JFrame game is the board window
          *  JFrame info is the information window
-         *
          */
         game = new JFrame();
         info = new JFrame();
         mNumFlags = mines;
+
         /*
         Below are the JFrame values being set, documented by the related
         function name used to set the JFrame characteristic
         */
         game.setTitle("Definitely not Minesweeper");
-        game.setLocationRelativeTo(null);
+
+        /*
+         * Because a bigger board placed in the center of the screen would go
+         * off screen, this setup below limits the placement of the game window
+         * which is oriented by the top left of its frame to the upper left quadrant
+         * of the users monitor. This will then move further up and further left
+         * as the board increases in respective size.
+         * */
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int width = (int) screenSize.getWidth();
+        int height = (int) screenSize.getHeight();
+        int xOffset = width / 2 - (numRows * 15);
+        int yOffset = height / 2 - (numCols * 15);
+        game.setLocation(xOffset, yOffset);
+
         game.setResizable(false);
         game.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         info.setTitle("Information");
+        info.setAlwaysOnTop(true);
         info.setSize(200, 100);
         info.setLocationRelativeTo(game);
         info.setLayout(new GridLayout(2, 2));
@@ -79,14 +124,6 @@ public class Board {
             game.dispose();
             info.dispose();
             Board newgame = new Board(numCols, numRows, mines);
-            /*try {
-                if (Integer.parseInt(flags.getText().replaceAll("[^\\d]", "")) == 0) {
-                    throw new NumberFormatException();
-                }
-                flags.setText("Flags Available: " + Integer.toString(Integer.parseInt(flags.getText().replaceAll("[^\\d]", "")) - 1));
-            } catch (NumberFormatException e) {
-                System.out.println(flags.getText());
-            }*/
         });
 
         info.add(updateFlags);
@@ -133,7 +170,7 @@ public class Board {
             @Override
             public void windowClosing(WindowEvent e) {
                 info.dispose();
-                if(game.getDefaultCloseOperation() == WindowConstants.DISPOSE_ON_CLOSE){
+                if (game.getDefaultCloseOperation() == WindowConstants.DISPOSE_ON_CLOSE) {
                     Menu.open();
                 }
             }
@@ -142,10 +179,17 @@ public class Board {
         Game_Driver gameStart = new Game_Driver(game, tileGrid, numRows, numCols, mines);
     }
 
-    static void decrementFlagCount() {
-        mNumFlags -= 1;
+    /*incrementFlagCount()
+     * @Return Void
+     *
+     * Takes the information stored in the flags JLabel
+     * and increments it and updates the Label
+     * */
+    static void incrementFlagCount() {
+        mNumFlags += 1;
+
         try {
-            if (Integer.parseInt(flags.getText().replaceAll("[^\\d]", "")) == 0) {
+            if (Integer.parseInt(flags.getText().replaceAll("[^\\d]", "")) == mNumFlags) {
                 throw new NumberFormatException();
             }
             flags.setText("Flags Available: " + Integer.toString(mNumFlags));
@@ -154,11 +198,16 @@ public class Board {
         }
     }
 
-    static void incrementFlagCount() {
-        mNumFlags += 1;
-
+    /*decrementFlagCount()
+     * @Return Void
+     *
+     * Takes the information stored in the flags JLabel
+     * and decrements it and updates the Label
+     * */
+    static void decrementFlagCount() {
+        mNumFlags -= 1;
         try {
-            if (Integer.parseInt(flags.getText().replaceAll("[^\\d]", "")) == mNumFlags) {
+            if (Integer.parseInt(flags.getText().replaceAll("[^\\d]", "")) == 0) {
                 throw new NumberFormatException();
             }
             flags.setText("Flags Available: " + Integer.toString(mNumFlags));
@@ -175,10 +224,6 @@ public class Board {
         return info;
     }
 
-    static JFrame getGameFrame(){
-        return game;
-    }
-
     static int getFlagCount() {
         return mNumFlags;
     }
@@ -189,5 +234,4 @@ public class Board {
     public static void main(String[] args) {
         /* Empty main() */
     }
-
 }

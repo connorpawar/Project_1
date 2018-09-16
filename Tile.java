@@ -1,15 +1,42 @@
+/* Tile.java -- Extension of the JButton class to act as a tile in a minesweeper game.
+ *
+ * getFlagged() -- returns mFlagged
+ * getSurroundingMines() -- returns mSurroundingMines
+ * getIsMine() -- returns mIsMine
+ *
+ * canOpen() -- returns true if a tile is not opened and not flagged
+ *
+ * setNullIcon() -- sets a tile icon to null
+ * setMineIcon() -- sets a tile icon to mMineIcon
+ * setDisable() -- this sets a button to disabled and removes the mouseListener from it disabling user input to the tile
+ * setFlagged() -- flags/unflags tiles as appropriate and will recognize a gameWin() on a flag placement
+ * setIcons() -- sets all of the ImageIcons used in the operation of the minesweeper game, called in Menu.java main()
+ * setX() -- sets the x value of a tile for use in openTile(), called upon tile creation in Board.java
+ * setY() -- sets the y value of a tile for use in openTile(), called upon tile creation in Board.java
+ * setSurroundingMines() -- sets mSurroundingMines
+ * setIsMine() -- sets mIsMine
+ * displaySurroundingMines() -- when called displays the correct tile related to being pressed, disables tile after
+ * setIsOpened() -- sets mOpened true
+ * */
+
+//Swing imports
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-import java.io.IOException;
+import javax.swing.JButton;
+import javax.swing.ImageIcon;
+//AWT imports
+import java.awt.Insets;
+import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.InputEvent;
+//Non-GUI related imports
+import java.io.IOException;
 
 
-public class Tile extends JButton {
-    /* Contants for Tiles */
+class Tile extends JButton {
+    /* Constants for Tiles */
     private static final int mTileSize = 30;
 
     /* Member variables of tiles */
@@ -56,7 +83,9 @@ public class Tile extends JButton {
         }
     };
 
-    //constructor
+    /////////////////////////////////////////////////////////
+    //Constructor
+    /////////////////////////////////////////////////////////
     Tile() {
         super();
 
@@ -78,7 +107,7 @@ public class Tile extends JButton {
     //Getters
     /////////////////////////////////////////////////////////
 
-    public boolean getFlagged() {
+    boolean getFlagged() {
         return mFlagged;
     }
 
@@ -88,10 +117,6 @@ public class Tile extends JButton {
 
     boolean getIsMine() {
         return mIsMine;
-    }
-
-    public boolean getIsOpened() {
-        return mOpened;
     }
 
     boolean canOpen() {
@@ -107,11 +132,11 @@ public class Tile extends JButton {
         setDisable();
     }
 
-    private void setMineIcon() {
+    void setMineIcon() {
         setIcon(mMineIcon);
     }
 
-    public void setDisable() {
+    void setDisable() {
         setEnabled(false);
         removeMouseListener(mouseListener);
     }
@@ -130,8 +155,6 @@ public class Tile extends JButton {
             setIcon(mTileIcon);
             mFlagged = false;
             Board.incrementFlagCount();
-        } else {
-
         }
     }
 
@@ -171,10 +194,6 @@ public class Tile extends JButton {
         } catch (Exception e) {
             System.out.println("ImageIcons not set successfully.");
         }
-    }
-
-    void setMine() {
-        setIcon(mMineIcon);
     }
 
     void setX(int i) {
