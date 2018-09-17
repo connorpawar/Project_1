@@ -1,19 +1,20 @@
+package minesweeper;
+
 //Swing imports
-import javax.swing.JFrame;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 //AWT imports
 import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.Toolkit;
 
+/**
+ * Creates the menu that the user inputs information into and then verifies input
+ * and passes the input over to {@link Board} as well as calls {@link Tile#setIcons()} to set the
+ * static icon variables in the {@link Tile} class, the entry point of Minesweeper.
+ * */
 public class Menu {
 
     /**
-     * Menu() Constructor
      * Constructor just calls initMenu() which
      * initializes the menu
      *
@@ -26,26 +27,23 @@ public class Menu {
     }
 
     /**
-     *
-     * open() provides a public method to avoid
+     * Provides a public method to avoid
      * creating Menu Objects in any other class
      *
      * @ms.Pre-condition The board, winFrame, or loseFrame are disposed
      * @ms.Post-condition Calls the constructor to create a new menu for the user to create a new board
-     *
      * */
     static void open() {
         Menu menu = new Menu();
     }
 
     /**
-     * 
-     * Creates the menu, which takes in the user's input, verifies it, 
+     * Creates the menu, which takes in the user's input, verifies it,
      * and passes it to {@link Board}
      *
      * @ms.Pre-condition No guarantees are made before this function is called
      * @ms.Post-condition Creates a JFrame where users can input their preferred rows, columns and mines
-     *      while confirming the inputs are valid and passing them to Board class
+     *                    while confirming the inputs are valid and passing them to Board class
      * */
     private void initMenu() {
 
@@ -178,6 +176,9 @@ public class Menu {
     /////////////////////////////////////////////////////////
     /**
      * Main calls the constructor for {@link #Menu()}
+     *
+     * @param args Never used due to this class being the entry point of the function.
+     *
      * @ms.Pre-condition No guarantees are made before this function is called
      * @ms.Post-condition Constructor is called
      */

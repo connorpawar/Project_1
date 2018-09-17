@@ -1,3 +1,5 @@
+package minesweeper;
+
 //Swing imports
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,6 +23,11 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.lang.Exception;
 
+/**
+ * Creates the JFrame holding the {@link Tile}'s and populates the JFrame
+ * with the tiles as well as creates the info frame and the 2D array used by {@link Game_Driver} to
+ * control the Minesweeper game eventually passing full control to Game_Driver.
+ * */
 public class Board {
 
     /**
@@ -30,8 +37,8 @@ public class Board {
     final static int tileSize = 30;
 
     /**
-     * Number of flags available to the user which is equal to the number
-     * of mines on the board. Used by various functions to track flags placed by user.
+     * Number of mFlags available to the user which is equal to the number
+     * of mines on the board. Used by various functions to track mFlags placed by user.
      *
      * @see #incrementFlagCount()
      * @see #decrementFlagCount()
@@ -40,14 +47,14 @@ public class Board {
     private static int mNumFlags;
 
     /**
-     * JLabel that displays the text containing Flags Available: and
-     * also the current number of flags which is equivalent to {@link #mNumFlags}
+     * JLabel that displays the text containing Flags Available and
+     * also the current number of mFlags which is equivalent to {@link #mNumFlags}
      * */
-    private static JLabel flags;
+    private static JLabel mFlags;
 
     /**
      * JFrame that holds the replay JButton as well as the JLabel that tells the
-     * user how many flags are available to be placed still. Useful as member variable
+     * user how many mFlags are available to be placed still. Useful as member variable
      * to let other functions manipulate text field indicating available mines.
      *
      * @see #getInfoFrame()
@@ -152,20 +159,20 @@ public class Board {
         mInfo.setLayout(new GridLayout(2, 2));
 
         /*
-         * Below is the JLabel being created to show the current number of flags
+         * Below is the JLabel being created to show the current number of mFlags
          * available to the player.
          */
-        flags = new JLabel();
-        flags.setText("Flags Available: " + Integer.toString(mines));
+        mFlags = new JLabel();
+        mFlags.setText("Flags Available: " + Integer.toString(mines));
         try {
             Image img = ImageIO.read(getClass().getResource("Resources/flag.png"));
-            flags.setIcon(new ImageIcon(img));
+            mFlags.setIcon(new ImageIcon(img));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         /*
-         * Below is a button being created to test the decrement of the flags JLabel
+         * Below is a button being created to test the decrement of the mFlags JLabel
          * by clicking the Tile updateFlags, this will be implemented as an extension
          * of the Tile class.
          */
@@ -178,7 +185,7 @@ public class Board {
         });
 
         mInfo.add(updateFlags);
-        mInfo.add(flags);
+        mInfo.add(mFlags);
         mInfo.setResizable(false);
         mInfo.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
@@ -231,14 +238,14 @@ public class Board {
     }
 
     /**
-     * Takes the information stored in the flags JLabel
+     * Takes the information stored in the mFlags JLabel
      * and increments it and updates the Label
      *
      * @ms.Pre-condition The user has unflagged a tile and the JLabel holding flag information must be incremented
      * @ms.Post-condition The JLabel holding the flag information is displayed with a value 1 greater than calling
      *
      * @throws  NumberFormatException If thrown the JLabel holding the display value for the
-     *                                number of flags remaining for some reason does not parse
+     *                                number of mFlags remaining for some reason does not parse
      *                                into an integer correctly.
      *
      * @see #decrementFlagCount()
@@ -247,24 +254,24 @@ public class Board {
         mNumFlags += 1;
 
         try {
-            if (Integer.parseInt(flags.getText().replaceAll("[^\\d]", "")) == mNumFlags) {
+            if (Integer.parseInt(mFlags.getText().replaceAll("[^\\d]", "")) == mNumFlags) {
                 throw new NumberFormatException();
             }
-            flags.setText("Flags Available: " + Integer.toString(mNumFlags));
+            mFlags.setText("Flags Available: " + Integer.toString(mNumFlags));
         } catch (NumberFormatException e) {
-            System.out.println(flags.getText());
+            System.out.println(mFlags.getText());
         }
     }
 
     /**
-     * Takes the information stored in the flags JLabel
+     * Takes the information stored in the mFlags JLabel
      * and decrements it and updates the Label
      *
      * @ms.Pre-condition The user has flagged a tile and the JLabel holding flag information must be decremented
      * @ms.Post-condition The JLabel holding the flag information is displayed with a value 1 less than calling
      *
      * @throws  NumberFormatException If thrown the JLabel holding the display value for the
-     *                                number of flags remaining for some reason does not parse
+     *                                number of mFlags remaining for some reason does not parse
      *                                into an integer correctly.
      *
      * @see #incrementFlagCount()
@@ -272,12 +279,12 @@ public class Board {
     static void decrementFlagCount() {
         mNumFlags -= 1;
         try {
-            if (Integer.parseInt(flags.getText().replaceAll("[^\\d]", "")) == 0) {
+            if (Integer.parseInt(mFlags.getText().replaceAll("[^\\d]", "")) == 0) {
                 throw new NumberFormatException();
             }
-            flags.setText("Flags Available: " + Integer.toString(mNumFlags));
+            mFlags.setText("Flags Available: " + Integer.toString(mNumFlags));
         } catch (NumberFormatException e) {
-            System.out.println(flags.getText());
+            System.out.println(mFlags.getText());
         }
     }
 
@@ -309,7 +316,7 @@ public class Board {
 
     /**
      * Returns the JFrame mInfo that is created during {@link #initGame(int, int, int)} that
-     * holds information about available flags and also allows the user to restart the mGame.
+     * holds information about available mFlags and also allows the user to restart the mGame.
      *
      * @return {@link #mInfo} JFrame that holds the replay button and the flag JLabel.
      *
@@ -324,9 +331,9 @@ public class Board {
 
     /**
      * Returns the member variable {@link #mNumFlags} that corresponds to
-     * the number of flags in the current mGame of minesweeper.
+     * the number of mFlags in the current mGame of minesweeper.
      *
-     * @return {@link #mNumFlags} Number of flags available to be placed
+     * @return {@link #mNumFlags} Number of mFlags available to be placed
      *
      * @ms.Pre-condition No gaurantees are made before this function is called
      * @ms.Post-condition The integer stored in mNumFlags is returned
