@@ -1,3 +1,5 @@
+package minesweeper;
+
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
@@ -12,39 +14,40 @@ import java.awt.event.InputEvent;
 //Non-GUI related imports
 import java.io.IOException;
 
-
+/**
+ * An extension of the JButton class to be used as tiles of a Minesweeper game.
+ * */
 class Tile extends JButton {
     /* Constants for Tiles */
-	/** mTileSize - The length and width of all tiles */
+	/** The length and width of all tiles */
     private static final int mTileSize = 30;
 
     /* Member variables of tiles */
-    /** mSurroundingMines - holds the number of adjacent mines*/
+    /** holds the number of adjacent mines*/
     private int mSurroundingMines;
-    /** mFlagged - true if the tile is currenly flagged */
+    /** true if the tile is currenly flagged */
     private boolean mFlagged;
-    /** mIsMine - true if the tile is a mine */
+    /** true if the tile is a mine */
     private boolean mIsMine;
-    /** mOpened - true if the tile is open */
+    /** true if the tile is open */
     private boolean mOpened;
-    /** x - the x coordinate in the board */
+    /** the x coordinate in the board */
     private int x;
-    /** y - the y coordinate in the board */
+    /** the y coordinate in the board */
     private int y;
 
     /* The ImageIcons used to display the icons */
-    /** mFaggedIcon - Image for flag used on tiles*/
+    /** Image for flag used on tiles*/
     private static ImageIcon mFlaggedIcon;
-    /** mMineIcon - Image for mine used on tiles*/
+    /** Image for mine used on tiles*/
     private static ImageIcon mMineIcon;
-    /** mTileIcon - Image for tile used on tiles */
+    /** Image for tile used on tiles */
     private static ImageIcon mTileIcon;
-    /** mPressedIcon - Image for a pressed tile if surrounding mines are 0 use on tile */
+    /** Image for a pressed tile if surrounding mines are 0 use on tile */
     private static ImageIcon mPressedIcon;
 
     /**
      * MouseListener that controls the tiles right and left click
-     * @param mouseEvent passed from mouse when clicked. shows left, right, or middle button clicked
      */
     private MouseListener mouseListener = new MouseAdapter() {
         public void mousePressed(MouseEvent mouseEvent) {
@@ -80,7 +83,7 @@ class Tile extends JButton {
     /////////////////////////////////////////////////////////
 
     /**
-     * Constructs defalut tile sets default tile icon, size, visibility, margin, and mouse listener
+     * Constructs default tile sets default tile icon, size, visibility, margin, and mouse listener
      */
     Tile() {
         super();
@@ -104,7 +107,8 @@ class Tile extends JButton {
 
     /**
      * returns mFlagged
-     * @return True if tile is falgged
+     *
+     * @return True if tile is flagged
      */
     boolean getFlagged() {
         return mFlagged;
@@ -112,6 +116,7 @@ class Tile extends JButton {
 
     /**
      * returns mSurroundingMines
+     *
      * @return The number of adjacent mines
      */
     Integer getSurroundingMines() {
@@ -120,6 +125,7 @@ class Tile extends JButton {
 
     /**
      * returns mIsMine
+     *
      * @return True if the tile is a mine
      */
     boolean getIsMine() {
@@ -128,7 +134,8 @@ class Tile extends JButton {
 
     /**
      * Says if the tile can be opened
-     * @return True if tile can be opened, not open and not falgged
+     *
+     * @return True if tile can be opened, not open and not flagged
      */
     boolean canOpen() {
         return (!mOpened && !mFlagged);
@@ -163,6 +170,7 @@ class Tile extends JButton {
 
     /**
      * Set the tile icon to a flag image and sets member variable mFlagged
+     *
      * @param flagged True if tile show be flagged
      */
     private void setFlagged(boolean flagged) {
@@ -224,6 +232,7 @@ class Tile extends JButton {
 
     /**
      * Sets the x value of a tile for use in openTile(), called upon tile creation in Board.java
+     *
      * @param i The new x coordinate
      */
     void setX(int i) {
@@ -232,6 +241,7 @@ class Tile extends JButton {
 
     /**
      * Sets the y value of a tile for use in openTile(), called upon tile creation in Board.java
+     *
      * @param j The new y coordinate
      */
     void setY(int j) {
@@ -240,6 +250,7 @@ class Tile extends JButton {
 
     /**
      * Sets mSurroundingMines
+     *
      * @param mineCount The number of adjacent mines
      */
     void setSurroundingMines(int mineCount) {
@@ -248,6 +259,7 @@ class Tile extends JButton {
 
     /**
      * Sets the flag if the tile is a mine
+     *
      * @param isMine The new mIsMine value
      */
     void setIsMine(boolean isMine) {
@@ -278,7 +290,7 @@ class Tile extends JButton {
     }
 
     /**
-     * Sets mOpened true
+     * Sets mOpened to true
      */
     void setIsOpened() {
         mOpened = true;
