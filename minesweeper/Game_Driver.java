@@ -55,7 +55,13 @@ class Game_Driver {
      *
      * */
     Game_Driver(JFrame game, Tile[][] tileArray, int numRows, int numCols, int mineCount) {
-        mGame = game;
+        mGame = game
+		JButton cheatButton = new JButton("Cheat Mode");
+        cheatButton.setBounds(100, 250, 80, 40);
+		cheatButton.addActionListener(e -> {
+            CheatMode();
+        });
+		mGame.add(cheatButton);
         mTileArray = tileArray;
         mNumRows = numRows;
         mNumCols = numCols;
