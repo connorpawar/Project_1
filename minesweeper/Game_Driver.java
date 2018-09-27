@@ -32,6 +32,8 @@ class Game_Driver {
     private static int mNumCols;
     /** holds the number of mines **/
     private static int mNumMines;
+    /** True if the cheat mode is active **/
+    private static int mCheatActive;
 
     /////////////////////////////////////////////////////////
     //Constructor
@@ -298,7 +300,7 @@ class Game_Driver {
      * @ms.Pre-condition No guarantees are made before this function is called
      * @ms.Post-condition All of the tiles are given a mine risk number
      *
-     * @see Tile#getIsMine() 
+     * @see Tile#getIsMine()
      * */
     private void setRiskNum() {
         for (int i = 0; i < mNumRows; i++) {
@@ -342,4 +344,18 @@ class Game_Driver {
             }
         }
     }
+
+	void CheatMode() {
+		for(int i = 0; i<mNumRows; i++){
+			for(int j = 0; j<nNumCols; j++){
+				mTileArray[i][j].TileCheat(mCheatActive);
+			}
+		}
+		if(mCheatActive){
+			mCheatActive = false;
+		}
+		else{
+			mCheatActive = true;
+		}
+	}
 }

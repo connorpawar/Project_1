@@ -295,4 +295,25 @@ class Tile extends JButton {
     void setIsOpened() {
         mOpened = true;
     }
+	void TileCheat(boolean cheatmode) {
+		if(cheatmode && mOpened){
+			if (mSurroundingMines > 0) {
+				displaySurroundingMines();
+			}
+			else {
+				setNullIcon();
+			}
+		}
+		else{
+			if (mIsMine) {
+				setMineIcon();
+			}
+			else if (mSurroundingMines > 0) {
+				displaySurroundingMines();
+			}
+			else {
+				setNullIcon();
+			}
+		}
+	}
 }
