@@ -25,7 +25,7 @@ class Tile extends JButton {
     /* Member variables of tiles */
     /** holds the number of adjacent mines*/
     private int mSurroundingMines;
-    /** true if the tile is currenly flagged */
+    /** true if the tile is currently flagged */
     private boolean mFlagged;
     /** true if the tile is a mine */
     private boolean mIsMine;
@@ -60,8 +60,12 @@ class Tile extends JButton {
                         Game_Driver.gameOver();
                     } else {
                         if (mSurroundingMines > 0) {
+                        	
                             displaySurroundingMines();
                         } else {
+                        	removeMine();
+                        	Game_Driver.updateMineNums();
+                        	//displaySurroundingMines();
                             setNullIcon();
                             Game_Driver.openTile(x, y);
                         }
@@ -277,6 +281,7 @@ class Tile extends JButton {
     void displaySurroundingMines() {
 
         if (mSurroundingMines == 0) {
+        	setText("");
             setIcon(mPressedIcon);
         } else if (mSurroundingMines > 0) {
             try {
@@ -294,5 +299,13 @@ class Tile extends JButton {
      */
     void setIsOpened() {
         mOpened = true;
+    }
+    
+    void removeMine() {
+    	setIcon(mPressedIcon);
+    	setText("");
+    	
+    	Game_Driver.resetMineNum();
+    	
     }
 }
