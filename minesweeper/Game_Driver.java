@@ -376,6 +376,7 @@ class Game_Driver {
                 JPanel tempPanel = new JPanel(new GridLayout(mNumCols, 1));
 
                 for (int j = 0; j < mNumCols; j++) {
+                	copyTileArray[i][j] = new Tile(mTileArray[i][j]);
                     tempPanel.add(copyTileArray[i][j]);
                     copyTileArray[i][j].TileCheat();
                 }

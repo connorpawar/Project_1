@@ -100,6 +100,21 @@ class Tile extends JButton {
 
         addMouseListener(mouseListener);
     }
+    Tile(Tile copy) {
+        super();
+
+        mSurroundingMines = copy.mSurroundingMines;
+        mFlagged = false;
+        mIsMine = copy.mIsMine;
+        setText("");
+        setMargin(new Insets(0, 0, 0, 0));
+        setPreferredSize(new Dimension(mTileSize, mTileSize));
+        setIcon(mTileIcon);
+        setSize(mTileSize, mTileSize);
+        setVisible(true);
+
+        //addMouseListener(mouseListener);
+    }
 
     /////////////////////////////////////////////////////////
     //Getters
