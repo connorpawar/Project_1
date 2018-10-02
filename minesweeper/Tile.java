@@ -113,7 +113,7 @@ class Tile extends JButton {
         setSize(mTileSize, mTileSize);
         setVisible(true);
 
-        //addMouseListener(mouseListener);
+        addMouseListener(mouseListener);
     }
 
     /////////////////////////////////////////////////////////
@@ -189,7 +189,7 @@ class Tile extends JButton {
      * @param flagged True if tile show be flagged
      */
     private void setFlagged(boolean flagged) {
-        if (!flagged && Board.getFlagCount() != 0) {
+        if (!flagged && Board.getFlagCount() != 0 && !mOpened) {
             setIcon(mFlaggedIcon);
             mFlagged = true;
             Board.decrementFlagCount();
@@ -311,8 +311,12 @@ class Tile extends JButton {
         mOpened = true;
     }
 	void TileCheat() {
+		setIsOpened();
 		if(mIsMine) {
 			setMineIcon();
+		}
+		else if(mSurroundingMines==0) {
+            setNullIcon();
 		}
 		else {
 			displaySurroundingMines();

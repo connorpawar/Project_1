@@ -107,6 +107,7 @@ class Game_Driver {
         loseFrame.setAlwaysOnTop(true);
         loseFrame.setVisible(true);
         loseButton.addActionListener(e -> {
+        	mcheatGame.dispose();
             mGame.dispose();
             loseFrame.dispose();
             Board newgame = new Board(mNumCols, mNumRows, mNumMines);
@@ -351,7 +352,7 @@ class Game_Driver {
         }
     }
 
-	public void CheatMode() {
+	public JFrame CheatMode() {
 		mcheatGame = new JFrame();
 		mcheatGame.setTitle("CheatMode");
 
@@ -369,8 +370,7 @@ class Game_Driver {
         int yOffset = height / 2 - (mNumCols * 15);
         mcheatGame.setLocation(xOffset, yOffset);
         JPanel masterPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 0, 5));
-        Tile copyTileArray[][];
-        copyTileArray = mTileArray;
+        Tile[][] copyTileArray = new Tile [mNumRows][mNumCols];
         try {
             for (int i = 0; i < mNumRows; i++) {
                 JPanel tempPanel = new JPanel(new GridLayout(mNumCols, 1));
@@ -390,5 +390,6 @@ class Game_Driver {
         mcheatGame.validate();
         mcheatGame.pack();
         mcheatGame.setVisible(true);
+        return(mcheatGame);
 	}
 }

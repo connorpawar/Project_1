@@ -67,6 +67,7 @@ public class Board {
      * to control the board.
      * */
     private static JFrame mGame;
+    private static JFrame mCheatGame;
 
     /**
      * This constructor takes in the various input values from the user that is
@@ -182,6 +183,7 @@ public class Board {
         updateFlags.addActionListener((ActionEvent event) -> {
             mGame.dispose();
             mInfo.dispose();
+            mCheatGame.dispose();
             Board newgame = new Board(numCols, numRows, mines);
         });
 
@@ -240,7 +242,7 @@ public class Board {
         JButton cheatMode = new JButton();
         cheatMode.setText("Cheat Mode");
         cheatMode.addActionListener((ActionEvent event) -> {
-        	gameStart.CheatMode();
+        	mCheatGame = gameStart.CheatMode();
         });
         mInfo.add(cheatMode);
     }
