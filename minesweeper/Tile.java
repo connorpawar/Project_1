@@ -25,7 +25,7 @@ class Tile extends JButton {
     /* Member variables of tiles */
     /** holds the number of adjacent mines*/
     private int mSurroundingMines;
-    /** true if the tile is currenly flagged */
+    /** true if the tile is currently flagged */
     private boolean mFlagged;
     /** true if the tile is a mine */
     private boolean mIsMine;
@@ -295,20 +295,12 @@ class Tile extends JButton {
     void setIsOpened() {
         mOpened = true;
     }
-	void TileCheat(boolean cheatmode) {
-		if(cheatmode && !mOpened){
-			setIcon(mTileIcon);
+	void TileCheat() {
+		if(mIsMine) {
+			setMineIcon();
 		}
-		else{
-			if (mIsMine) {
-				setMineIcon();
-			}
-			else if (mSurroundingMines > 0) {
-				displaySurroundingMines();
-			}
-			else {
-				setNullIcon();
-			}
+		else {
+			displaySurroundingMines();
 		}
 	}
 }

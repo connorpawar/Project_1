@@ -4,9 +4,15 @@ package minesweeper;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JButton;
+
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 //AWT imports
 import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 //Non-GUI related imports
@@ -20,6 +26,8 @@ class Game_Driver {
     /* Objects for Game_Driver */
     /** set equal to JFrame board in constructor from {@link Board}, game window that user interacts with **/
     private static JFrame mGame;
+    /** set equal to JFrame board in constructor from {@link Board}, game window that user interacts with **/
+    private static JFrame mcheatGame;
     /** 2D Tile array of used for game logic, equal coordinates to nXm game board **/
     private static Tile mTileArray[][];
     /** creates a random value, used for x,y coordinates **/
@@ -32,8 +40,6 @@ class Game_Driver {
     private static int mNumCols;
     /** holds the number of mines **/
     private static int mNumMines;
-    /** True if the cheat mode is active **/
-    private static int mCheatActive;
 
     /////////////////////////////////////////////////////////
     //Constructor
@@ -55,13 +61,7 @@ class Game_Driver {
      *
      * */
     Game_Driver(JFrame game, Tile[][] tileArray, int numRows, int numCols, int mineCount) {
-        mGame = game
-		JButton cheatButton = new JButton("Cheat Mode");
-        cheatButton.setBounds(100, 250, 80, 40);
-		cheatButton.addActionListener(e -> {
-            CheatMode();
-        });
-		mGame.add(cheatButton);
+        mGame = game;
         mTileArray = tileArray;
         mNumRows = numRows;
         mNumCols = numCols;
@@ -351,17 +351,43 @@ class Game_Driver {
         }
     }
 
-	void CheatMode() {
-		for(int i = 0; i<mNumRows; i++){
-			for(int j = 0; j<nNumCols; j++){
-				mTileArray[i][j].TileCheat(mCheatActive);
-			}
-		}
-		if(mCheatActive){
-			mCheatActive = false;
-		}
-		else{
-			mCheatActive = true;
-		}
+	public void CheatMode() {
+		mcheatGame = new JFrame();
+		mcheatGame.setTitle("CheatMode");
+
+        /*
+         * Because a bigger board placed in the center of the screen would go
+         * off screen, this setup below limits the placement of the mGame window
+         * which is oriented by the top left of its frame to the upper left quadrant
+         * of the users monitor. This will then move further up and further left
+         * as the board increases in respective size.
+         * */
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int width = (int) screenSize.getWidth();
+        int height = (int) screenSize.getHeight();
+        int xOffset = width / 2 - (mNumRows * 15);
+        int yOffset = height / 2 - (mNumCols * 15);
+        mcheatGame.setLocation(xOffset, yOffset);
+        JPanel masterPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 0, 5));
+        Tile copyTileArray[][];
+        copyTileArray = mTileArray;
+        try {
+            for (int i = 0; i < mNumRows; i++) {
+                JPanel tempPanel = new JPanel(new GridLayout(mNumCols, 1));
+
+                for (int j = 0; j < mNumCols; j++) {
+                    tempPanel.add(copyTileArray[i][j]);
+                    copyTileArray[i][j].TileCheat();
+                }
+                masterPanel.add(tempPanel);
+            }
+            mcheatGame.add(masterPanel);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        mcheatGame.validate();
+        mcheatGame.pack();
+        mcheatGame.setVisible(true);
 	}
 }
