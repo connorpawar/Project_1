@@ -30,10 +30,14 @@ class Game_Driver {
     private static JFrame mcheatGame;
     /** 2D Tile array of used for game logic, equal coordinates to nXm game board **/
     private static Tile mTileArray[][];
+    /** 2D Tile array of used for game logic, equal coordinates to nXm game board **/
+    private static Tile mcopyTileArray[][];
     /** creates a random value, used for x,y coordinates **/
     private Random random = new Random();
-    
+
     private static Random random2 = new Random();
+
+    private boolean mCheatActive = false;
 
     /* Member Variables for Game_Driver */
     /** holds the number of rows **/
@@ -206,7 +210,7 @@ class Game_Driver {
         }
         return (isPossible);
     }
-    
+
     static void resetMineNum() {
     	int nonResetMines = 0;
         for (int i = 0; i < mNumRows; i++) {
@@ -263,14 +267,14 @@ class Game_Driver {
             }
         }
     }
-    
+
     static void resetMine() {
     	int x = random2.nextInt(mNumRows);
         int y = random2.nextInt(mNumCols);
 
         if (!mTileArray[x][y].getIsMine() && mTileArray[x][y].canOpen()) {
             mTileArray[x][y].setIsMine(true);
-        } 
+        }
         else if(mTileArray[x][y].getIsMine() && mTileArray[x][y].getFlagged()) {
         	mTileArray[x][y].setIsMine(true);
         }
@@ -279,7 +283,7 @@ class Game_Driver {
             resetMine();
         }
     }
-    
+
     static void updateMineNums() {
         for (int i = 0; i < mNumRows; i++) {
             for (int j = 0; j < mNumCols; j++) {
@@ -288,6 +292,7 @@ class Game_Driver {
             	}
             }
         }
+        CheatUpdate();
     }
 
     /**
@@ -436,8 +441,40 @@ class Game_Driver {
             }
         }
     }
+    static void CheatUpdate() {
 
+    	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int width = (int) screenSize.getWidth();
+        int height = (int) screenSize.getHeight();
+        int xOffset = width / 2 - (mNumRows * 15);
+        int yOffset = height / 2 - (mNumCols * 15);
+        mcheatGame.setLocation(xOffset, yOffset);
+        JPanel masterPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 0, 5));
+        mcopyTileArray = new Tile [mNumRows][mNumCols];
+        try {
+            for (int i = 0; i < mNumRows; i++) {
+                JPanel tempPanel = new JPanel(new GridLayout(mNumCols, 1));
+
+                for (int j = 0; j < mNumCols; j++) {
+                	mcopyTileArray[i][j] = new Tile(mTileArray[i][j]);
+                    tempPanel.add(mcopyTileArray[i][j]);
+                    mcopyTileArray[i][j].TileCheat();
+                }
+                masterPanel.add(tempPanel);
+            }
+            mcheatGame.add(masterPanel);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        mcheatGame.validate();
+        mcheatGame.pack();
+        mcheatGame.setVisible(true);
+    }
 	public JFrame CheatMode() {
+		if(mCheatActive) {
+			mcheatGame.dispose();
+		}
 		mcheatGame = new JFrame();
 		mcheatGame.setTitle("CheatMode");
 
@@ -455,15 +492,15 @@ class Game_Driver {
         int yOffset = height / 2 - (mNumCols * 15);
         mcheatGame.setLocation(xOffset, yOffset);
         JPanel masterPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 0, 5));
-        Tile[][] copyTileArray = new Tile [mNumRows][mNumCols];
+        mcopyTileArray = new Tile [mNumRows][mNumCols];
         try {
             for (int i = 0; i < mNumRows; i++) {
                 JPanel tempPanel = new JPanel(new GridLayout(mNumCols, 1));
 
                 for (int j = 0; j < mNumCols; j++) {
-                	copyTileArray[i][j] = new Tile(mTileArray[i][j]);
-                    tempPanel.add(copyTileArray[i][j]);
-                    copyTileArray[i][j].TileCheat();
+                	mcopyTileArray[i][j] = new Tile(mTileArray[i][j]);
+                    tempPanel.add(mcopyTileArray[i][j]);
+                    mcopyTileArray[i][j].TileCheat();
                 }
                 masterPanel.add(tempPanel);
             }
@@ -475,6 +512,7 @@ class Game_Driver {
         mcheatGame.validate();
         mcheatGame.pack();
         mcheatGame.setVisible(true);
+        mCheatActive = true;
         return(mcheatGame);
 	}
 }
