@@ -1,4 +1,0 @@
-INDEX VERSION 1.131+/home/connor/Documents/Project_2_448/Project_2_448/minesweeper/.metadata/.plugins/org.eclipse.jdt.core
-3482676715.index
-1249709263.index
-646308851.index
