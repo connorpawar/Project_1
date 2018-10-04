@@ -67,6 +67,7 @@ public class Board {
      * to control the board.
      * */
     private static JFrame mGame;
+    private static JFrame mCheatGame;
 
     /**
      * This constructor takes in the various input values from the user that is
@@ -176,11 +177,13 @@ public class Board {
          * by clicking the Tile updateFlags, this will be implemented as an extension
          * of the Tile class.
          */
+
         JButton updateFlags = new JButton();
         updateFlags.setText("RESTART");
         updateFlags.addActionListener((ActionEvent event) -> {
             mGame.dispose();
             mInfo.dispose();
+            mCheatGame.dispose();
             Board newgame = new Board(numCols, numRows, mines);
         });
 
@@ -235,6 +238,13 @@ public class Board {
         });
 
         Game_Driver gameStart = new Game_Driver(mGame, tileGrid, numRows, numCols, mines);
+
+        JButton cheatMode = new JButton();
+        cheatMode.setText("Cheat Mode");
+        cheatMode.addActionListener((ActionEvent event) -> {
+        	mCheatGame = gameStart.CheatMode();
+        });
+        mInfo.add(cheatMode);
     }
 
     /**

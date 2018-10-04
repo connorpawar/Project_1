@@ -4,9 +4,15 @@ package minesweeper;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JButton;
+
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 //AWT imports
 import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 //Non-GUI related imports
@@ -20,10 +26,14 @@ class Game_Driver {
     /* Objects for Game_Driver */
     /** set equal to JFrame board in constructor from {@link Board}, game window that user interacts with **/
     private static JFrame mGame;
+    /** set equal to JFrame board in constructor from {@link Board}, game window that user interacts with **/
+    private static JFrame mcheatGame;
     /** 2D Tile array of used for game logic, equal coordinates to nXm game board **/
     private static Tile mTileArray[][];
     /** creates a random value, used for x,y coordinates **/
     private Random random = new Random();
+    
+    private static Random random2 = new Random();
 
     /* Member Variables for Game_Driver */
     /** holds the number of rows **/
@@ -99,6 +109,7 @@ class Game_Driver {
         loseFrame.setAlwaysOnTop(true);
         loseFrame.setVisible(true);
         loseButton.addActionListener(e -> {
+        	mcheatGame.dispose();
             mGame.dispose();
             loseFrame.dispose();
             Board newgame = new Board(mNumCols, mNumRows, mNumMines);
@@ -194,6 +205,89 @@ class Game_Driver {
             }
         }
         return (isPossible);
+    }
+    
+    static void resetMineNum() {
+    	int nonResetMines = 0;
+        for (int i = 0; i < mNumRows; i++) {
+            for (int j = 0; j < mNumCols; j++) {
+            	if(mTileArray[i][j].getIsMine() && mTileArray[i][j].getFlagged()) {
+            		nonResetMines++;
+            	}
+            	else {
+            		mTileArray[i][j].setIsMine(false);
+            	}
+            }
+        }
+        for (int i = 0; i < mNumMines - nonResetMines; i++) {
+            resetMine();
+        }
+        for (int i = 0; i < mNumRows; i++) {
+            int leftOne = i - 1;
+            int rightOne = i + 1;
+
+            for (int j = 0; j < mNumCols; j++) {
+                int downOne = j - 1;
+                int upOne = j + 1;
+                int mineRisk = 0;
+
+                /*
+                 *Starts from bottom left of tile and checks in a clockwise pattern
+                 */
+                if (leftOne >= 0 && downOne >= 0 && mTileArray[leftOne][downOne].getIsMine()) {
+                    mineRisk++;
+                }
+                if (leftOne >= 0 && mTileArray[leftOne][j].getIsMine()) {
+                    mineRisk++;
+                }
+                if (leftOne >= 0 && upOne < mNumCols && mTileArray[leftOne][upOne].getIsMine()) {
+                    mineRisk++;
+                }
+                if (upOne < mNumCols && mTileArray[i][upOne].getIsMine()) {
+                    mineRisk++;
+                }
+                if (rightOne < mNumRows && upOne < mNumCols && mTileArray[rightOne][upOne].getIsMine()) {
+                    mineRisk++;
+                }
+                if (rightOne < mNumRows && mTileArray[rightOne][j].getIsMine()) {
+                    mineRisk++;
+                }
+                if (rightOne < mNumRows && downOne >= 0 && mTileArray[rightOne][downOne].getIsMine()) {
+                    mineRisk++;
+                }
+                if (downOne >= 0 && mTileArray[i][downOne].getIsMine()) {
+                    mineRisk++;
+                }
+
+                mTileArray[i][j].setSurroundingMines(mineRisk);
+            }
+        }
+    }
+    
+    static void resetMine() {
+    	int x = random2.nextInt(mNumRows);
+        int y = random2.nextInt(mNumCols);
+
+        if (!mTileArray[x][y].getIsMine() && mTileArray[x][y].canOpen()) {
+            mTileArray[x][y].setIsMine(true);
+        } 
+        else if(mTileArray[x][y].getIsMine() && mTileArray[x][y].getFlagged()) {
+        	mTileArray[x][y].setIsMine(true);
+        }
+        else {
+        	mTileArray[x][y].setIsMine(false);
+            resetMine();
+        }
+    }
+    
+    static void updateMineNums() {
+        for (int i = 0; i < mNumRows; i++) {
+            for (int j = 0; j < mNumCols; j++) {
+            	if(!mTileArray[i][j].canOpen()) {
+            		mTileArray[i][j].displaySurroundingMines();
+            	}
+            }
+        }
     }
 
     /**
@@ -298,9 +392,9 @@ class Game_Driver {
      * @ms.Pre-condition No guarantees are made before this function is called
      * @ms.Post-condition All of the tiles are given a mine risk number
      *
-     * @see Tile#getIsMine() 
+     * @see Tile#getIsMine()
      * */
-    private void setRiskNum() {
+    public void setRiskNum() {
         for (int i = 0; i < mNumRows; i++) {
             int leftOne = i - 1;
             int rightOne = i + 1;
@@ -342,4 +436,45 @@ class Game_Driver {
             }
         }
     }
+
+	public JFrame CheatMode() {
+		mcheatGame = new JFrame();
+		mcheatGame.setTitle("CheatMode");
+
+        /*
+         * Because a bigger board placed in the center of the screen would go
+         * off screen, this setup below limits the placement of the mGame window
+         * which is oriented by the top left of its frame to the upper left quadrant
+         * of the users monitor. This will then move further up and further left
+         * as the board increases in respective size.
+         * */
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int width = (int) screenSize.getWidth();
+        int height = (int) screenSize.getHeight();
+        int xOffset = width / 2 - (mNumRows * 15);
+        int yOffset = height / 2 - (mNumCols * 15);
+        mcheatGame.setLocation(xOffset, yOffset);
+        JPanel masterPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 0, 5));
+        Tile[][] copyTileArray = new Tile [mNumRows][mNumCols];
+        try {
+            for (int i = 0; i < mNumRows; i++) {
+                JPanel tempPanel = new JPanel(new GridLayout(mNumCols, 1));
+
+                for (int j = 0; j < mNumCols; j++) {
+                	copyTileArray[i][j] = new Tile(mTileArray[i][j]);
+                    tempPanel.add(copyTileArray[i][j]);
+                    copyTileArray[i][j].TileCheat();
+                }
+                masterPanel.add(tempPanel);
+            }
+            mcheatGame.add(masterPanel);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        mcheatGame.validate();
+        mcheatGame.pack();
+        mcheatGame.setVisible(true);
+        return(mcheatGame);
+	}
 }

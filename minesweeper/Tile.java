@@ -25,7 +25,7 @@ class Tile extends JButton {
     /* Member variables of tiles */
     /** holds the number of adjacent mines*/
     private int mSurroundingMines;
-    /** true if the tile is currenly flagged */
+    /** true if the tile is currently flagged */
     private boolean mFlagged;
     /** true if the tile is a mine */
     private boolean mIsMine;
@@ -60,8 +60,12 @@ class Tile extends JButton {
                         Game_Driver.gameOver();
                     } else {
                         if (mSurroundingMines > 0) {
+
                             displaySurroundingMines();
                         } else {
+                        	removeMine();
+                        	Game_Driver.updateMineNums();
+                        	//displaySurroundingMines();
                             setNullIcon();
                             Game_Driver.openTile(x, y);
                         }
@@ -91,6 +95,21 @@ class Tile extends JButton {
         mSurroundingMines = 0;
         mFlagged = false;
         mIsMine = false;
+        setText("");
+        setMargin(new Insets(0, 0, 0, 0));
+        setPreferredSize(new Dimension(mTileSize, mTileSize));
+        setIcon(mTileIcon);
+        setSize(mTileSize, mTileSize);
+        setVisible(true);
+
+        addMouseListener(mouseListener);
+    }
+    Tile(Tile copy) {
+        super();
+
+        mSurroundingMines = copy.mSurroundingMines;
+        mFlagged = false;
+        mIsMine = copy.mIsMine;
         setText("");
         setMargin(new Insets(0, 0, 0, 0));
         setPreferredSize(new Dimension(mTileSize, mTileSize));
@@ -174,7 +193,7 @@ class Tile extends JButton {
      * @param flagged True if tile show be flagged
      */
     private void setFlagged(boolean flagged) {
-        if (!flagged && Board.getFlagCount() != 0) {
+        if (!flagged && Board.getFlagCount() != 0 && !mOpened) {
             setIcon(mFlaggedIcon);
             mFlagged = true;
             Board.decrementFlagCount();
@@ -277,6 +296,7 @@ class Tile extends JButton {
     void displaySurroundingMines() {
 
         if (mSurroundingMines == 0) {
+        	setText("");
             setIcon(mPressedIcon);
         } else if (mSurroundingMines > 0) {
             try {
@@ -294,5 +314,24 @@ class Tile extends JButton {
      */
     void setIsOpened() {
         mOpened = true;
+    }
+	void TileCheat() {
+		setIsOpened();
+		if(mIsMine) {
+			setMineIcon();
+		}
+		else if(mSurroundingMines==0) {
+            setNullIcon();
+		}
+		else {
+			displaySurroundingMines();
+		}
+	}
+    void removeMine() {
+        setIcon(mPressedIcon);
+        setText("");
+
+        Game_Driver.resetMineNum();
+
     }
 }
