@@ -32,6 +32,8 @@ class Game_Driver {
     private static Tile mTileArray[][];
     /** creates a random value, used for x,y coordinates **/
     private Random random = new Random();
+    
+    private static Random random2 = new Random();
 
     /* Member Variables for Game_Driver */
     /** holds the number of rows **/
@@ -204,6 +206,89 @@ class Game_Driver {
         }
         return (isPossible);
     }
+    
+    static void resetMineNum() {
+    	int nonResetMines = 0;
+        for (int i = 0; i < mNumRows; i++) {
+            for (int j = 0; j < mNumCols; j++) {
+            	if(mTileArray[i][j].getIsMine() && mTileArray[i][j].getFlagged()) {
+            		nonResetMines++;
+            	}
+            	else {
+            		mTileArray[i][j].setIsMine(false);
+            	}
+            }
+        }
+        for (int i = 0; i < mNumMines - nonResetMines; i++) {
+            resetMine();
+        }
+        for (int i = 0; i < mNumRows; i++) {
+            int leftOne = i - 1;
+            int rightOne = i + 1;
+
+            for (int j = 0; j < mNumCols; j++) {
+                int downOne = j - 1;
+                int upOne = j + 1;
+                int mineRisk = 0;
+
+                /*
+                 *Starts from bottom left of tile and checks in a clockwise pattern
+                 */
+                if (leftOne >= 0 && downOne >= 0 && mTileArray[leftOne][downOne].getIsMine()) {
+                    mineRisk++;
+                }
+                if (leftOne >= 0 && mTileArray[leftOne][j].getIsMine()) {
+                    mineRisk++;
+                }
+                if (leftOne >= 0 && upOne < mNumCols && mTileArray[leftOne][upOne].getIsMine()) {
+                    mineRisk++;
+                }
+                if (upOne < mNumCols && mTileArray[i][upOne].getIsMine()) {
+                    mineRisk++;
+                }
+                if (rightOne < mNumRows && upOne < mNumCols && mTileArray[rightOne][upOne].getIsMine()) {
+                    mineRisk++;
+                }
+                if (rightOne < mNumRows && mTileArray[rightOne][j].getIsMine()) {
+                    mineRisk++;
+                }
+                if (rightOne < mNumRows && downOne >= 0 && mTileArray[rightOne][downOne].getIsMine()) {
+                    mineRisk++;
+                }
+                if (downOne >= 0 && mTileArray[i][downOne].getIsMine()) {
+                    mineRisk++;
+                }
+
+                mTileArray[i][j].setSurroundingMines(mineRisk);
+            }
+        }
+    }
+    
+    static void resetMine() {
+    	int x = random2.nextInt(mNumRows);
+        int y = random2.nextInt(mNumCols);
+
+        if (!mTileArray[x][y].getIsMine() && mTileArray[x][y].canOpen()) {
+            mTileArray[x][y].setIsMine(true);
+        } 
+        else if(mTileArray[x][y].getIsMine() && mTileArray[x][y].getFlagged()) {
+        	mTileArray[x][y].setIsMine(true);
+        }
+        else {
+        	mTileArray[x][y].setIsMine(false);
+            resetMine();
+        }
+    }
+    
+    static void updateMineNums() {
+        for (int i = 0; i < mNumRows; i++) {
+            for (int j = 0; j < mNumCols; j++) {
+            	if(!mTileArray[i][j].canOpen()) {
+            		mTileArray[i][j].displaySurroundingMines();
+            	}
+            }
+        }
+    }
 
     /**
      * If a tile is blank, check that the orthogonally adjacent
@@ -309,7 +394,7 @@ class Game_Driver {
      *
      * @see Tile#getIsMine()
      * */
-    private void setRiskNum() {
+    public void setRiskNum() {
         for (int i = 0; i < mNumRows; i++) {
             int leftOne = i - 1;
             int rightOne = i + 1;
