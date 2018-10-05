@@ -183,7 +183,9 @@ public class Board {
         updateFlags.addActionListener((ActionEvent event) -> {
             mGame.dispose();
             mInfo.dispose();
-            mCheatGame.dispose();
+            if(Game_Driver.mCheatActive){
+                mcheatGame.dispose();
+            }
             Board newgame = new Board(numCols, numRows, mines);
         });
 

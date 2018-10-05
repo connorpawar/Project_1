@@ -37,7 +37,7 @@ class Game_Driver {
 
     private static Random random2 = new Random();
 
-    private boolean mCheatActive = false;
+    public static boolean mCheatActive = false;
 
     /* Member Variables for Game_Driver */
     /** holds the number of rows **/
@@ -113,14 +113,18 @@ class Game_Driver {
         loseFrame.setAlwaysOnTop(true);
         loseFrame.setVisible(true);
         loseButton.addActionListener(e -> {
-        	mcheatGame.dispose();
+            if(mCheatActive){
+        	       mcheatGame.dispose();
+            }
             mGame.dispose();
             loseFrame.dispose();
             Board newgame = new Board(mNumCols, mNumRows, mNumMines);
         });
         loseFrame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-            	mcheatGame.dispose();
+                if(mCheatActive){
+                       mcheatGame.dispose();
+                }
                 mGame.dispose();
                 Menu.open();
             }
@@ -293,7 +297,9 @@ class Game_Driver {
             	}
             }
         }
-        CheatUpdate();
+        if(mCheatActive){
+               CheatUpdate();
+        }
     }
 
     /**
