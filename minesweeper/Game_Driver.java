@@ -120,6 +120,7 @@ class Game_Driver {
         });
         loseFrame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
+            	mcheatGame.dispose();
                 mGame.dispose();
                 Menu.open();
             }
@@ -442,13 +443,6 @@ class Game_Driver {
         }
     }
     static void CheatUpdate() {
-
-    	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int width = (int) screenSize.getWidth();
-        int height = (int) screenSize.getHeight();
-        int xOffset = width / 2 - (mNumRows * 15);
-        int yOffset = height / 2 - (mNumCols * 15);
-        mcheatGame.setLocation(xOffset, yOffset);
         JPanel masterPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 0, 5));
         mcopyTileArray = new Tile [mNumRows][mNumCols];
         try {
