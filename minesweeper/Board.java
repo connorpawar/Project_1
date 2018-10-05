@@ -231,6 +231,7 @@ public class Board {
             @Override
             public void windowClosing(WindowEvent e) {
                 mInfo.dispose();
+                mCheatGame.dispose();
                 if (mGame.getDefaultCloseOperation() == WindowConstants.DISPOSE_ON_CLOSE) {
                     Menu.open();
                 }

@@ -120,6 +120,7 @@ class Game_Driver {
         });
         loseFrame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
+            	mcheatGame.dispose();
                 mGame.dispose();
                 Menu.open();
             }
@@ -442,7 +443,6 @@ class Game_Driver {
         }
     }
     static void CheatUpdate() {
-
     	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int width = (int) screenSize.getWidth();
         int height = (int) screenSize.getHeight();

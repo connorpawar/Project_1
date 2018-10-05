@@ -177,6 +177,7 @@ class Tile extends JButton {
      */
     void setMineIcon() {
         setIcon(mMineIcon);
+        setDisable();
     }
 
     /**
