@@ -332,11 +332,6 @@ class Tile extends JButton {
 		}
 	}
     void removeMine() {
-        /*setIcon(mPressedIcon);
-        setText("");
-
-        Game_Driver.resetMineNum();*/
     	mIsMine = false;
-
     }
 }

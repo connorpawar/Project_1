@@ -155,7 +155,7 @@ public class Board {
 
         mInfo.setTitle("Information");
         mInfo.setAlwaysOnTop(true);
-        mInfo.setSize(200, 100);
+        mInfo.setSize(300, 100);
         mInfo.setLocationRelativeTo(mGame);
         mInfo.setLayout(new GridLayout(2, 2));
 
@@ -184,7 +184,7 @@ public class Board {
             mGame.dispose();
             mInfo.dispose();
             if(Game_Driver.mCheatActive){
-                mcheatGame.dispose();
+                mCheatGame.dispose();
             }
             Board newgame = new Board(numCols, numRows, mines);
         });
@@ -233,7 +233,9 @@ public class Board {
             @Override
             public void windowClosing(WindowEvent e) {
                 mInfo.dispose();
-                mCheatGame.dispose();
+                if(Game_Driver.mCheatActive){
+                    mCheatGame.dispose();
+                }
                 if (mGame.getDefaultCloseOperation() == WindowConstants.DISPOSE_ON_CLOSE) {
                     Menu.open();
                 }
