@@ -217,7 +217,7 @@ class Game_Driver {
     }
 
     static void resetMineNum() {
-    	int nonResetMines = 0;
+    	/*int nonResetMines = 0;
         for (int i = 0; i < mNumRows; i++) {
             for (int j = 0; j < mNumCols; j++) {
             	if(mTileArray[i][j].getIsMine() && mTileArray[i][j].getFlagged()) {
@@ -242,7 +242,7 @@ class Game_Driver {
 
                 /*
                  *Starts from bottom left of tile and checks in a clockwise pattern
-                 */
+                 *//*
                 if (leftOne >= 0 && downOne >= 0 && mTileArray[leftOne][downOne].getIsMine()) {
                     mineRisk++;
                 }
@@ -270,14 +270,14 @@ class Game_Driver {
 
                 mTileArray[i][j].setSurroundingMines(mineRisk);
             }
-        }
+        }*/
     }
 
     static void resetMine() {
     	int x = random2.nextInt(mNumRows);
         int y = random2.nextInt(mNumCols);
 
-        if (!mTileArray[x][y].getIsMine() && mTileArray[x][y].canOpen()) {
+        /*if (!mTileArray[x][y].getIsMine() && mTileArray[x][y].canOpen()) {
             mTileArray[x][y].setIsMine(true);
         }
         else if(mTileArray[x][y].getIsMine() && mTileArray[x][y].getFlagged()) {
@@ -286,11 +286,16 @@ class Game_Driver {
         else {
         	mTileArray[x][y].setIsMine(false);
             resetMine();
+        }*/
+        if (!mTileArray[x][y].getIsMine() && !mTileArray[x][y].getIsOpened()) {
+            mTileArray[x][y].setIsMine(true);
+        } else {
+            resetMine();
         }
     }
 
     static void updateMineNums() {
-        for (int i = 0; i < mNumRows; i++) {
+        /*for (int i = 0; i < mNumRows; i++) {
             for (int j = 0; j < mNumCols; j++) {
             	if(!mTileArray[i][j].canOpen()) {
             		mTileArray[i][j].displaySurroundingMines();
@@ -299,7 +304,30 @@ class Game_Driver {
         }
         if(mCheatActive){
                CheatUpdate();
+        }*/
+    	int numreset = 0;
+    	for (int i = 0; i < mNumRows; i++) {
+            for (int j = 0; j < mNumCols; j++) {
+            	if(mTileArray[i][j].getIsMine() && !mTileArray[i][j].getFlagged()) {
+            		mTileArray[i][j].removeMine();
+            		numreset++;
+            	}
+            }
         }
+    	for(int i = 0; i<numreset; i++) {
+    		resetMine();
+    	}
+        setRiskNum();
+    	for (int i = 0; i < mNumRows; i++) {
+            for (int j = 0; j < mNumCols; j++) {
+            	if(mTileArray[i][j].getIsOpened()) {
+            		mTileArray[i][j].displaySurroundingMines();
+            	}
+            }
+        }
+    	if(mCheatActive){
+            CheatUpdate();
+    	}
     }
 
     /**
@@ -336,6 +364,14 @@ class Game_Driver {
                 openTile(i, upOne);
             if (rightOne < mNumRows && mTileArray[rightOne][j].canOpen())
                 openTile(rightOne, j);
+            if (leftOne >= 0 && upOne < mNumCols && mTileArray[leftOne][upOne].canOpen())
+                openTile(leftOne, upOne);
+            if (leftOne >= 0 && downOne >= 0 && mTileArray[leftOne][downOne].canOpen())
+                openTile(leftOne, downOne);
+            if (rightOne < mNumRows && downOne >= 0 && mTileArray[rightOne][downOne].canOpen())
+                openTile(rightOne, downOne);
+            if (rightOne < mNumRows && upOne < mNumCols && mTileArray[rightOne][upOne].canOpen())
+                openTile(rightOne, upOne);
         }
     }
 
@@ -406,7 +442,7 @@ class Game_Driver {
      *
      * @see Tile#getIsMine()
      * */
-    public void setRiskNum() {
+    public static void setRiskNum() {
         for (int i = 0; i < mNumRows; i++) {
             int leftOne = i - 1;
             int rightOne = i + 1;

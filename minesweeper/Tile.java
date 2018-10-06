@@ -63,8 +63,6 @@ class Tile extends JButton {
 
                             displaySurroundingMines();
                         } else {
-                        	removeMine();
-                        	Game_Driver.updateMineNums();
                         	//displaySurroundingMines();
                             setNullIcon();
                             Game_Driver.openTile(x, y);
@@ -74,6 +72,7 @@ class Tile extends JButton {
                         }
                     }
                 }
+            	Game_Driver.updateMineNums();
             }
             //right button clicked
             if ((modifiers & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
@@ -184,6 +183,7 @@ class Tile extends JButton {
      * Makes the tile unclick able by disabling it and removing mouse listener
      */
     void setDisable() {
+    	mOpened = true;
         setEnabled(false);
         removeMouseListener(mouseListener);
     }
@@ -316,6 +316,9 @@ class Tile extends JButton {
     void setIsOpened() {
         mOpened = true;
     }
+    public boolean getIsOpened() {
+        return mOpened;
+    }
 	void TileCheat() {
 		setIsOpened();
 		if(mIsMine) {
@@ -329,10 +332,11 @@ class Tile extends JButton {
 		}
 	}
     void removeMine() {
-        setIcon(mPressedIcon);
+        /*setIcon(mPressedIcon);
         setText("");
 
-        Game_Driver.resetMineNum();
+        Game_Driver.resetMineNum();*/
+    	mIsMine = false;
 
     }
 }
