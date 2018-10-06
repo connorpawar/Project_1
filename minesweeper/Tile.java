@@ -71,8 +71,8 @@ class Tile extends JButton {
                             Game_Driver.gameWin();
                         }
                     }
+                    Game_Driver.updateMineNums();
                 }
-            	Game_Driver.updateMineNums();
             }
             //right button clicked
             if ((modifiers & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {

@@ -184,6 +184,7 @@ public class Board {
             mGame.dispose();
             mInfo.dispose();
             if(Game_Driver.mCheatActive){
+                Game_Driver.mCheatActive = false;
                 mCheatGame.dispose();
             }
             Board newgame = new Board(numCols, numRows, mines);
