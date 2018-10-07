@@ -235,6 +235,7 @@ class Game_Driver {
      * @see Tile#MouseListener mouseListener
      * */
     static void updateMineNums() {
+      //turns can only equal 0 if changing mines aren't active
       if(mTurns == 0) {
         return;
       }
@@ -244,6 +245,7 @@ class Game_Driver {
       }
       mTurns = mTurnsOg;
       int numreset = 0;
+      //removes all non flagged mines
       for (int i = 0; i < mNumRows; i++) {
             for (int j = 0; j < mNumCols; j++) {
               if(mTileArray[i][j].getIsMine() && !mTileArray[i][j].getFlagged()) {
@@ -252,10 +254,12 @@ class Game_Driver {
               }
             }
         }
+      //resets those mines
       for(int i = 0; i<numreset; i++) {
         resetMine();
       }
-        setRiskNum();
+      //creates the new numbers for the board and displays the ones already clicked
+      setRiskNum();
       for (int i = 0; i < mNumRows; i++) {
             for (int j = 0; j < mNumCols; j++) {
               if(mTileArray[i][j].getIsOpened()) {
@@ -263,6 +267,7 @@ class Game_Driver {
               }
             }
         }
+      //updates cheat mode if it is active
       if(mCheatActive){
             CheatUpdate();
       }
@@ -506,6 +511,8 @@ class Game_Driver {
 		    }
 		    mcheatGame = new JFrame();
 		    mcheatGame.setTitle("CheatMode");
+
+        //this creates a new cheat board in the center of the screen
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int width = (int) screenSize.getWidth();
         int height = (int) screenSize.getHeight();
@@ -541,9 +548,19 @@ class Game_Driver {
         mCheatActive = true;
         return(mcheatGame);
 	}
+  /**
+   * returns if the cheat mode is active
+   *
+   * @see Board#initGame
+   * */
   public boolean CheatModeActive() {
 		return mCheatActive;
 	}
+  /**
+   * sets cheat mode to be false
+   *
+   * @see Board#initGame
+   * */
 	public void setCheatMode() {
 		mCheatActive = false;
 	}

@@ -103,6 +103,9 @@ class Tile extends JButton {
 
         addMouseListener(mouseListener);
     }
+    /**
+     * Constructs copy of inputted tile
+     */
     Tile(Tile copy) {
         super();
 
