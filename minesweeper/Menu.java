@@ -66,8 +66,8 @@ public class Menu {
          * Column combobox generation along with associated label
          */
         JComboBox<Integer> field_colLength = new JComboBox<>();
-        field_colLength.setBounds(140, 78, 80, 30);
-        for (int i = 2; i <= max_numCols - 1; i++) {
+        field_colLength.setBounds(240, 78, 80, 30);
+        for (int i = 2; i <= max_numCols - 4; i++) {
             field_colLength.addItem(i);
         }
         field_colLength.setVisible(true);
@@ -80,8 +80,8 @@ public class Menu {
          * Row combobox generation along with associated label
          */
         JComboBox<Integer> field_rowLength = new JComboBox<>();
-        field_rowLength.setBounds(140, 108, 80, 30);
-        for (int i = 2; i <= max_numRows - 2; i++) {
+        field_rowLength.setBounds(240, 108, 80, 30);
+        for (int i = 2; i <= max_numRows - 4; i++) {
             field_rowLength.addItem(i);
         }
         field_rowLength.setVisible(true);
@@ -89,6 +89,8 @@ public class Menu {
         JLabel field_rowLength_label = new JLabel();
         field_rowLength_label.setText("Rows:");
         field_rowLength_label.setBounds(40, 70, 120, 100);
+
+
 
         /*
          * Mine text field generation along with associated labels
@@ -98,30 +100,46 @@ public class Menu {
         mineLabel.setBounds(40, 140, 100, 100);
         JTextField mineField = new JTextField();
         mineField.setText("0");
-        mineField.setBounds(140, 178, 80, 30);
+        mineField.setBounds(240, 178, 80, 30);
         JLabel mineErr = new JLabel();
         mineErr.setBounds(40, 200, 200, 30);
         mineErr.setVisible(false);
         mineErr.setForeground(Color.red);
 
         /*
+         * Creates turns until mines change combobox
+         */
+        JComboBox<Integer> field_changemine = new JComboBox<>();
+        field_changemine.setBounds(240, 138, 80, 30);
+        for (int i = 0; i <= 5; i++) {
+            field_changemine.addItem(i);
+        }
+        field_changemine.setVisible(true);
+
+        JLabel field_changemine_label = new JLabel();
+        field_changemine_label.setText("<html>Turns Until Mines Change:<br>(0 for normal minesweeper)</html>");
+        field_changemine_label.setBounds(40, 100, 250, 100);
+
+        /*
          * Add components to menu frame
          */
         menuFrame.add(field_rowLength_label);
         menuFrame.add(field_colLength_label);
+        menuFrame.add(field_changemine_label);
         menuFrame.add(mineLabel);
         menuFrame.add(mineField);
         menuFrame.add(mineErr);
-        field_rowLength.setSelectedIndex(max_numRows - 4);
-        field_colLength.setSelectedIndex(max_numCols - 3);
+        field_rowLength.setSelectedIndex(max_numRows-6);
+        field_colLength.setSelectedIndex(max_numCols-6);
         menuFrame.add(field_rowLength);
         menuFrame.add(field_colLength);
+        menuFrame.add(field_changemine);
         menuFrame.add(menuButton);
 
         /*
          * Set various menuFrame properties
          */
-        menuFrame.setSize(300, 400);
+        menuFrame.setSize(370, 400);
         menuFrame.setLocationRelativeTo(null);
         menuFrame.setLayout(null);
         menuFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -135,6 +153,7 @@ public class Menu {
             boolean error_exists = false;
             int numRows = (Integer) field_rowLength.getSelectedItem();
             int numCols = (Integer) field_colLength.getSelectedItem();
+            int numTurns = (Integer) field_changemine.getSelectedItem();
 
             mineErr.setVisible(false);
             /*
@@ -165,7 +184,7 @@ public class Menu {
              * and the valid parameters are passed through
              */
             if (!error_exists) {
-                Board game = new Board(numRows, numCols, Integer.parseInt(mineField.getText()));
+                Board game = new Board(numRows, numCols, numTurns, Integer.parseInt(mineField.getText()));
                 menuFrame.dispose();
             }
         });

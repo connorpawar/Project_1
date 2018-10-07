@@ -4,9 +4,15 @@ package minesweeper;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JButton;
+
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 //AWT imports
 import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 //Non-GUI related imports
@@ -22,12 +28,21 @@ class Game_Driver {
     /* Objects for Game_Driver */
     /** set equal to JFrame board in constructor from {@link Board}, game window that user interacts with **/
     private static JFrame mGame;
+    /** set equal to JFrame board in constructor from {@link Board}, game window that user interacts with **/
+    private static JFrame mcheatGame;
     /** 2D Tile array of used for game logic, equal coordinates to nXm game board **/
     private static Tile mTileArray[][];
+    /** 2D Tile array of used for game logic, equal coordinates to nXm game board **/
+    private static Tile mcopyTileArray[][];
     /** creates a random value, used for x,y coordinates **/
     private Random random = new Random();
     private static Sound makeNoise=new Sound();
 
+    private static Random random2 = new Random();
+
+    public static boolean mCheatActive = false;
+
+    public static boolean mOver = false;
     /* Member Variables for Game_Driver */
     /** holds the number of rows **/
     private static int mNumRows;
@@ -35,6 +50,8 @@ class Game_Driver {
     private static int mNumCols;
     /** holds the number of mines **/
     private static int mNumMines;
+    private static int mTurnsOg;
+    private static int mTurns;
 
     /////////////////////////////////////////////////////////
     //Constructor
@@ -52,15 +69,19 @@ class Game_Driver {
      * @param tileArray {@link Tile} object array already associated with buttons
      * @param numRows value of amount of rows in the board
      * @param numCols value of amount of columns in the board
+     * @param turns value of the number of turns till the mines change
      * @param mineCount amount of mines user wants to place in their board
      *
      * */
-    Game_Driver(JFrame game, Tile[][] tileArray, int numRows, int numCols, int mineCount) {
+    Game_Driver(JFrame game, Tile[][] tileArray, int numRows, int numCols, int turns, int mineCount) {
         mGame = game;
         mTileArray = tileArray;
         mNumRows = numRows;
         mNumCols = numCols;
         mNumMines = mineCount;
+        mTurns = turns;
+        mTurnsOg = turns;
+    	  mCheatActive = false;
         initBoard();
     }
 
@@ -79,6 +100,7 @@ class Game_Driver {
      *
      * */
     static void gameOver() {
+    	mTurns = mTurnsOg;
         for (int i = 0; i < mNumRows; i++) {
             for (int j = 0; j < mNumCols; j++) {
                 if (mTileArray[i][j].getIsMine()) {
@@ -102,12 +124,18 @@ class Game_Driver {
         loseFrame.setAlwaysOnTop(true);
         loseFrame.setVisible(true);
         loseButton.addActionListener(e -> {
+            if(mCheatActive){
+        	       mcheatGame.dispose();
+            }
             mGame.dispose();
             loseFrame.dispose();
-            Board newgame = new Board(mNumCols, mNumRows, mNumMines);
+            Board newgame = new Board(mNumCols, mNumRows, mTurnsOg, mNumMines);
         });
         loseFrame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
+                if(mCheatActive){
+                       mcheatGame.dispose();
+                }
                 mGame.dispose();
                 Menu.open();
             }
@@ -125,6 +153,7 @@ class Game_Driver {
      * */
     static void gameWin() {
         if (Board.getFlagCount() == 0) {
+          	mTurns = mTurnsOg;
             boolean win = true;
             for (int i = 0; i < mNumRows; i++) {
                 for (int j = 0; j < mNumCols; j++) {
@@ -154,12 +183,18 @@ class Game_Driver {
                 winFrame.setAlwaysOnTop(true);
                 winFrame.setVisible(true);
                 winButton.addActionListener(e -> {
+                	if(mCheatActive) {
+            			mcheatGame.dispose();
+            		}
                     mGame.dispose();
                     winFrame.dispose();
-                    Board newgame = new Board(mNumCols, mNumRows, mNumMines);
+                    Board newgame = new Board(mNumCols, mNumRows, mTurnsOg, mNumMines);
                 });
                 winFrame.addWindowListener(new WindowAdapter() {
                     public void windowClosing(WindowEvent e) {
+                    	if(mCheatActive) {
+                			mcheatGame.dispose();
+                		}
                         mGame.dispose();
                         Menu.open();
                     }
@@ -167,7 +202,79 @@ class Game_Driver {
             }
         }
     }
+    //////////////////////////////
+    /*Changing Mines Methods       */
+    //////////////////////////////
 
+    /**
+     * This just takes two random numbers places a mine
+     * at that index if it can
+     *
+     * @ms.Pre-condition There is a mine that needs to be reset in the changing mines
+     * @ms.Post-condition There is a new mine on the board
+     *
+     * @see #updateMineNums
+     * */
+    static void resetMine() {
+        int x = random2.nextInt(mNumRows);
+        int y = random2.nextInt(mNumCols);
+
+        if (!mTileArray[x][y].getIsMine() && !mTileArray[x][y].getIsOpened()) {
+            mTileArray[x][y].setIsMine(true);
+        } else {
+            resetMine();
+        }
+    }
+
+    /**
+     * First it checks the number of turns if to see if it is zero and if it is then
+     * changing mines is not on. Then you subtract 1 from the number of turns to see if it
+     * is the turn that you need to update mines. If it is the right turn then you remove all
+     * the non flagged mines, reset them, reset the numbers and update cheat mode if it is active
+     *
+     * @ms.Pre-condition A tile on the board is clicked
+     * @ms.Post-condition Either the board is the same or it's mines have been reset
+     *
+     * @see Tile#MouseListener mouseListener
+     * */
+    static void updateMineNums() {
+      //turns can only equal 0 if changing mines aren't active
+      if(mTurns == 0) {
+        return;
+      }
+      mTurns --;
+      if(mTurns>0) {
+        return;
+      }
+      mTurns = mTurnsOg;
+      int numreset = 0;
+      //removes all non flagged mines
+      for (int i = 0; i < mNumRows; i++) {
+            for (int j = 0; j < mNumCols; j++) {
+              if(mTileArray[i][j].getIsMine() && !mTileArray[i][j].getFlagged()) {
+                mTileArray[i][j].removeMine();
+                numreset++;
+              }
+            }
+        }
+      //resets those mines
+      for(int i = 0; i<numreset; i++) {
+        resetMine();
+      }
+      //creates the new numbers for the board and displays the ones already clicked
+      setRiskNum();
+      for (int i = 0; i < mNumRows; i++) {
+            for (int j = 0; j < mNumCols; j++) {
+              if(mTileArray[i][j].getIsOpened()) {
+                mTileArray[i][j].displaySurroundingMines();
+              }
+            }
+        }
+      //updates cheat mode if it is active
+      if(mCheatActive){
+            CheatUpdate();
+      }
+    }
     //////////////////////////////
     /*HELPER METHODS            */
     //////////////////////////////
@@ -197,6 +304,7 @@ class Game_Driver {
         }
         return (isPossible);
     }
+
 
     /**
      * If a tile is blank, check that the orthogonally adjacent
@@ -232,6 +340,14 @@ class Game_Driver {
                 openTile(i, upOne);
             if (rightOne < mNumRows && mTileArray[rightOne][j].canOpen())
                 openTile(rightOne, j);
+            if (leftOne >= 0 && upOne < mNumCols && mTileArray[leftOne][upOne].canOpen())
+                openTile(leftOne, upOne);
+            if (leftOne >= 0 && downOne >= 0 && mTileArray[leftOne][downOne].canOpen())
+                openTile(leftOne, downOne);
+            if (rightOne < mNumRows && downOne >= 0 && mTileArray[rightOne][downOne].canOpen())
+                openTile(rightOne, downOne);
+            if (rightOne < mNumRows && upOne < mNumCols && mTileArray[rightOne][upOne].canOpen())
+                openTile(rightOne, upOne);
         }
     }
 
@@ -302,7 +418,7 @@ class Game_Driver {
      *
      * @see Tile#getIsMine()
      * */
-    private void setRiskNum() {
+    public static void setRiskNum() {
         for (int i = 0; i < mNumRows; i++) {
             int leftOne = i - 1;
             int rightOne = i + 1;
@@ -344,4 +460,111 @@ class Game_Driver {
             }
         }
     }
+    /////////////////////////////////////////////////////////
+    //Cheat Mode methods
+    /////////////////////////////////////////////////////////
+
+    /**
+     * The purpose of this function is to copy the new board created from
+     * the changing mines and put it onto the cheatmode board if it is active.
+     *
+     * @ms.Pre-condition the user clicked the board and cheat mode is activated and changing mines are on
+     * @ms.Post-condition The cheat mode window is updated to display the current state of the board
+     *
+     * @see #updateMineNums()
+     *
+     * */
+    static void CheatUpdate() {
+        JPanel masterPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 0, 5));
+        mcopyTileArray = new Tile [mNumRows][mNumCols];
+        try {
+            for (int i = 0; i < mNumRows; i++) {
+                JPanel tempPanel = new JPanel(new GridLayout(mNumCols, 1));
+
+                for (int j = 0; j < mNumCols; j++) {
+                	mcopyTileArray[i][j] = new Tile(mTileArray[i][j]);
+                    tempPanel.add(mcopyTileArray[i][j]);
+                    mcopyTileArray[i][j].TileCheat();
+                }
+                masterPanel.add(tempPanel);
+            }
+            mcheatGame.add(masterPanel);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        mcheatGame.validate();
+        mcheatGame.pack();
+        mcheatGame.setVisible(true);
+    }
+
+    /**
+     * The purpose of this function is to copy the new board created from
+     * the changing mines and put it onto the cheatmode board if it is active.
+     *
+     * @ms.Pre-condition The user clicked the cheat mode button
+     * @ms.Post-condition A new window pops up with the information of the current board
+     *
+     * @see #updateMineNums()
+     *
+     * */
+	  public JFrame CheatMode() {
+		    if(mCheatActive) {
+			     mcheatGame.dispose();
+		    }
+		    mcheatGame = new JFrame();
+		    mcheatGame.setTitle("CheatMode");
+
+        //this creates a new cheat board in the center of the screen
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int width = (int) screenSize.getWidth();
+        int height = (int) screenSize.getHeight();
+        int xOffset = width / 2 - (mNumRows * 15);
+        int yOffset = height / 2 - (mNumCols * 15);
+        mcheatGame.setLocation(xOffset, yOffset);
+        JPanel masterPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 0, 5));
+        mcopyTileArray = new Tile [mNumRows][mNumCols];
+        try {
+            for (int i = 0; i < mNumRows; i++) {
+                JPanel tempPanel = new JPanel(new GridLayout(mNumCols, 1));
+
+                for (int j = 0; j < mNumCols; j++) {
+                	mcopyTileArray[i][j] = new Tile(mTileArray[i][j]);
+                    tempPanel.add(mcopyTileArray[i][j]);
+                    mcopyTileArray[i][j].TileCheat();
+                }
+                masterPanel.add(tempPanel);
+            }
+            mcheatGame.add(masterPanel);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        mcheatGame.addWindowListener(new WindowAdapter() {
+        	public void windowClosing(WindowEvent e) {
+    			mCheatActive = false;
+        	}
+    	});
+
+        mcheatGame.validate();
+        mcheatGame.pack();
+        mcheatGame.setVisible(true);
+        mCheatActive = true;
+        return(mcheatGame);
+	}
+  /**
+   * returns if the cheat mode is active
+   *
+   * @see Board#initGame
+   * */
+  public boolean CheatModeActive() {
+		return mCheatActive;
+	}
+  /**
+   * sets cheat mode to be false
+   *
+   * @see Board#initGame
+   * */
+	public void setCheatMode() {
+		mCheatActive = false;
+	}
 }

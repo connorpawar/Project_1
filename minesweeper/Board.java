@@ -67,6 +67,7 @@ public class Board {
      * to control the board.
      * */
     private static JFrame mGame;
+    private static JFrame mCheatGame;
 
     /**
      * This constructor takes in the various input values from the user that is
@@ -80,14 +81,14 @@ public class Board {
      * @param colLength An integer representing the length of a column
      * @param mines An integer representing the number of mines in a mGame
      */
-    Board(int rowLength, int colLength, int mines) {
+    Board(int rowLength, int colLength, int turns, int mines) {
         /*
         * Precondition checks that should be unnecessary due to user input restrictions in menu
         */
         try {
             verifyBoardParam(rowLength, colLength, mines);
             /* EventQueue.invokeLater() is necessary to avoid window hanging */
-            EventQueue.invokeLater(() -> initGame(rowLength, colLength, mines));
+            EventQueue.invokeLater(() -> initGame(rowLength, colLength, turns, mines));
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             Menu.open();
@@ -113,7 +114,7 @@ public class Board {
      * @param numRows Number of rows which is related to the length of a column
      * @param mines Number of mines in the board
      * */
-    private void initGame(int numCols, int numRows, int mines) {
+    private void initGame(int numCols, int numRows, int turns, int mines) {
         try {
             verifyBoardParam(numCols, numRows, mines);
         }catch(IllegalArgumentException e){
@@ -153,8 +154,8 @@ public class Board {
         mGame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         mInfo.setTitle("Information");
-        mInfo.setAlwaysOnTop(true);
-        mInfo.setSize(200, 100);
+        //mInfo.setAlwaysOnTop(true);
+        mInfo.setSize(300, 100);
         mInfo.setLocationRelativeTo(mGame);
         mInfo.setLayout(new GridLayout(2, 2));
 
@@ -176,12 +177,16 @@ public class Board {
          * by clicking the Tile updateFlags, this will be implemented as an extension
          * of the Tile class.
          */
+
         JButton updateFlags = new JButton();
         updateFlags.setText("RESTART");
         updateFlags.addActionListener((ActionEvent event) -> {
             mGame.dispose();
             mInfo.dispose();
-            Board newgame = new Board(numCols, numRows, mines);
+            if(Game_Driver.mCheatActive){
+                mCheatGame.dispose();
+            }
+            Board newgame = new Board(numCols, numRows, turns, mines);
         });
 
         mInfo.add(updateFlags);
@@ -228,13 +233,31 @@ public class Board {
             @Override
             public void windowClosing(WindowEvent e) {
                 mInfo.dispose();
+                if(Game_Driver.mCheatActive){
+                    mCheatGame.dispose();
+                }
                 if (mGame.getDefaultCloseOperation() == WindowConstants.DISPOSE_ON_CLOSE) {
                     Menu.open();
                 }
             }
         });
 
-        Game_Driver gameStart = new Game_Driver(mGame, tileGrid, numRows, numCols, mines);
+        Game_Driver gameStart = new Game_Driver(mGame, tileGrid, numRows, numCols, turns, mines);
+        /*
+        This is a new button for the info menu that starts the cheat mode being created
+        */
+        JButton cheatMode = new JButton();
+        cheatMode.setText("Cheat Mode");
+        cheatMode.addActionListener((ActionEvent event) -> {
+          if (gameStart.CheatModeActive()) {
+        		mCheatGame.dispose();
+        		gameStart.setCheatMode();
+        	}
+        	else {
+        		mCheatGame = gameStart.CheatMode();
+        	}
+        });
+        mInfo.add(cheatMode);
     }
 
     /**

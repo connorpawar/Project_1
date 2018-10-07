@@ -25,7 +25,7 @@ class Tile extends JButton {
     /* Member variables of tiles */
     /** holds the number of adjacent mines*/
     private int mSurroundingMines;
-    /** true if the tile is currenly flagged */
+    /** true if the tile is currently flagged */
     private boolean mFlagged;
     /** true if the tile is a mine */
     private boolean mIsMine;
@@ -62,14 +62,17 @@ class Tile extends JButton {
                         Game_Driver.gameOver();
                     } else {
                         if (mSurroundingMines > 0) {
+
                             displaySurroundingMines();
                         } else {
+                        	//displaySurroundingMines();
                             setNullIcon();
                             Game_Driver.openTile(x, y);
                         }
                         if (Game_Driver.isEndPossible()) {
                             Game_Driver.gameWin();
                         }
+                        Game_Driver.updateMineNums();
                     }
                 }
             }
@@ -93,6 +96,24 @@ class Tile extends JButton {
         mSurroundingMines = 0;
         mFlagged = false;
         mIsMine = false;
+        setText("");
+        setMargin(new Insets(0, 0, 0, 0));
+        setPreferredSize(new Dimension(mTileSize, mTileSize));
+        setIcon(mTileIcon);
+        setSize(mTileSize, mTileSize);
+        setVisible(true);
+
+        addMouseListener(mouseListener);
+    }
+    /**
+     * Constructs copy of inputted tile
+     */
+    Tile(Tile copy) {
+        super();
+
+        mSurroundingMines = copy.mSurroundingMines;
+        mFlagged = false;
+        mIsMine = copy.mIsMine;
         setText("");
         setMargin(new Insets(0, 0, 0, 0));
         setPreferredSize(new Dimension(mTileSize, mTileSize));
@@ -160,12 +181,14 @@ class Tile extends JButton {
      */
     void setMineIcon() {
         setIcon(mMineIcon);
+        setDisable();
     }
 
     /**
      * Makes the tile unclick able by disabling it and removing mouse listener
      */
     void setDisable() {
+    	mOpened = true;
         setEnabled(false);
         removeMouseListener(mouseListener);
     }
@@ -176,7 +199,7 @@ class Tile extends JButton {
      * @param flagged True if tile show be flagged
      */
     private void setFlagged(boolean flagged) {
-        if (!flagged && Board.getFlagCount() != 0) {
+        if (!flagged && Board.getFlagCount() != 0 && !mOpened) {
             setIcon(mFlaggedIcon);
             mFlagged = true;
             Board.decrementFlagCount();
@@ -279,6 +302,7 @@ class Tile extends JButton {
     void displaySurroundingMines() {
 
         if (mSurroundingMines == 0) {
+        	setText("");
             setIcon(mPressedIcon);
         } else if (mSurroundingMines > 0) {
             try {
@@ -296,5 +320,42 @@ class Tile extends JButton {
      */
     void setIsOpened() {
         mOpened = true;
+    }
+
+    /**
+     * Returns mOpened
+     */
+    public boolean getIsOpened() {
+        return mOpened;
+    }
+
+    /**
+     * changes what the tile should look like on the cheat mode board
+     *
+     * @ms.Pre-condition cheat mode is activated
+     * @ms.Post-condition The tile on the cheat mode board displays the image
+     * corresponding to the real board
+     *
+     * @see Game_Driver#CheatUpdate()
+     * @see Game_Driver#CheatMode()
+     * */
+	  void TileCheat() {
+		    setIsOpened();
+		    if(mIsMine) {
+			       setMineIcon();
+    		}
+    		else if(mSurroundingMines==0) {
+             setNullIcon();
+    		}
+    		else {
+    			   displaySurroundingMines();
+    		}
+	  }
+
+    /**
+     * sets mIsMIne to false;
+     */
+    void removeMine() {
+    	mIsMine = false;
     }
 }
