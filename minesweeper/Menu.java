@@ -67,7 +67,7 @@ public class Menu {
          */
         JComboBox<Integer> field_colLength = new JComboBox<>();
         field_colLength.setBounds(240, 78, 80, 30);
-        for (int i = 2; i <= max_numCols - 1; i++) {
+        for (int i = 2; i <= max_numCols - 4; i++) {
             field_colLength.addItem(i);
         }
         field_colLength.setVisible(true);
@@ -81,7 +81,7 @@ public class Menu {
          */
         JComboBox<Integer> field_rowLength = new JComboBox<>();
         field_rowLength.setBounds(240, 108, 80, 30);
-        for (int i = 2; i <= max_numRows - 2; i++) {
+        for (int i = 2; i <= max_numRows - 4; i++) {
             field_rowLength.addItem(i);
         }
         field_rowLength.setVisible(true);
@@ -127,8 +127,8 @@ public class Menu {
         menuFrame.add(mineLabel);
         menuFrame.add(mineField);
         menuFrame.add(mineErr);
-        field_rowLength.setSelectedIndex(max_numRows - 4);
-        field_colLength.setSelectedIndex(max_numCols - 3);
+        field_rowLength.setSelectedIndex(max_numRows-6);
+        field_colLength.setSelectedIndex(max_numCols-6);
         menuFrame.add(field_rowLength);
         menuFrame.add(field_colLength);
         menuFrame.add(field_changemine);

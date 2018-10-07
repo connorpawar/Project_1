@@ -247,7 +247,13 @@ public class Board {
         JButton cheatMode = new JButton();
         cheatMode.setText("Cheat Mode");
         cheatMode.addActionListener((ActionEvent event) -> {
-        	mCheatGame = gameStart.CheatMode();
+          if (gameStart.CheatModeActive()) {
+        		mCheatGame.dispose();
+        		gameStart.setCheatMode();
+        	}
+        	else {
+        		mCheatGame = gameStart.CheatMode();
+        	}
         });
         mInfo.add(cheatMode);
     }
