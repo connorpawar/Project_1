@@ -154,7 +154,7 @@ public class Board {
         mGame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         mInfo.setTitle("Information");
-        mInfo.setAlwaysOnTop(true);
+        //mInfo.setAlwaysOnTop(true);
         mInfo.setSize(300, 100);
         mInfo.setLocationRelativeTo(mGame);
         mInfo.setLayout(new GridLayout(2, 2));
