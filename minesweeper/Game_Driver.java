@@ -96,7 +96,6 @@ class Game_Driver {
      * */
     static void gameOver() {
     	mTurns = mTurnsOg;
-    	mOver = true;
         for (int i = 0; i < mNumRows; i++) {
             for (int j = 0; j < mNumCols; j++) {
                 if (mTileArray[i][j].getIsMine()) {
@@ -125,7 +124,7 @@ class Game_Driver {
             }
             mGame.dispose();
             loseFrame.dispose();
-            Board newgame = new Board(mNumCols, mNumRows, mNumRows, mNumMines);
+            Board newgame = new Board(mNumCols, mNumRows, mTurnsOg, mNumMines);
         });
         loseFrame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -136,8 +135,6 @@ class Game_Driver {
                 Menu.open();
             }
         });
-        
-
     }
 
     /**
@@ -186,7 +183,7 @@ class Game_Driver {
             		}
                     mGame.dispose();
                     winFrame.dispose();
-                    Board newgame = new Board(mNumCols, mNumRows, mNumRows, mNumMines);
+                    Board newgame = new Board(mNumCols, mNumRows, mTurnsOg, mNumMines);
                 });
                 winFrame.addWindowListener(new WindowAdapter() {
                     public void windowClosing(WindowEvent e) {
@@ -243,10 +240,10 @@ class Game_Driver {
     }
 
     static void updateMineNums() {
-    	mTurns --;
-    	if(mOver) {
+    	if(mTurns == 0) {
     		return;
     	}
+    	mTurns --;
     	if(mTurns>0) {
     		return;
     	}
@@ -490,6 +487,11 @@ class Game_Driver {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        mcheatGame.addWindowListener(new WindowAdapter() {
+        	public void windowClosing(WindowEvent e) {
+    			mCheatActive = false;
+        	}
+    	});
 
         mcheatGame.validate();
         mcheatGame.pack();

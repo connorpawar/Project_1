@@ -89,17 +89,8 @@ public class Menu {
         JLabel field_rowLength_label = new JLabel();
         field_rowLength_label.setText("Rows:");
         field_rowLength_label.setBounds(40, 70, 120, 100);
-        
-        JComboBox<Integer> field_changemine = new JComboBox<>();
-        field_changemine.setBounds(240, 138, 80, 30);
-        for (int i = 1; i <= 5; i++) {
-            field_changemine.addItem(i);
-        }
-        field_changemine.setVisible(true);
 
-        JLabel field_changemine_label = new JLabel();
-        field_changemine_label.setText("Turns Till Mines Change:");
-        field_changemine_label.setBounds(40, 100, 140, 100);
+
 
         /*
          * Mine text field generation along with associated labels
@@ -114,6 +105,18 @@ public class Menu {
         mineErr.setBounds(40, 200, 200, 30);
         mineErr.setVisible(false);
         mineErr.setForeground(Color.red);
+
+
+        JComboBox<Integer> field_changemine = new JComboBox<>();
+        field_changemine.setBounds(240, 138, 80, 30);
+        for (int i = 0; i <= 5; i++) {
+            field_changemine.addItem(i);
+        }
+        field_changemine.setVisible(true);
+
+        JLabel field_changemine_label = new JLabel();
+        field_changemine_label.setText("<html>Turns Until Mines Change:<br>(0 for normal minesweeper)</html>");
+        field_changemine_label.setBounds(40, 100, 250, 100);
 
         /*
          * Add components to menu frame
