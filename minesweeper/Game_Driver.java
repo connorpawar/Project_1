@@ -39,6 +39,7 @@ class Game_Driver {
 
     public static boolean mCheatActive = false;
 
+    public static boolean mOver = false;
     /* Member Variables for Game_Driver */
     /** holds the number of rows **/
     private static int mNumRows;
@@ -46,6 +47,8 @@ class Game_Driver {
     private static int mNumCols;
     /** holds the number of mines **/
     private static int mNumMines;
+    private static int mTurnsOg;
+    private static int mTurns;
 
     /////////////////////////////////////////////////////////
     //Constructor
@@ -66,12 +69,14 @@ class Game_Driver {
      * @param mineCount amount of mines user wants to place in their board
      *
      * */
-    Game_Driver(JFrame game, Tile[][] tileArray, int numRows, int numCols, int mineCount) {
+    Game_Driver(JFrame game, Tile[][] tileArray, int numRows, int numCols, int turns, int mineCount) {
         mGame = game;
         mTileArray = tileArray;
         mNumRows = numRows;
         mNumCols = numCols;
         mNumMines = mineCount;
+        mTurns = turns;
+        mTurnsOg = turns;
         initBoard();
     }
 
@@ -90,6 +95,8 @@ class Game_Driver {
      *
      * */
     static void gameOver() {
+    	mTurns = mTurnsOg;
+    	mOver = true;
         for (int i = 0; i < mNumRows; i++) {
             for (int j = 0; j < mNumCols; j++) {
                 if (mTileArray[i][j].getIsMine()) {
@@ -118,7 +125,7 @@ class Game_Driver {
             }
             mGame.dispose();
             loseFrame.dispose();
-            Board newgame = new Board(mNumCols, mNumRows, mNumMines);
+            Board newgame = new Board(mNumCols, mNumRows, mNumRows, mNumMines);
         });
         loseFrame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -129,7 +136,7 @@ class Game_Driver {
                 Menu.open();
             }
         });
-
+        
 
     }
 
@@ -143,6 +150,7 @@ class Game_Driver {
      * @see #gameOver()
      * */
     static void gameWin() {
+    	mTurns = mTurnsOg;
         if (Board.getFlagCount() == 0) {
             boolean win = true;
             for (int i = 0; i < mNumRows; i++) {
@@ -178,7 +186,7 @@ class Game_Driver {
             		}
                     mGame.dispose();
                     winFrame.dispose();
-                    Board newgame = new Board(mNumCols, mNumRows, mNumMines);
+                    Board newgame = new Board(mNumCols, mNumRows, mNumRows, mNumMines);
                 });
                 winFrame.addWindowListener(new WindowAdapter() {
                     public void windowClosing(WindowEvent e) {
@@ -235,6 +243,14 @@ class Game_Driver {
     }
 
     static void updateMineNums() {
+    	mTurns --;
+    	if(mOver) {
+    		return;
+    	}
+    	if(mTurns>0) {
+    		return;
+    	}
+    	mTurns = mTurnsOg;
     	int numreset = 0;
     	for (int i = 0; i < mNumRows; i++) {
             for (int j = 0; j < mNumCols; j++) {

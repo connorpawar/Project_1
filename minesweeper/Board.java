@@ -81,14 +81,14 @@ public class Board {
      * @param colLength An integer representing the length of a column
      * @param mines An integer representing the number of mines in a mGame
      */
-    Board(int rowLength, int colLength, int mines) {
+    Board(int rowLength, int colLength, int turns, int mines) {
         /*
         * Precondition checks that should be unnecessary due to user input restrictions in menu
         */
         try {
             verifyBoardParam(rowLength, colLength, mines);
             /* EventQueue.invokeLater() is necessary to avoid window hanging */
-            EventQueue.invokeLater(() -> initGame(rowLength, colLength, mines));
+            EventQueue.invokeLater(() -> initGame(rowLength, colLength, turns, mines));
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             Menu.open();
@@ -114,7 +114,7 @@ public class Board {
      * @param numRows Number of rows which is related to the length of a column
      * @param mines Number of mines in the board
      * */
-    private void initGame(int numCols, int numRows, int mines) {
+    private void initGame(int numCols, int numRows, int turns, int mines) {
         try {
             verifyBoardParam(numCols, numRows, mines);
         }catch(IllegalArgumentException e){
@@ -184,10 +184,9 @@ public class Board {
             mGame.dispose();
             mInfo.dispose();
             if(Game_Driver.mCheatActive){
-                Game_Driver.mCheatActive = false;
                 mCheatGame.dispose();
             }
-            Board newgame = new Board(numCols, numRows, mines);
+            Board newgame = new Board(numCols, numRows, turns, mines);
         });
 
         mInfo.add(updateFlags);
@@ -243,7 +242,7 @@ public class Board {
             }
         });
 
-        Game_Driver gameStart = new Game_Driver(mGame, tileGrid, numRows, numCols, mines);
+        Game_Driver gameStart = new Game_Driver(mGame, tileGrid, numRows, numCols, turns, mines);
 
         JButton cheatMode = new JButton();
         cheatMode.setText("Cheat Mode");

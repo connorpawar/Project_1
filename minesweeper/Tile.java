@@ -70,8 +70,8 @@ class Tile extends JButton {
                         if (Game_Driver.isEndPossible()) {
                             Game_Driver.gameWin();
                         }
-                        Game_Driver.updateMineNums();
                     }
+                	Game_Driver.updateMineNums();
                 }
             }
             //right button clicked
