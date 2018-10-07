@@ -368,7 +368,7 @@ public class Board {
      *
      * @return {@link #mNumFlags} Number of mFlags available to be placed
      *
-     * @ms.Pre-condition No gaurantees are made before this function is called
+     * @ms.Pre-condition No guarantees are made before this function is called
      * @ms.Post-condition The integer stored in mNumFlags is returned
      *
      * @see #mNumFlags

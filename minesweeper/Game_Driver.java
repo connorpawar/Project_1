@@ -39,8 +39,6 @@ class Game_Driver {
     private static Tile mcopyTileArray[][];
     /** creates a random value, used for x,y coordinates **/
     private Random random = new Random();
-    /** sound for the explosion of mines after clicking on one **/
-    private static Sound makeNoise=new Sound();
     /** random variable to randomly change the position of mines across the board **/
     private static Random random2 = new Random();
     /** enables cheat mode if the cheat button was pressed **/
