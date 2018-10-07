@@ -204,21 +204,16 @@ class Game_Driver {
     //////////////////////////////
 
     /**
-     * Iterates through the board and checks
-     * every tile that is not a mine, if every
-     * tile that is not a mine is disabled as a result
-     * of being clicked, the game may end. Only called
-     * by setting a flag.
+     * This just takes two random numbers places a mine
+     * at that index if it can
      *
-     * @return boolean isPossible, depends on if any buttons are still enabled
+     * @ms.Pre-condition There is a mine that needs to be reset in the changing mines
+     * @ms.Post-condition There is a new mine on the board
      *
-     * @ms.Pre-condition called in (@link #Tile} #mouselistener to see if one has won
-     * @ms.Post-condition the boolean returned checked if the game has been won
-     *
-     * @see Tile#mouseListener
+     * @see #updateMineNums
      * */
     static void resetMine() {
-      int x = random2.nextInt(mNumRows);
+        int x = random2.nextInt(mNumRows);
         int y = random2.nextInt(mNumCols);
 
         if (!mTileArray[x][y].getIsMine() && !mTileArray[x][y].getIsOpened()) {
@@ -228,6 +223,17 @@ class Game_Driver {
         }
     }
 
+    /**
+     * First it checks the number of turns if to see if it is zero and if it is then
+     * changing mines is not on. Then you subtract 1 from the number of turns to see if it
+     * is the turn that you need to update mines. If it is the right turn then you remove all
+     * the non flagged mines, reset them, reset the numbers and update cheat mode if it is active
+     *
+     * @ms.Pre-condition A tile on the board is clicked
+     * @ms.Post-condition Either the board is the same or it's mines have been reset
+     *
+     * @see Tile#MouseListener mouseListener
+     * */
     static void updateMineNums() {
       if(mTurns == 0) {
         return;

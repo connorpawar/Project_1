@@ -316,21 +316,40 @@ class Tile extends JButton {
     void setIsOpened() {
         mOpened = true;
     }
+
+    /**
+     * Returns mOpened
+     */
     public boolean getIsOpened() {
         return mOpened;
     }
-	void TileCheat() {
-		setIsOpened();
-		if(mIsMine) {
-			setMineIcon();
-		}
-		else if(mSurroundingMines==0) {
-            setNullIcon();
-		}
-		else {
-			displaySurroundingMines();
-		}
-	}
+
+    /**
+     * changes what the tile should look like on the cheat mode board
+     *
+     * @ms.Pre-condition cheat mode is activated
+     * @ms.Post-condition The tile on the cheat mode board displays the image
+     * corresponding to the real board
+     *
+     * @see Game_Driver#CheatUpdate()
+     * @see Game_Driver#CheatMode()
+     * */
+	  void TileCheat() {
+		    setIsOpened();
+		    if(mIsMine) {
+			       setMineIcon();
+    		}
+    		else if(mSurroundingMines==0) {
+             setNullIcon();
+    		}
+    		else {
+    			   displaySurroundingMines();
+    		}
+	  }
+
+    /**
+     * sets mIsMIne to false;
+     */
     void removeMine() {
     	mIsMine = false;
     }

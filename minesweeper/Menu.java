@@ -106,7 +106,9 @@ public class Menu {
         mineErr.setVisible(false);
         mineErr.setForeground(Color.red);
 
-
+        /*
+         * Creates turns until mines change combobox
+         */
         JComboBox<Integer> field_changemine = new JComboBox<>();
         field_changemine.setBounds(240, 138, 80, 30);
         for (int i = 0; i <= 5; i++) {

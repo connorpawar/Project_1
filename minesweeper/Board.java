@@ -243,7 +243,9 @@ public class Board {
         });
 
         Game_Driver gameStart = new Game_Driver(mGame, tileGrid, numRows, numCols, turns, mines);
-
+        /*
+        This is a new button for the info menu that starts the cheat mode being created
+        */
         JButton cheatMode = new JButton();
         cheatMode.setText("Cheat Mode");
         cheatMode.addActionListener((ActionEvent event) -> {
