@@ -179,27 +179,27 @@ class Game_Driver {
 			
                     };
                     
-                    Timer timer = new Timer(5000, action1);
+                    Timer timer = new Timer(3600000, action1);
                     timer.setInitialDelay(1000 + 200);
                     timer.start();
                     
-                    Timer timer2 = new Timer(5000, action2);
+                    Timer timer2 = new Timer(3600000, action2);
                     timer2.setInitialDelay(1000 + 400);
                     timer2.start();          
                    				
-                    Timer timer3 = new Timer(5000, action3);
+                    Timer timer3 = new Timer(3600000, action3);
                     timer3.setInitialDelay(1000 + 600);
                     timer3.start(); 
                     
-                    Timer timer4 = new Timer(5000, action4);
+                    Timer timer4 = new Timer(3600000, action4);
                     timer4.setInitialDelay(1000 + 800);
                     timer4.start(); 
                     
-                    Timer timer5 = new Timer(5000, action5);
+                    Timer timer5 = new Timer(3600000, action5);
                     timer5.setInitialDelay(1000 + 1000);
                     timer5.start(); 
                     
-                    Timer timer6 = new Timer(5000, action6);
+                    Timer timer6 = new Timer(3600000, action6);
                     timer6.setInitialDelay(1000 + 1200);
                     timer6.start(); 
                     
