@@ -79,7 +79,6 @@ class Game_Driver {
      *
      * */
     static void gameOver() {
-        makeNoise.playBomb();
         for (int i = 0; i < mNumRows; i++) {
             for (int j = 0; j < mNumCols; j++) {
                 if (mTileArray[i][j].getIsMine()) {

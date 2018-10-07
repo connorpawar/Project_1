@@ -52,11 +52,13 @@ class Tile extends JButton {
     private MouseListener mouseListener = new MouseAdapter() {
         public void mousePressed(MouseEvent mouseEvent) {
             int modifiers = mouseEvent.getModifiers();
+            Sound makeNoise = new Sound();
             //left button clicked
             if ((modifiers & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
                 if (!mFlagged) {
                     if (mIsMine) {
                         setMineIcon();
+                        makeNoise.playBomb();
                         Game_Driver.gameOver();
                     } else {
                         if (mSurroundingMines > 0) {

@@ -10,11 +10,10 @@ public class Sound
 	}
 	void playBomb()
 	{
-		URL url = getClass().getResource("bomb.wav");
 		try
 	    {
 	    Clip clip = AudioSystem.getClip();
-	    clip.open(AudioSystem.getAudioInputStream(new File( url.toURI())));
+	    clip.open(AudioSystem.getAudioInputStream(new File("src/minesweeper/235968__tommccann__explosion-01.wav")));
 	    clip.start();
 	    }
 	    catch (Exception exc)
