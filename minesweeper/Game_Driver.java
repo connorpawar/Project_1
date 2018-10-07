@@ -12,6 +12,8 @@ import java.awt.event.WindowEvent;
 //Non-GUI related imports
 import java.util.Random;
 
+
+
 /**
  * Receives required objects from {@link Board} and takes the user input and
  * manipulates the objects as necessary to play Minesweeper.
@@ -24,6 +26,7 @@ class Game_Driver {
     private static Tile mTileArray[][];
     /** creates a random value, used for x,y coordinates **/
     private Random random = new Random();
+    private static Sound makeNoise=new Sound();
 
     /* Member Variables for Game_Driver */
     /** holds the number of rows **/
@@ -76,6 +79,7 @@ class Game_Driver {
      *
      * */
     static void gameOver() {
+        makeNoise.playBomb();
         for (int i = 0; i < mNumRows; i++) {
             for (int j = 0; j < mNumCols; j++) {
                 if (mTileArray[i][j].getIsMine()) {
@@ -109,7 +113,6 @@ class Game_Driver {
                 Menu.open();
             }
         });
-
     }
 
     /**
@@ -298,7 +301,7 @@ class Game_Driver {
      * @ms.Pre-condition No guarantees are made before this function is called
      * @ms.Post-condition All of the tiles are given a mine risk number
      *
-     * @see Tile#getIsMine() 
+     * @see Tile#getIsMine()
      * */
     private void setRiskNum() {
         for (int i = 0; i < mNumRows; i++) {

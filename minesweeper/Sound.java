@@ -8,9 +8,9 @@ public class Sound
 	Sound()
 	{
 	}
-	static void playBomb()
+	void playBomb()
 	{
-		URL url = Sound.class.getResource("bomb.wav");
+		URL url = getClass().getResource("bomb.wav");
 		try
 	    {
 	    Clip clip = AudioSystem.getClip();
@@ -21,9 +21,5 @@ public class Sound
 	    {
 	    exc.printStackTrace(System.out);
 	    }
-	}
-	void placingFlag()
-	{
-		//class will implement a sound or slap type of noise 
 	}
 }
