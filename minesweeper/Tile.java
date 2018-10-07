@@ -46,6 +46,14 @@ class Tile extends JButton {
     /** Image for a pressed tile if surrounding mines are 0 use on tile */
     private static ImageIcon mPressedIcon;
 
+    /** animation icons*/
+    private static ImageIcon mExplIcon1;
+    private static ImageIcon mExplIcon2;
+    private static ImageIcon mExplIcon3;
+    private static ImageIcon mExplIcon4;
+    private static ImageIcon mExplIcon5;
+    private static ImageIcon mExplIcon6;
+    
     /**
      * MouseListener that controls the tiles right and left click
      */
@@ -183,6 +191,28 @@ class Tile extends JButton {
         setIcon(mMineIcon);
         setDisable();
     }
+    
+    /**
+     * Sets explosion icons on the tile
+     */
+    void setExpl1() {
+        setIcon(mExplIcon1);
+    }
+    void setExpl2() {
+        setIcon(mExplIcon2);
+    }
+    void setExpl3() {
+        setIcon(mExplIcon3);
+    }
+    void setExpl4() {
+        setIcon(mExplIcon4);
+    }
+    void setExpl5() {
+        setIcon(mExplIcon5);
+    }
+    void setExpl6() {
+        setIcon(mExplIcon6);
+    }
 
     /**
      * Makes the tile unclickable by disabling it and removing mouse listener
@@ -249,7 +279,47 @@ class Tile extends JButton {
             }
             mPressedIcon = new ImageIcon(img);
 
+            try {
+                img = ImageIO.read(getClass().getResource("Resources/expl1.jpg"));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            mExplIcon1 = new ImageIcon(img);
+            
+            try {
+                img = ImageIO.read(getClass().getResource("Resources/expl2.jpg"));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            mExplIcon2 = new ImageIcon(img);
+            
+            try {
+                img = ImageIO.read(getClass().getResource("Resources/expl3.jpg"));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            mExplIcon3 = new ImageIcon(img);
+            
+            try {
+                img = ImageIO.read(getClass().getResource("Resources/expl4.jpg"));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            mExplIcon4 = new ImageIcon(img);
 
+            try {
+                img = ImageIO.read(getClass().getResource("Resources/expl5.jpg"));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            mExplIcon5 = new ImageIcon(img);
+            
+            try {
+                img = ImageIO.read(getClass().getResource("Resources/expl6.jpg"));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            mExplIcon6 = new ImageIcon(img);
         } catch (Exception e) {
             System.out.println("ImageIcons not set successfully.");
         }
