@@ -28,7 +28,7 @@ class Game_Driver {
     /* Objects for Game_Driver */
     /** set equal to JFrame board in constructor from {@link Board}, game window that user interacts with **/
     private static JFrame mGame;
-    /** set equal to JFrame board in constructor from {@link Board}, game window that user interacts with **/
+    /** set equal to JFrame board in constructor from {@link Board}, game window that user sees mines with **/
     private static JFrame mcheatGame;
     /** 2D Tile array of used for game logic, equal coordinates to nXm game board **/
     private static Tile mTileArray[][];
@@ -36,12 +36,13 @@ class Game_Driver {
     private static Tile mcopyTileArray[][];
     /** creates a random value, used for x,y coordinates **/
     private Random random = new Random();
+    /** sound for the explosion of mines after clicking on one **/
     private static Sound makeNoise=new Sound();
-
+    /** random variable to randomly change the position of mines across the board **/
     private static Random random2 = new Random();
-
+    /** enables cheat mode if the cheat button was pressed **/
     public static boolean mCheatActive = false;
-
+    /** boolean signifying if the game is finished **/
     public static boolean mOver = false;
     /* Member Variables for Game_Driver */
     /** holds the number of rows **/
@@ -50,7 +51,9 @@ class Game_Driver {
     private static int mNumCols;
     /** holds the number of mines **/
     private static int mNumMines;
+    /** holds the number of turns before mines change **/
     private static int mTurnsOg;
+    /** holds the current turn number to compare against before mines change **/
     private static int mTurns;
 
     /////////////////////////////////////////////////////////
@@ -207,7 +210,7 @@ class Game_Driver {
     //////////////////////////////
 
     /**
-     * This just takes two random numbers places a mine
+     * This takes two random numbers and places a mine
      * at that index if it can
      *
      * @ms.Pre-condition There is a mine that needs to be reset in the changing mines
@@ -233,7 +236,7 @@ class Game_Driver {
      * the non flagged mines, reset them, reset the numbers and update cheat mode if it is active
      *
      * @ms.Pre-condition A tile on the board is clicked
-     * @ms.Post-condition Either the board is the same or it's mines have been reset
+     * @ms.Post-condition Either the board is the same or its mines have been reset
      *
      * @see Tile#MouseListener mouseListener
      * */

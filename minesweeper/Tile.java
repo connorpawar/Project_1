@@ -106,7 +106,7 @@ class Tile extends JButton {
         addMouseListener(mouseListener);
     }
     /**
-     * Constructs copy of inputted tile
+     * Constructs copy of input tile
      */
     Tile(Tile copy) {
         super();
@@ -185,7 +185,7 @@ class Tile extends JButton {
     }
 
     /**
-     * Makes the tile unclick able by disabling it and removing mouse listener
+     * Makes the tile unclickable by disabling it and removing mouse listener
      */
     void setDisable() {
     	mOpened = true;

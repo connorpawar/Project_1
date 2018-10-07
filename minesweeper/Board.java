@@ -67,6 +67,12 @@ public class Board {
      * to control the board.
      * */
     private static JFrame mGame;
+    /**
+     * JFrame that displays the {@link Tile} objects that correspond to the minesweeper cheat
+     * board. Reference to this object is passed to {@link Game_Driver} to allow Game_Driver
+     * to control the board. This is modified copy of {@link #mGame} to allow the user to see where mines
+     * are placed on the main board.
+     * */
     private static JFrame mCheatGame;
 
     /**
@@ -74,7 +80,7 @@ public class Board {
      * checked in the {@link Menu} object on start up and also in this constructor.
      * Once preconditions are checked and verified, initGame() is added to the EventQueue.
      *
-     * @ms.Pre-condition Input fields from Menu have been verified and the user has pressed the "Start" button
+     * @ms.Pre-condition Input fields from {@link #Menu()} have been verified and the user has pressed the "Start" button
      * @ms.Post-condition initGame() is successfully added to the EventQueue once inputs are verified once more
      *
      * @param rowLength An integer representing the length of a row
@@ -176,10 +182,14 @@ public class Board {
          * Below is a button being created to test the decrement of the mFlags JLabel
          * by clicking the Tile updateFlags, this will be implemented as an extension
          * of the Tile class.
+         * 
          */
 
         JButton updateFlags = new JButton();
         updateFlags.setText("RESTART");
+        /*
+         * Boards are removed if restart is clicked.
+         */
         updateFlags.addActionListener((ActionEvent event) -> {
             mGame.dispose();
             mInfo.dispose();
@@ -226,9 +236,9 @@ public class Board {
         mInfo.setVisible(true);
 
         /*
-        This WindowListener has an Overridden windowClosing event that allows
-        the function Menu.open() to get called on the Board window closing.
-        */
+         * This WindowListener has an Overridden windowClosing event that allows
+         * the function Menu.open() to get called on the Board window closing.
+         */
         mGame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -244,7 +254,7 @@ public class Board {
 
         Game_Driver gameStart = new Game_Driver(mGame, tileGrid, numRows, numCols, turns, mines);
         /*
-        This is a new button for the info menu that starts the cheat mode being created
+        This is a new button for the info menu that starts the cheat mode being created.
         */
         JButton cheatMode = new JButton();
         cheatMode.setText("Cheat Mode");
@@ -370,7 +380,7 @@ public class Board {
     /**
      * Main function of Board.java holds no particular significance and is left blank.
      *
-     * @ms.Pre-condition No gaurantees are made before this function is called
+     * @ms.Pre-condition No guarantees are made before this function is called
      * @ms.Post-condition No result of calling Board.main()
      *
      * */
