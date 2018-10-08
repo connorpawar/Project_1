@@ -31,7 +31,7 @@ class Game_Driver {
     /* Objects for Game_Driver */
     /** set equal to JFrame board in constructor from {@link Board}, game window that user interacts with **/
     private static JFrame mGame;
-    /** set equal to JFrame board in constructor from {@link Board}, game window that user sees mines with **/
+    /** A copy of the mGame but it automatically displays all of the tiles, opens when cheat mode button is clicked**/
     private static JFrame mcheatGame;
     /** 2D Tile array of used for game logic, equal coordinates to nXm game board **/
     private static Tile mTileArray[][];
@@ -96,6 +96,7 @@ class Game_Driver {
     /**
      * Displays all of the bombs and disables all of the buttons,
      * presents the user with a replay option.
+     * It also is in control of cycling through the explosion animation.
      *
      * @ms.Pre-condition User has lost, mine has been hit
      * @ms.Post-condition Game Board is disabled and lose frame pops up
@@ -105,16 +106,17 @@ class Game_Driver {
      * */
     static void gameOver() {
     	mTurns = mTurnsOg;
+      /* This loop cycles through the animation for each of the bombs to animate it */
         for (int i = 0; i < mNumRows; i++) {
             for (int j = 0; j < mNumCols; j++) {
                 if (mTileArray[i][j].getIsMine()) {
                     mTileArray[i][j].setMineIcon();
-                    
+
                     final int k = i;
                     final int l = j;
-                    
+
                     ActionListener action1 = new ActionListener()
-                    {   
+                    {
                         @Override
                         public void actionPerformed(ActionEvent event)
                         {
@@ -123,86 +125,87 @@ class Game_Driver {
                         }
 
                     };
-                                      
+
                     ActionListener action2 = new ActionListener()
-                    {   
+                    {
                         @Override
                         public void actionPerformed(ActionEvent event)
                         {
                         	mTileArray[k][l].setExpl2();
                             mTileArray[k][l].repaint();
                         }
-			
+
                     };
-                    
+
                     ActionListener action3 = new ActionListener()
-                    {   
+                    {
                         @Override
                         public void actionPerformed(ActionEvent event)
                         {
                         	mTileArray[k][l].setExpl3();
                             mTileArray[k][l].repaint();
                         }
-			
+
                     };
-                    
+
                     ActionListener action4 = new ActionListener()
-                    {   
+                    {
                         @Override
                         public void actionPerformed(ActionEvent event)
                         {
                         	mTileArray[k][l].setExpl4();
                             mTileArray[k][l].repaint();
                         }
-			
+
                     };
-                    
+
                     ActionListener action5 = new ActionListener()
-                    {   
+                    {
                         @Override
                         public void actionPerformed(ActionEvent event)
                         {
                         	mTileArray[k][l].setExpl5();
                             mTileArray[k][l].repaint();
                         }
-			
+
                     };
-                    
+
                     ActionListener action6 = new ActionListener()
-                    {   
+                    {
                         @Override
                         public void actionPerformed(ActionEvent event)
                         {
                         	mTileArray[k][l].setExpl6();
                             mTileArray[k][l].repaint();
+                            mTileArray[k][l].setMineIcon();
                         }
-			
+
                     };
-                    
+
                     Timer timer = new Timer(3600000, action1);
                     timer.setInitialDelay(1000 + 200);
                     timer.start();
-                    
+
                     Timer timer2 = new Timer(3600000, action2);
                     timer2.setInitialDelay(1000 + 400);
-                    timer2.start();          
-                   				
+                    timer2.start();
+
                     Timer timer3 = new Timer(3600000, action3);
                     timer3.setInitialDelay(1000 + 600);
-                    timer3.start(); 
-                    
+                    timer3.start();
+
                     Timer timer4 = new Timer(3600000, action4);
                     timer4.setInitialDelay(1000 + 800);
-                    timer4.start(); 
-                    
+                    timer4.start();
+
                     Timer timer5 = new Timer(3600000, action5);
                     timer5.setInitialDelay(1000 + 1000);
-                    timer5.start(); 
-                    
+                    timer5.start();
+
                     Timer timer6 = new Timer(3600000, action6);
                     timer6.setInitialDelay(1000 + 1200);
-                    timer6.start(); 
-                    
+                    timer6.start();
+
                 }
                 mTileArray[i][j].setDisable();
             }
@@ -225,7 +228,13 @@ class Game_Driver {
             if(mCheatActive){
         	       mcheatGame.dispose();
             }
-            mGame.dispose();
+            //This has to have a delay to resetting the board because if not there is an after image of the explosion
+            try {
+                Thread.currentThread().sleep(2000);
+                mGame.dispose();
+            }catch(InterruptedException ie) {
+
+            }
             loseFrame.dispose();
             Board newgame = new Board(mNumCols, mNumRows, mTurnsOg, mNumMines);
         });
@@ -305,8 +314,8 @@ class Game_Driver {
     //////////////////////////////
 
     /**
-     * This takes two random numbers and places a mine
-     * at that index if it can
+     * This creates two random numbers between 1 and the number of rows/cols
+     * and places a mine at that index if that indes isn't already a mine and isn't open.
      *
      * @ms.Pre-condition There is a mine that needs to be reset in the changing mines
      * @ms.Post-condition There is a new mine on the board
