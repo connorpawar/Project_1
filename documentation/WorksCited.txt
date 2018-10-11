@@ -1,5 +1,7 @@
 Images:
 	MineIcon.png - https://www.kisspng.com/png-bomb-nuclear-weapon-explosion-grenade-blow-1285016/
+	expl1.jpg-expl6.jpg -  https://us.123rf.com/450wm/sudowoodo/sudowoodo1509/sudowoodo150900033/45010322-animation-for-game-cartoon-explosion-in-the-air-6-frame-sprite-sheet-on-dark-background-.jpg?ver=6
+	
 
 Sounds:
 	235968__tommccann__explosion-01.wav - https://freesound.org/people/tommccann/sounds/235968/
