@@ -1,0 +1,5 @@
+Images:
+	MineIcon.png - https://www.kisspng.com/png-bomb-nuclear-weapon-explosion-grenade-blow-1285016/
+
+Sounds:
+	235968__tommccann__explosion-01.wav - https://freesound.org/people/tommccann/sounds/235968/
